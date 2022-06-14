@@ -9,6 +9,7 @@ class Optimizer(object):
                  prof_filenames,
                  bandwidth=2000,
                  parallel=True,
+                 ignore_latency=False,
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -17,6 +18,7 @@ class Optimizer(object):
         self.layers = {}  # Dictionary of Layer objects: layername -> Layer objects
         self.priorities = {}  # Dictionary of integers: layername -> integer
         self.parallel = parallel
+        self.ignore_latency = ignore_latency
         
         # load and initialize devices
         parallel = True
@@ -31,7 +33,10 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
+        self.partitions = open("part.csv", "w")
+        self.partitions.write(f"layername,device\n")
         self.optimize()
+        self.partitions.close()
 
     def load_dependencies(self, dep_filename):
         """
@@ -67,9 +72,8 @@ class Optimizer(object):
             for dep_name in self.layers[cur_layer_name].dependencies:
                 dep_layer = self.layers[dep_name]
                 transfer_latency = 0
-                if dep_layer.device_id != device.name:
+                if (not self.ignore_latency) and dep_layer.device_id != device.name:
                     transfer_latency = dep_layer.size / self.bandwidth
-                transfer_latency = 0
 
                 end_time = dep_layer.end_time + transfer_latency + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)
@@ -84,6 +88,7 @@ class Optimizer(object):
         self.layers[cur_layer_name].device_id = decision
         self.devices[decision].available_time = min_value
         print(f"Decision for layer {cur_layer_name}: executed on device {decision}, end time {min_value}\n")
+        # self.partitions.write(f"{cur_layer_name},{decision}\n")
         return decision
 
     def device_exec(self, cur_layer_name):
@@ -123,4 +128,5 @@ class Optimizer(object):
         print("{:<15} {:<15}".format("layer name", "device"))
         for layer_name, layer in self.layers.items():
             print("{:<15} {:<15}".format(layer_name, layer.device_id))
+            self.partitions.write(f"{layer_name},{layer.device_id}\n")
 
