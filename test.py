@@ -1,16 +1,12 @@
 from optimizer import Optimizer
 
 Optimizer(
-    dep_filename="yolov4_dep.csv",
+    dep_filename="dep.csv",
     prof_filenames=[
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
-        "yolov4_prof.csv",
+        "prof.csv",
+        "prof.csv",
     ],
-    bandwidth=2000,
-    ignore_latency=False,
+    bandwidth=2,
+    parallel=True,
+    ignore_latency=True,
 )

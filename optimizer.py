@@ -22,7 +22,7 @@ class Optimizer(object):
         
         # load and initialize devices
         parallel = True
-        print(f"Device parallel = {parallel}")
+        print(f"Device data-compute-parallel = {parallel}")
 
         self.num_devices = len(prof_filenames)
         self.device_names = [i for i in range(len(prof_filenames))]
@@ -78,9 +78,9 @@ class Optimizer(object):
                 end_time = dep_layer.end_time + transfer_latency + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)
             dependency_arrival_timepool.append(device.available_time + device.time[cur_layer_name])
-            print(f"dependency_arrival_timepool for {device_name}: {dependency_arrival_timepool}")
+            print(f"The arrival time pool of dependencies on device {device_name} is {dependency_arrival_timepool}")
             device_results.append(max(dependency_arrival_timepool))
-        print(f"decision_pool(runtime): {device_results}")
+        print(f"==>>decision pool(clock time): {device_results}")
         min_value = min(device_results)
         decision = device_results.index(min_value)
         self.layers[cur_layer_name].end_time = min_value
@@ -100,7 +100,6 @@ class Optimizer(object):
             return
         else:
             cur_layer = self.layers[cur_layer_name]
-            num_needed_alien_data = 0
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
                     return
@@ -108,6 +107,7 @@ class Optimizer(object):
             decision = self.decide_one_layer(cur_layer_name)
 
             cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
+            print(f"Sorted branches: {cur_layer.next}")
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
                     continue
