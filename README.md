@@ -15,6 +15,7 @@ Optimizer(
     ],
     bandwidth=2000,
     parallel=True,
+    ignore_latency=True,
 )
 ```
 
