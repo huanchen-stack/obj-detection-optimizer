@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from layer import Layer
 from device import Device
@@ -12,6 +13,7 @@ class Optimizer(object):
                  parallel=True,
                  ignore_latency=False,
                  iterations = 1,
+                 dir = "",
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -22,6 +24,7 @@ class Optimizer(object):
         self.parallel = parallel
         self.ignore_latency = ignore_latency
         self.iterations = iterations
+        self.dir = dir
         
         # load and initialize devices
         parallel = True
@@ -41,11 +44,11 @@ class Optimizer(object):
         self.FIRST_RUN = False
         for i in range(self.iterations):
             if i == self.iterations - 1:
-                self.priorities = open("priority.csv", "w")
+                self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
                 self.priorities.write(f"layername,priority\n")
                 self.backtrace(write_csv=True)
                 self.priorities.close()
-                self.partitions = open("part.csv", "w")
+                self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
                 self.partitions.write(f"layername,device\n")
                 self.optimize(write_csv=True)
                 self.partitions.close()

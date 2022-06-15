@@ -16,6 +16,8 @@ Optimizer(
     bandwidth=2000,
     parallel=True,
     ignore_latency=True,
+    iterations=1,
+    dir="testcase/explore"
 )
 ```
 

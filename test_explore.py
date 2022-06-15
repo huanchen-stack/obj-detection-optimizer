@@ -20,4 +20,6 @@ Optimizer(
     ],
     bandwidth=1,
     ignore_latency=False,
+    iterations=1,
+    dir="testcases/explore",
 )
