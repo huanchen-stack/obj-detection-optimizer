@@ -1,0 +1,425 @@
+Device parallel = True
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+dependency_arrival_timepool for 0: [0.0]
+dependency_arrival_timepool for 1: [0.0]
+dependency_arrival_timepool for 2: [0.0]
+dependency_arrival_timepool for 3: [0.0]
+dependency_arrival_timepool for 4: [0.0]
+dependency_arrival_timepool for 5: [0.0]
+decision_pool(runtime): [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Decision for layer input: executed on device 0, end time 0.0
+
+Begin analyzing layer transform. 
+dependency_arrival_timepool for 0: [0.0003419, 0.0003419]
+dependency_arrival_timepool for 1: [0.000944, 0.0003419]
+dependency_arrival_timepool for 2: [0.000944, 0.0003419]
+dependency_arrival_timepool for 3: [0.000944, 0.0003419]
+dependency_arrival_timepool for 4: [0.000944, 0.0003419]
+dependency_arrival_timepool for 5: [0.000944, 0.0003419]
+decision_pool(runtime): [0.0003419, 0.000944, 0.000944, 0.000944, 0.000944, 0.000944]
+Decision for layer transform: executed on device 0, end time 0.0003419
+
+Begin analyzing layer conv1. 
+dependency_arrival_timepool for 0: [0.0004435, 0.0004435]
+dependency_arrival_timepool for 1: [0.008123499999999999, 0.0001016]
+dependency_arrival_timepool for 2: [0.008123499999999999, 0.0001016]
+dependency_arrival_timepool for 3: [0.008123499999999999, 0.0001016]
+dependency_arrival_timepool for 4: [0.008123499999999999, 0.0001016]
+dependency_arrival_timepool for 5: [0.008123499999999999, 0.0001016]
+decision_pool(runtime): [0.0004435, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999]
+Decision for layer conv1: executed on device 0, end time 0.0004435
+
+Begin analyzing layer bn1. 
+dependency_arrival_timepool for 0: [0.0006271, 0.0006271]
+dependency_arrival_timepool for 1: [0.0415871, 0.0001836]
+dependency_arrival_timepool for 2: [0.0415871, 0.0001836]
+dependency_arrival_timepool for 3: [0.0415871, 0.0001836]
+dependency_arrival_timepool for 4: [0.0415871, 0.0001836]
+dependency_arrival_timepool for 5: [0.0415871, 0.0001836]
+decision_pool(runtime): [0.0006271, 0.0415871, 0.0415871, 0.0415871, 0.0415871, 0.0415871]
+Decision for layer bn1: executed on device 0, end time 0.0006271
+
+Begin analyzing layer relu. 
+dependency_arrival_timepool for 0: [0.0006571, 0.0006571]
+dependency_arrival_timepool for 1: [0.041617100000000004, 3e-05]
+dependency_arrival_timepool for 2: [0.041617100000000004, 3e-05]
+dependency_arrival_timepool for 3: [0.041617100000000004, 3e-05]
+dependency_arrival_timepool for 4: [0.041617100000000004, 3e-05]
+dependency_arrival_timepool for 5: [0.041617100000000004, 3e-05]
+decision_pool(runtime): [0.0006571, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004]
+Decision for layer relu: executed on device 0, end time 0.0006571
+
+Begin analyzing layer maxpool. 
+dependency_arrival_timepool for 0: [0.0006973999999999999, 0.0006973999999999999]
+dependency_arrival_timepool for 1: [0.041657400000000004, 4.03e-05]
+dependency_arrival_timepool for 2: [0.041657400000000004, 4.03e-05]
+dependency_arrival_timepool for 3: [0.041657400000000004, 4.03e-05]
+dependency_arrival_timepool for 4: [0.041657400000000004, 4.03e-05]
+dependency_arrival_timepool for 5: [0.041657400000000004, 4.03e-05]
+decision_pool(runtime): [0.0006973999999999999, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004]
+Decision for layer maxpool: executed on device 0, end time 0.0006973999999999999
+
+Begin analyzing layer layer1. 
+dependency_arrival_timepool for 0: [0.0033154, 0.0033154]
+dependency_arrival_timepool for 1: [0.0135554, 0.002618]
+dependency_arrival_timepool for 2: [0.0135554, 0.002618]
+dependency_arrival_timepool for 3: [0.0135554, 0.002618]
+dependency_arrival_timepool for 4: [0.0135554, 0.002618]
+dependency_arrival_timepool for 5: [0.0135554, 0.002618]
+decision_pool(runtime): [0.0033154, 0.0135554, 0.0135554, 0.0135554, 0.0135554, 0.0135554]
+Decision for layer layer1: executed on device 0, end time 0.0033154
+
+Begin analyzing layer layer2. 
+dependency_arrival_timepool for 0: [0.0071824, 0.0071824]
+dependency_arrival_timepool for 1: [0.04814240000000001, 0.003867]
+dependency_arrival_timepool for 2: [0.04814240000000001, 0.003867]
+dependency_arrival_timepool for 3: [0.04814240000000001, 0.003867]
+dependency_arrival_timepool for 4: [0.04814240000000001, 0.003867]
+dependency_arrival_timepool for 5: [0.04814240000000001, 0.003867]
+decision_pool(runtime): [0.0071824, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001]
+Decision for layer layer2: executed on device 0, end time 0.0071824
+
+Begin analyzing layer layer3. 
+dependency_arrival_timepool for 0: [0.0127034, 0.0127034]
+dependency_arrival_timepool for 1: [0.0331834, 0.005521]
+dependency_arrival_timepool for 2: [0.0331834, 0.005521]
+dependency_arrival_timepool for 3: [0.0331834, 0.005521]
+dependency_arrival_timepool for 4: [0.0331834, 0.005521]
+dependency_arrival_timepool for 5: [0.0331834, 0.005521]
+decision_pool(runtime): [0.0127034, 0.0331834, 0.0331834, 0.0331834, 0.0331834, 0.0331834]
+Decision for layer layer3: executed on device 0, end time 0.0127034
+
+Begin analyzing layer layer4. 
+dependency_arrival_timepool for 0: [0.0155904, 0.0155904]
+dependency_arrival_timepool for 1: [0.025830400000000003, 0.002887]
+dependency_arrival_timepool for 2: [0.025830400000000003, 0.002887]
+dependency_arrival_timepool for 3: [0.025830400000000003, 0.002887]
+dependency_arrival_timepool for 4: [0.025830400000000003, 0.002887]
+dependency_arrival_timepool for 5: [0.025830400000000003, 0.002887]
+decision_pool(runtime): [0.0155904, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003]
+Decision for layer layer4: executed on device 0, end time 0.0155904
+
+Begin analyzing layer inner_3. 
+dependency_arrival_timepool for 0: [0.0157001, 0.0157001]
+dependency_arrival_timepool for 1: [0.0208201, 0.0001097]
+dependency_arrival_timepool for 2: [0.0208201, 0.0001097]
+dependency_arrival_timepool for 3: [0.0208201, 0.0001097]
+dependency_arrival_timepool for 4: [0.0208201, 0.0001097]
+dependency_arrival_timepool for 5: [0.0208201, 0.0001097]
+decision_pool(runtime): [0.0157001, 0.0208201, 0.0208201, 0.0208201, 0.0208201, 0.0208201]
+Decision for layer inner_3: executed on device 0, end time 0.0157001
+
+Begin analyzing layer layer_3. 
+dependency_arrival_timepool for 0: [0.015813800000000003, 0.015813800000000003]
+dependency_arrival_timepool for 1: [0.016453800000000005, 0.0001137]
+dependency_arrival_timepool for 2: [0.016453800000000005, 0.0001137]
+dependency_arrival_timepool for 3: [0.016453800000000005, 0.0001137]
+dependency_arrival_timepool for 4: [0.016453800000000005, 0.0001137]
+dependency_arrival_timepool for 5: [0.016453800000000005, 0.0001137]
+decision_pool(runtime): [0.015813800000000003, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005]
+Decision for layer layer_3: executed on device 0, end time 0.015813800000000003
+
+Begin analyzing layer rpn_parallel_f3. 
+dependency_arrival_timepool for 0: [0.018196800000000003, 0.018196800000000003]
+dependency_arrival_timepool for 1: [0.018836800000000004, 0.002383]
+dependency_arrival_timepool for 2: [0.018836800000000004, 0.002383]
+dependency_arrival_timepool for 3: [0.018836800000000004, 0.002383]
+dependency_arrival_timepool for 4: [0.018836800000000004, 0.002383]
+dependency_arrival_timepool for 5: [0.018836800000000004, 0.002383]
+decision_pool(runtime): [0.018196800000000003, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004]
+Decision for layer rpn_parallel_f3: executed on device 0, end time 0.018196800000000003
+
+Begin analyzing layer extra. 
+dependency_arrival_timepool for 0: [0.015856500000000003, 0.018239500000000002]
+dependency_arrival_timepool for 1: [0.016496500000000004, 4.27e-05]
+dependency_arrival_timepool for 2: [0.016496500000000004, 4.27e-05]
+dependency_arrival_timepool for 3: [0.016496500000000004, 4.27e-05]
+dependency_arrival_timepool for 4: [0.016496500000000004, 4.27e-05]
+dependency_arrival_timepool for 5: [0.016496500000000004, 4.27e-05]
+decision_pool(runtime): [0.018239500000000002, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004]
+Decision for layer extra: executed on device 1, end time 0.016496500000000004
+
+Begin analyzing layer rpn_parallel_f4. 
+dependency_arrival_timepool for 0: [0.019028600000000003, 0.020555800000000003]
+dependency_arrival_timepool for 1: [0.018855500000000004, 0.018855500000000004]
+dependency_arrival_timepool for 2: [0.019028600000000003, 0.002359]
+dependency_arrival_timepool for 3: [0.019028600000000003, 0.002359]
+dependency_arrival_timepool for 4: [0.019028600000000003, 0.002359]
+dependency_arrival_timepool for 5: [0.019028600000000003, 0.002359]
+decision_pool(runtime): [0.020555800000000003, 0.018855500000000004, 0.019028600000000003, 0.019028600000000003, 0.019028600000000003, 0.019028600000000003]
+Decision for layer rpn_parallel_f4: executed on device 1, end time 0.018855500000000004
+
+Begin analyzing layer interpolate__2. 
+dependency_arrival_timepool for 0: [0.015740200000000003, 0.018236900000000004]
+dependency_arrival_timepool for 1: [0.016380200000000004, 0.018895600000000005]
+dependency_arrival_timepool for 2: [0.016380200000000004, 4.01e-05]
+dependency_arrival_timepool for 3: [0.016380200000000004, 4.01e-05]
+dependency_arrival_timepool for 4: [0.016380200000000004, 4.01e-05]
+dependency_arrival_timepool for 5: [0.016380200000000004, 4.01e-05]
+decision_pool(runtime): [0.018236900000000004, 0.018895600000000005, 0.016380200000000004, 0.016380200000000004, 0.016380200000000004, 0.016380200000000004]
+Decision for layer interpolate__2: executed on device 2, end time 0.016380200000000004
+
+Begin analyzing layer inner_2. 
+dependency_arrival_timepool for 0: [0.012805200000000001, 0.0182986]
+dependency_arrival_timepool for 1: [0.023045200000000002, 0.018957300000000003]
+dependency_arrival_timepool for 2: [0.023045200000000002, 0.016482000000000004]
+dependency_arrival_timepool for 3: [0.023045200000000002, 0.0001018]
+dependency_arrival_timepool for 4: [0.023045200000000002, 0.0001018]
+dependency_arrival_timepool for 5: [0.023045200000000002, 0.0001018]
+decision_pool(runtime): [0.0182986, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002]
+Decision for layer inner_2: executed on device 0, end time 0.0182986
+
+Begin analyzing layer add__2. 
+dependency_arrival_timepool for 0: [0.0182986, 0.018940200000000004, 0.0182986]
+dependency_arrival_timepool for 1: [0.0208586, 0.018940200000000004, 0.018855500000000004]
+dependency_arrival_timepool for 2: [0.0208586, 0.016380200000000004, 0.016380200000000004]
+dependency_arrival_timepool for 3: [0.0208586, 0.018940200000000004, 0.0]
+dependency_arrival_timepool for 4: [0.0208586, 0.018940200000000004, 0.0]
+dependency_arrival_timepool for 5: [0.0208586, 0.018940200000000004, 0.0]
+decision_pool(runtime): [0.018940200000000004, 0.0208586, 0.0208586, 0.0208586, 0.0208586, 0.0208586]
+Decision for layer add__2: executed on device 0, end time 0.018940200000000004
+
+Begin analyzing layer layer_2. 
+dependency_arrival_timepool for 0: [0.019046800000000003, 0.019046800000000003]
+dependency_arrival_timepool for 1: [0.021606800000000002, 0.018962100000000003]
+dependency_arrival_timepool for 2: [0.021606800000000002, 0.016486800000000003]
+dependency_arrival_timepool for 3: [0.021606800000000002, 0.0001066]
+dependency_arrival_timepool for 4: [0.021606800000000002, 0.0001066]
+dependency_arrival_timepool for 5: [0.021606800000000002, 0.0001066]
+decision_pool(runtime): [0.019046800000000003, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002]
+Decision for layer layer_2: executed on device 0, end time 0.019046800000000003
+
+Begin analyzing layer rpn_parallel_f2. 
+dependency_arrival_timepool for 0: [0.021458800000000004, 0.021458800000000004]
+dependency_arrival_timepool for 1: [0.024018800000000003, 0.021267500000000005]
+dependency_arrival_timepool for 2: [0.024018800000000003, 0.018792200000000005]
+dependency_arrival_timepool for 3: [0.024018800000000003, 0.002412]
+dependency_arrival_timepool for 4: [0.024018800000000003, 0.002412]
+dependency_arrival_timepool for 5: [0.024018800000000003, 0.002412]
+decision_pool(runtime): [0.021458800000000004, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003]
+Decision for layer rpn_parallel_f2: executed on device 0, end time 0.021458800000000004
+
+Begin analyzing layer interpolate__1. 
+dependency_arrival_timepool for 0: [0.018976900000000005, 0.021495500000000004]
+dependency_arrival_timepool for 1: [0.021536900000000005, 0.018892200000000005]
+dependency_arrival_timepool for 2: [0.021536900000000005, 0.016416900000000005]
+dependency_arrival_timepool for 3: [0.021536900000000005, 3.67e-05]
+dependency_arrival_timepool for 4: [0.021536900000000005, 3.67e-05]
+dependency_arrival_timepool for 5: [0.021536900000000005, 3.67e-05]
+decision_pool(runtime): [0.021495500000000004, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005]
+Decision for layer interpolate__1: executed on device 0, end time 0.021495500000000004
+
+Begin analyzing layer inner_1. 
+dependency_arrival_timepool for 0: [0.0077696, 0.022082700000000004]
+dependency_arrival_timepool for 1: [0.028249600000000003, 0.019442700000000004]
+dependency_arrival_timepool for 2: [0.028249600000000003, 0.016967400000000004]
+dependency_arrival_timepool for 3: [0.028249600000000003, 0.0005872]
+dependency_arrival_timepool for 4: [0.028249600000000003, 0.0005872]
+dependency_arrival_timepool for 5: [0.028249600000000003, 0.0005872]
+decision_pool(runtime): [0.022082700000000004, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003]
+Decision for layer inner_1: executed on device 0, end time 0.022082700000000004
+
+Begin analyzing layer add__1. 
+dependency_arrival_timepool for 0: [0.022082700000000004, 0.021495500000000004, 0.022082700000000004]
+dependency_arrival_timepool for 1: [0.0323227, 0.03173550000000001, 0.018855500000000004]
+dependency_arrival_timepool for 2: [0.0323227, 0.03173550000000001, 0.016380200000000004]
+dependency_arrival_timepool for 3: [0.0323227, 0.03173550000000001, 0.0]
+dependency_arrival_timepool for 4: [0.0323227, 0.03173550000000001, 0.0]
+dependency_arrival_timepool for 5: [0.0323227, 0.03173550000000001, 0.0]
+decision_pool(runtime): [0.022082700000000004, 0.0323227, 0.0323227, 0.0323227, 0.0323227, 0.0323227]
+Decision for layer add__1: executed on device 0, end time 0.022082700000000004
+
+Begin analyzing layer layer_1. 
+dependency_arrival_timepool for 0: [0.022195900000000005, 0.022195900000000005]
+dependency_arrival_timepool for 1: [0.032435900000000004, 0.018968700000000005]
+dependency_arrival_timepool for 2: [0.032435900000000004, 0.016493400000000005]
+dependency_arrival_timepool for 3: [0.032435900000000004, 0.0001132]
+dependency_arrival_timepool for 4: [0.032435900000000004, 0.0001132]
+dependency_arrival_timepool for 5: [0.032435900000000004, 0.0001132]
+decision_pool(runtime): [0.022195900000000005, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004]
+Decision for layer layer_1: executed on device 0, end time 0.022195900000000005
+
+Begin analyzing layer rpn_parallel_f1. 
+dependency_arrival_timepool for 0: [0.025174900000000004, 0.025174900000000004]
+dependency_arrival_timepool for 1: [0.035414900000000006, 0.021834500000000003]
+dependency_arrival_timepool for 2: [0.035414900000000006, 0.019359200000000003]
+dependency_arrival_timepool for 3: [0.035414900000000006, 0.002979]
+dependency_arrival_timepool for 4: [0.035414900000000006, 0.002979]
+dependency_arrival_timepool for 5: [0.035414900000000006, 0.002979]
+decision_pool(runtime): [0.025174900000000004, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006]
+Decision for layer rpn_parallel_f1: executed on device 0, end time 0.025174900000000004
+
+Begin analyzing layer interpolate__0. 
+dependency_arrival_timepool for 0: [0.022119900000000005, 0.025212100000000005]
+dependency_arrival_timepool for 1: [0.032359900000000004, 0.018892700000000005]
+dependency_arrival_timepool for 2: [0.032359900000000004, 0.016417400000000006]
+dependency_arrival_timepool for 3: [0.032359900000000004, 3.72e-05]
+dependency_arrival_timepool for 4: [0.032359900000000004, 3.72e-05]
+dependency_arrival_timepool for 5: [0.032359900000000004, 3.72e-05]
+decision_pool(runtime): [0.025212100000000005, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004]
+Decision for layer interpolate__0: executed on device 0, end time 0.025212100000000005
+
+Begin analyzing layer inner_0. 
+dependency_arrival_timepool for 0: [0.0034215, 0.025318200000000006]
+dependency_arrival_timepool for 1: [0.044381500000000004, 0.018961600000000006]
+dependency_arrival_timepool for 2: [0.044381500000000004, 0.016486300000000006]
+dependency_arrival_timepool for 3: [0.044381500000000004, 0.0001061]
+dependency_arrival_timepool for 4: [0.044381500000000004, 0.0001061]
+dependency_arrival_timepool for 5: [0.044381500000000004, 0.0001061]
+decision_pool(runtime): [0.025318200000000006, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004]
+Decision for layer inner_0: executed on device 0, end time 0.025318200000000006
+
+Begin analyzing layer add__0. 
+dependency_arrival_timepool for 0: [0.025318200000000006, 0.025212100000000005, 0.025318200000000006]
+dependency_arrival_timepool for 1: [0.06627820000000001, 0.06617210000000001, 0.018855500000000004]
+dependency_arrival_timepool for 2: [0.06627820000000001, 0.06617210000000001, 0.016380200000000004]
+dependency_arrival_timepool for 3: [0.06627820000000001, 0.06617210000000001, 0.0]
+dependency_arrival_timepool for 4: [0.06627820000000001, 0.06617210000000001, 0.0]
+dependency_arrival_timepool for 5: [0.06627820000000001, 0.06617210000000001, 0.0]
+decision_pool(runtime): [0.025318200000000006, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001]
+Decision for layer add__0: executed on device 0, end time 0.025318200000000006
+
+Begin analyzing layer layer_0. 
+dependency_arrival_timepool for 0: [0.025430700000000007, 0.025430700000000007]
+dependency_arrival_timepool for 1: [0.06639070000000001, 0.018968000000000006]
+dependency_arrival_timepool for 2: [0.06639070000000001, 0.016492700000000006]
+dependency_arrival_timepool for 3: [0.06639070000000001, 0.0001125]
+dependency_arrival_timepool for 4: [0.06639070000000001, 0.0001125]
+dependency_arrival_timepool for 5: [0.06639070000000001, 0.0001125]
+decision_pool(runtime): [0.025430700000000007, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001]
+Decision for layer layer_0: executed on device 0, end time 0.025430700000000007
+
+Begin analyzing layer rpn_parallel_f0. 
+dependency_arrival_timepool for 0: [0.031367700000000005, 0.031367700000000005]
+dependency_arrival_timepool for 1: [0.07232770000000001, 0.024792500000000002]
+dependency_arrival_timepool for 2: [0.07232770000000001, 0.022317200000000002]
+dependency_arrival_timepool for 3: [0.07232770000000001, 0.005937]
+dependency_arrival_timepool for 4: [0.07232770000000001, 0.005937]
+dependency_arrival_timepool for 5: [0.07232770000000001, 0.005937]
+decision_pool(runtime): [0.031367700000000005, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001]
+Decision for layer rpn_parallel_f0: executed on device 0, end time 0.031367700000000005
+
+Begin analyzing layer rpn_merger. 
+dependency_arrival_timepool for 0: [0.050557700000000004, 0.0443649, 0.0406488, 0.0373868, 0.0380597, 0.050557700000000004]
+dependency_arrival_timepool for 1: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380455, 0.0380455]
+dependency_arrival_timepool for 2: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.0355702]
+dependency_arrival_timepool for 3: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
+dependency_arrival_timepool for 4: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
+dependency_arrival_timepool for 5: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
+decision_pool(runtime): [0.050557700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004]
+Decision for layer rpn_merger: executed on device 0, end time 0.050557700000000004
+
+Begin analyzing layer box_roi_pool. 
+dependency_arrival_timepool for 0: [0.029677700000000008, 0.026442900000000005, 0.023293800000000003, 0.020060800000000004, 0.020916600000000004, 0.054804700000000005, 0.054804700000000005]
+dependency_arrival_timepool for 1: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020743500000000005, 0.05482070000000001, 0.023102500000000005]
+dependency_arrival_timepool for 2: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.020627200000000005]
+dependency_arrival_timepool for 3: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
+dependency_arrival_timepool for 4: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
+dependency_arrival_timepool for 5: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
+decision_pool(runtime): [0.054804700000000005, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001]
+Decision for layer box_roi_pool: executed on device 0, end time 0.054804700000000005
+
+Begin analyzing layer fc6. 
+dependency_arrival_timepool for 0: [0.054922700000000005, 0.054922700000000005]
+dependency_arrival_timepool for 1: [0.10510270000000001, 0.018973500000000004]
+dependency_arrival_timepool for 2: [0.10510270000000001, 0.016498200000000005]
+dependency_arrival_timepool for 3: [0.10510270000000001, 0.000118]
+dependency_arrival_timepool for 4: [0.10510270000000001, 0.000118]
+dependency_arrival_timepool for 5: [0.10510270000000001, 0.000118]
+decision_pool(runtime): [0.054922700000000005, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001]
+Decision for layer fc6: executed on device 0, end time 0.054922700000000005
+
+Begin analyzing layer fc7. 
+dependency_arrival_timepool for 0: [0.0550452, 0.0550452]
+dependency_arrival_timepool for 1: [0.059141200000000005, 0.018978000000000005]
+dependency_arrival_timepool for 2: [0.059141200000000005, 0.016502700000000006]
+dependency_arrival_timepool for 3: [0.059141200000000005, 0.0001225]
+dependency_arrival_timepool for 4: [0.059141200000000005, 0.0001225]
+dependency_arrival_timepool for 5: [0.059141200000000005, 0.0001225]
+decision_pool(runtime): [0.0550452, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005]
+Decision for layer fc7: executed on device 0, end time 0.0550452
+
+Begin analyzing layer bbox_pred_roi_. 
+dependency_arrival_timepool for 0: [0.0551356, 0.0551356]
+dependency_arrival_timepool for 1: [0.0592316, 0.018945900000000005]
+dependency_arrival_timepool for 2: [0.0592316, 0.016470600000000005]
+dependency_arrival_timepool for 3: [0.0592316, 9.04e-05]
+dependency_arrival_timepool for 4: [0.0592316, 9.04e-05]
+dependency_arrival_timepool for 5: [0.0592316, 9.04e-05]
+decision_pool(runtime): [0.0551356, 0.0592316, 0.0592316, 0.0592316, 0.0592316, 0.0592316]
+Decision for layer bbox_pred_roi_: executed on device 0, end time 0.0551356
+
+Begin analyzing layer cls_score. 
+dependency_arrival_timepool for 0: [0.055120100000000005, 0.0552105]
+dependency_arrival_timepool for 1: [0.05921610000000001, 0.018930400000000003]
+dependency_arrival_timepool for 2: [0.05921610000000001, 0.016455100000000004]
+dependency_arrival_timepool for 3: [0.05921610000000001, 7.49e-05]
+dependency_arrival_timepool for 4: [0.05921610000000001, 7.49e-05]
+dependency_arrival_timepool for 5: [0.05921610000000001, 7.49e-05]
+decision_pool(runtime): [0.0552105, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001]
+Decision for layer cls_score: executed on device 0, end time 0.0552105
+
+Begin analyzing layer postprocess_detections. 
+dependency_arrival_timepool for 0: [0.057738500000000005, 0.0576636, 0.053085700000000006, 0.057738500000000005]
+dependency_arrival_timepool for 1: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.021383500000000003]
+dependency_arrival_timepool for 2: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.018908200000000003]
+dependency_arrival_timepool for 3: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
+dependency_arrival_timepool for 4: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
+dependency_arrival_timepool for 5: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
+decision_pool(runtime): [0.057738500000000005, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001]
+Decision for layer postprocess_detections: executed on device 0, end time 0.057738500000000005
+
+Begin analyzing layer postprocess_resize. 
+dependency_arrival_timepool for 0: [0.057738500000000005, 0.057738500000000005]
+dependency_arrival_timepool for 1: [0.057738500000000005, 0.018855500000000004]
+dependency_arrival_timepool for 2: [0.057738500000000005, 0.016380200000000004]
+dependency_arrival_timepool for 3: [0.057738500000000005, 0.0]
+dependency_arrival_timepool for 4: [0.057738500000000005, 0.0]
+dependency_arrival_timepool for 5: [0.057738500000000005, 0.0]
+decision_pool(runtime): [0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005]
+Decision for layer postprocess_resize: executed on device 0, end time 0.057738500000000005
+
+
+[30;42m=========Result=========[0m
+layer name      device         
+input           0              
+transform       0              
+conv1           0              
+bn1             0              
+relu            0              
+maxpool         0              
+layer1          0              
+layer2          0              
+layer3          0              
+layer4          0              
+inner_3         0              
+layer_3         0              
+inner_2         0              
+interpolate__2  2              
+add__2          0              
+layer_2         0              
+inner_1         0              
+interpolate__1  0              
+add__1          0              
+layer_1         0              
+inner_0         0              
+interpolate__0  0              
+add__0          0              
+layer_0         0              
+extra           1              
+rpn_parallel_f0 0              
+rpn_merger      0              
+rpn_parallel_f1 0              
+rpn_parallel_f2 0              
+rpn_parallel_f3 0              
+rpn_parallel_f4 1              
+box_roi_pool    0              
+fc6             0              
+fc7             0              
+cls_score       0              
+bbox_pred_roi_  0              
+postprocess_detections 0              
+postprocess_resize 0              
+output          0              

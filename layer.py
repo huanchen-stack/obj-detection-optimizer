@@ -17,3 +17,5 @@ class Layer(object):
 
         self.arrival_time_pool = []
         self.end_time = 0
+        self.pr_max = None
+        self.pr_min = None

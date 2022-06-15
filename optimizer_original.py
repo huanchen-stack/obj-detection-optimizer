@@ -2,7 +2,6 @@ import pandas as pd
 from layer import Layer
 from device import Device
 
-
 class Optimizer(object):
 
     def __init__(self,
@@ -11,7 +10,6 @@ class Optimizer(object):
                  bandwidth=2000,
                  parallel=True,
                  ignore_latency=False,
-                 iterations = 3,
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -21,7 +19,6 @@ class Optimizer(object):
         self.priorities = {}  # Dictionary of integers: layername -> integer
         self.parallel = parallel
         self.ignore_latency = ignore_latency
-        self.iterations = iterations
         
         # load and initialize devices
         parallel = True
@@ -36,19 +33,10 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
-        self.FIRST_RUN = True
+        self.partitions = open("part.csv", "w")
+        self.partitions.write(f"layername,device\n")
         self.optimize()
-        self.FIRST_RUN = False
-        for i in range(self.iterations):
-            self.backtrace()
-            if i == self.iterations - 1:
-                self.partitions = open("part.csv", "w")
-                self.partitions.write(f"layername,device\n")
-                self.optimize(write_csv=True)
-                self.partitions.close()
-            else:
-                self.optimize()
-
+        self.partitions.close()
 
     def load_dependencies(self, dep_filename):
         """
@@ -118,13 +106,9 @@ class Optimizer(object):
 
             decision = self.decide_one_layer(cur_layer_name)
 
-            if self.FIRST_RUN:
-                print("Sorting criteria: device end time")
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
-            else:
-                print("Sorting criteria: priorities")
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
-
+            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
+            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].priority, reverse=True)
+            
             print(f"Sorted branches: {cur_layer.next}")
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
@@ -134,7 +118,7 @@ class Optimizer(object):
                     continue
                 self.device_exec(next_layer_name)
 
-    def optimize(self, write_csv=False):
+    def optimize(self):
         print(f"\n\033[30;44m=========Optimizinginging=========\033[0m")
 
         self.layers["input"].end_time = 0
@@ -146,35 +130,5 @@ class Optimizer(object):
         print("{:<15} {:<15}".format("layer name", "device"))
         for layer_name, layer in self.layers.items():
             print("{:<15} {:<15}".format(layer_name, layer.device_id))
-            if write_csv:
-                self.partitions.write(f"{layer_name},{layer.device_id}\n")
+            self.partitions.write(f"{layer_name},{layer.device_id}\n")
 
-    def backtrace(self):
-        self.layers["output"].pr_max = 1000
-        self.layers["output"].pr_min = 0
-        queue = ["output"]
-        while queue:
-            cur_layer_name = queue.pop(0)
-            cur_layer = self.layers[cur_layer_name]
-            cur_layer.completed = False
-            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time)
-            for dep_layer_name in cur_layer.dependencies:
-                if dep_layer_name == "input":
-                    continue
-                i = sorted_dep_layer_names.index(dep_layer_name)
-                pr_max_ = cur_layer.pr_min + (i + 1) / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
-                pr_min_ = cur_layer.pr_min + i / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
-                if (not self.layers[dep_layer_name].pr_max) or self.layers[dep_layer_name].pr_max < pr_max_:
-                    self.layers[dep_layer_name].pr_max = pr_max_
-                    self.layers[dep_layer_name].pr_min = pr_min_
-                if dep_layer_name not in queue:
-                    queue.append(dep_layer_name)
-
-        self.layers["input"].completed = False
-        for name, device in self.devices.items():
-            device.available_time = 0
-
-        print("\n================PRIORITIES================")
-        for name, layer in self.layers.items():
-            print(f"layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finish at {layer.end_time})")
-        print("==========================================\n")
