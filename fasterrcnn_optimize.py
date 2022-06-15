@@ -20,7 +20,10 @@ Optimizer(
         prof,
         prof,
         prof,
+        prof,
+        prof,
     ],
     bandwidth=2000,
     ignore_latency=False,
+    dir="testcases/fasterrcnn"
 )

@@ -15,6 +15,7 @@ class Device(object):
         self.macs = {}
         self.cache = set()  # Set of cached data
         self.available_time = 0
+        self.cur_time = 0
 
         self.assigned_layer = []
 

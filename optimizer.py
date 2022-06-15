@@ -171,7 +171,7 @@ class Optimizer(object):
             cur_layer_name = queue.pop(0)
             cur_layer = self.layers[cur_layer_name]
             cur_layer.completed = False
-            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time)
+            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time + (self.layers[e].size / self.bandwidth if self.layers[e].device_id != cur_layer.device_id else 0))
             print(f"On layer {cur_layer_name}, its dependencies are: {cur_layer.dependencies} (sorted by end time). ")
             for dep_layer_name in cur_layer.dependencies:
                 if dep_layer_name == "input":
