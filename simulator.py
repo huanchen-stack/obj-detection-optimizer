@@ -148,20 +148,20 @@ class Simulator(object):
             print(f"\033[31mLayer {start_layer_name} should not be executed on this device!\033[0m")
             exit(1)
         elif start_layer_name == "output":
-            print(f"Device {device.name} generates output at time {start_time:.4f}")
+            print(f"Device {device.name} generates output at time {start_time:.8f}")
             return
         else:
             if device.cur_time is not None:
                 start_time = max(start_time, device.cur_time)
             print("")
-            print(f"Device {device.name} is running: {start_layer_name}, starting at time {start_time:.4f}")
+            print(f"Device {device.name} is running: {start_layer_name}, starting at time {start_time:.8f}")
             cur_layer = self.layers[start_layer_name]
             num_needed_alien_data = 0
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
                     cur_layer.arrival_time_pool.append(start_time)
                     # cease exec
-                    print(f"Dependencies NOT satisfied. Ceasing at {start_time:.4f} on device {device.name}")
+                    print(f"Dependencies NOT satisfied. Ceasing at {start_time:.8f} on device {device.name}")
                     print("")
                     return
                 if self.layers[dep].device_id != device.name:
@@ -174,20 +174,20 @@ class Simulator(object):
                 cur_layer.arrival_time_pool.append(start_time)
                 device.cur_time = max(cur_layer.arrival_time_pool)
                 print(f"Dependencies now satisfied. Arrival time pool: {cur_layer.arrival_time_pool}")
-                print(f"Resuming at {device.cur_time:.4f} on device {device.name}")
+                print(f"Resuming at {device.cur_time:.8f} on device {device.name}")
             else:
                 device.cur_time = start_time
 
             device.cur_time += device.time[start_layer_name]
             cur_layer.completed = True
-            print(f"Finishing at time {device.cur_time:.4f}")
+            print(f"Finishing at time {device.cur_time:.8f}")
 
             if device_id not in self.time_result_seg.keys():
                 self.time_result_seg[device_id] = 0
             self.time_result_seg[device_id] += device.time[start_layer_name]
 
             print(f"Next layers: {cur_layer.next}")
-            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.priorities[e], reverse=True)
+            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.priorities[e], reverse=False)
             print(f"Sorted next layers: {cur_layer.next}")
 
             for next_layer_name in cur_layer.next:
@@ -203,9 +203,9 @@ class Simulator(object):
                     # transfer_latency = 0
                     transfer_latency = cur_layer.size / self.bandwidth
 
-                    print(f"Device {device.name} sends layer {cur_layer.name} output at time {device.cur_time: .4f} "
+                    print(f"Device {device.name} sends layer {cur_layer.name} output at time {device.cur_time: .8f} "
                           f"to device {self.layers[next_layer_name].device_id}, "
-                          f"latency {transfer_latency:.4f}")
+                          f"latency {transfer_latency:.8f}")
 
                     # change device
                     # for tail recursion

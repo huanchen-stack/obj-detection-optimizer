@@ -123,6 +123,9 @@ class Optimizer(object):
             return
         else:
             cur_layer = self.layers[cur_layer_name]
+            # if cur_layer_name == "add__0":
+            #     for dep in cur_layer.dependencies:
+            #         print(f"{dep}, {self.layers[dep].completed}")
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
                     return
@@ -197,8 +200,9 @@ class Optimizer(object):
 
         print("\n================PRIORITIES================")
         for name, layer in self.layers.items():
-            print(
-                f"Layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finishing at time {layer.end_time})")
+            print(f"Layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finishing at time {layer.end_time})")
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
         print("==========================================\n")
+
+        print("\n================BACKTRACE_CLEANING================")

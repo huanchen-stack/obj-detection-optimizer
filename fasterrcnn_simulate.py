@@ -10,8 +10,8 @@ prof = os.path.join(path, "prof.csv")
 part = os.path.join(path, "part.csv")
 priority = os.path.join(path, "priority.csv")
 
-out = os.path.join(path, "out")
-sys.stdout = open(out, "w")
+# out = os.path.join(path, "out")
+# sys.stdout = open(out, "w")
 
 Simulator(
     dep,

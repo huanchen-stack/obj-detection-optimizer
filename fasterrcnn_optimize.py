@@ -8,8 +8,8 @@ path = os.path.join(path, "testcases/fasterrcnn")
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")
 
-out = os.path.join(path, "out")
-sys.stdout = open(out, "w")
+# out = os.path.join(path, "out")
+# sys.stdout = open(out, "w")
 
 Optimizer(
     dep_filename=dep,
@@ -25,5 +25,6 @@ Optimizer(
     ],
     bandwidth=2000,
     ignore_latency=False,
+    iterations=1,
     dir="testcases/fasterrcnn"
 )
