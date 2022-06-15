@@ -1,386 +1,462 @@
-Device parallel = True
+Device data-compute-parallel = True
 
 [30;44m=========Optimizinginging=========[0m
 Begin analyzing layer input. 
-dependency_arrival_timepool for 0: [0.0]
-dependency_arrival_timepool for 1: [0.0]
-dependency_arrival_timepool for 2: [0.0]
-dependency_arrival_timepool for 3: [0.0]
-dependency_arrival_timepool for 4: [0.0]
-dependency_arrival_timepool for 5: [0.0]
-decision_pool(runtime): [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+The arrival time pool of dependencies on device 0 is [0.0]
+The arrival time pool of dependencies on device 1 is [0.0]
+The arrival time pool of dependencies on device 2 is [0.0]
+The arrival time pool of dependencies on device 3 is [0.0]
+The arrival time pool of dependencies on device 4 is [0.0]
+The arrival time pool of dependencies on device 5 is [0.0]
+==>>decision pool(clock time): [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 Decision for layer input: executed on device 0, end time 0.0
 
+Sorting criteria: device end time
+Sorted branches: ['transform']
 Begin analyzing layer transform. 
-dependency_arrival_timepool for 0: [0.0003419, 0.0003419]
-dependency_arrival_timepool for 1: [0.000944, 0.0003419]
-dependency_arrival_timepool for 2: [0.000944, 0.0003419]
-dependency_arrival_timepool for 3: [0.000944, 0.0003419]
-dependency_arrival_timepool for 4: [0.000944, 0.0003419]
-dependency_arrival_timepool for 5: [0.000944, 0.0003419]
-decision_pool(runtime): [0.0003419, 0.000944, 0.000944, 0.000944, 0.000944, 0.000944]
+The arrival time pool of dependencies on device 0 is [0.0003419, 0.0003419]
+The arrival time pool of dependencies on device 1 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 2 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 3 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 4 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 5 is [0.00064295, 0.0003419]
+==>>decision pool(clock time): [0.0003419, 0.00064295, 0.00064295, 0.00064295, 0.00064295, 0.00064295]
 Decision for layer transform: executed on device 0, end time 0.0003419
 
+Sorting criteria: device end time
+Sorted branches: ['conv1']
 Begin analyzing layer conv1. 
-dependency_arrival_timepool for 0: [0.0004435, 0.0004435]
-dependency_arrival_timepool for 1: [0.008123499999999999, 0.0001016]
-dependency_arrival_timepool for 2: [0.008123499999999999, 0.0001016]
-dependency_arrival_timepool for 3: [0.008123499999999999, 0.0001016]
-dependency_arrival_timepool for 4: [0.008123499999999999, 0.0001016]
-dependency_arrival_timepool for 5: [0.008123499999999999, 0.0001016]
-decision_pool(runtime): [0.0004435, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999, 0.008123499999999999]
+The arrival time pool of dependencies on device 0 is [0.0004435, 0.0004435]
+The arrival time pool of dependencies on device 1 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 2 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 3 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 4 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 5 is [0.0042835, 0.0001016]
+==>>decision pool(clock time): [0.0004435, 0.0042835, 0.0042835, 0.0042835, 0.0042835, 0.0042835]
 Decision for layer conv1: executed on device 0, end time 0.0004435
 
+Sorting criteria: device end time
+Sorted branches: ['bn1']
 Begin analyzing layer bn1. 
-dependency_arrival_timepool for 0: [0.0006271, 0.0006271]
-dependency_arrival_timepool for 1: [0.0415871, 0.0001836]
-dependency_arrival_timepool for 2: [0.0415871, 0.0001836]
-dependency_arrival_timepool for 3: [0.0415871, 0.0001836]
-dependency_arrival_timepool for 4: [0.0415871, 0.0001836]
-dependency_arrival_timepool for 5: [0.0415871, 0.0001836]
-decision_pool(runtime): [0.0006271, 0.0415871, 0.0415871, 0.0415871, 0.0415871, 0.0415871]
+The arrival time pool of dependencies on device 0 is [0.0006271, 0.0006271]
+The arrival time pool of dependencies on device 1 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 2 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 3 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 4 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 5 is [0.0211071, 0.0001836]
+==>>decision pool(clock time): [0.0006271, 0.0211071, 0.0211071, 0.0211071, 0.0211071, 0.0211071]
 Decision for layer bn1: executed on device 0, end time 0.0006271
 
+Sorting criteria: device end time
+Sorted branches: ['relu']
 Begin analyzing layer relu. 
-dependency_arrival_timepool for 0: [0.0006571, 0.0006571]
-dependency_arrival_timepool for 1: [0.041617100000000004, 3e-05]
-dependency_arrival_timepool for 2: [0.041617100000000004, 3e-05]
-dependency_arrival_timepool for 3: [0.041617100000000004, 3e-05]
-dependency_arrival_timepool for 4: [0.041617100000000004, 3e-05]
-dependency_arrival_timepool for 5: [0.041617100000000004, 3e-05]
-decision_pool(runtime): [0.0006571, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004, 0.041617100000000004]
+The arrival time pool of dependencies on device 0 is [0.0006571, 0.0006571]
+The arrival time pool of dependencies on device 1 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 2 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 3 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 4 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 5 is [0.0211371, 3e-05]
+==>>decision pool(clock time): [0.0006571, 0.0211371, 0.0211371, 0.0211371, 0.0211371, 0.0211371]
 Decision for layer relu: executed on device 0, end time 0.0006571
 
+Sorting criteria: device end time
+Sorted branches: ['maxpool']
 Begin analyzing layer maxpool. 
-dependency_arrival_timepool for 0: [0.0006973999999999999, 0.0006973999999999999]
-dependency_arrival_timepool for 1: [0.041657400000000004, 4.03e-05]
-dependency_arrival_timepool for 2: [0.041657400000000004, 4.03e-05]
-dependency_arrival_timepool for 3: [0.041657400000000004, 4.03e-05]
-dependency_arrival_timepool for 4: [0.041657400000000004, 4.03e-05]
-dependency_arrival_timepool for 5: [0.041657400000000004, 4.03e-05]
-decision_pool(runtime): [0.0006973999999999999, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004, 0.041657400000000004]
+The arrival time pool of dependencies on device 0 is [0.0006973999999999999, 0.0006973999999999999]
+The arrival time pool of dependencies on device 1 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 2 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 3 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 4 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 5 is [0.021177400000000002, 4.03e-05]
+==>>decision pool(clock time): [0.0006973999999999999, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002]
 Decision for layer maxpool: executed on device 0, end time 0.0006973999999999999
 
+Sorting criteria: device end time
+Sorted branches: ['layer1']
 Begin analyzing layer layer1. 
-dependency_arrival_timepool for 0: [0.0033154, 0.0033154]
-dependency_arrival_timepool for 1: [0.0135554, 0.002618]
-dependency_arrival_timepool for 2: [0.0135554, 0.002618]
-dependency_arrival_timepool for 3: [0.0135554, 0.002618]
-dependency_arrival_timepool for 4: [0.0135554, 0.002618]
-dependency_arrival_timepool for 5: [0.0135554, 0.002618]
-decision_pool(runtime): [0.0033154, 0.0135554, 0.0135554, 0.0135554, 0.0135554, 0.0135554]
+The arrival time pool of dependencies on device 0 is [0.0033154, 0.0033154]
+The arrival time pool of dependencies on device 1 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 2 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 3 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 4 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 5 is [0.008435400000000001, 0.002618]
+==>>decision pool(clock time): [0.0033154, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001]
 Decision for layer layer1: executed on device 0, end time 0.0033154
 
+Sorting criteria: device end time
+Sorted branches: ['layer2', 'inner_0']
 Begin analyzing layer layer2. 
-dependency_arrival_timepool for 0: [0.0071824, 0.0071824]
-dependency_arrival_timepool for 1: [0.04814240000000001, 0.003867]
-dependency_arrival_timepool for 2: [0.04814240000000001, 0.003867]
-dependency_arrival_timepool for 3: [0.04814240000000001, 0.003867]
-dependency_arrival_timepool for 4: [0.04814240000000001, 0.003867]
-dependency_arrival_timepool for 5: [0.04814240000000001, 0.003867]
-decision_pool(runtime): [0.0071824, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001, 0.04814240000000001]
+The arrival time pool of dependencies on device 0 is [0.0071824, 0.0071824]
+The arrival time pool of dependencies on device 1 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 2 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 3 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 4 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 5 is [0.0276624, 0.003867]
+==>>decision pool(clock time): [0.0071824, 0.0276624, 0.0276624, 0.0276624, 0.0276624, 0.0276624]
 Decision for layer layer2: executed on device 0, end time 0.0071824
 
+Sorting criteria: device end time
+Sorted branches: ['layer3', 'inner_1']
 Begin analyzing layer layer3. 
-dependency_arrival_timepool for 0: [0.0127034, 0.0127034]
-dependency_arrival_timepool for 1: [0.0331834, 0.005521]
-dependency_arrival_timepool for 2: [0.0331834, 0.005521]
-dependency_arrival_timepool for 3: [0.0331834, 0.005521]
-dependency_arrival_timepool for 4: [0.0331834, 0.005521]
-dependency_arrival_timepool for 5: [0.0331834, 0.005521]
-decision_pool(runtime): [0.0127034, 0.0331834, 0.0331834, 0.0331834, 0.0331834, 0.0331834]
+The arrival time pool of dependencies on device 0 is [0.0127034, 0.0127034]
+The arrival time pool of dependencies on device 1 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 2 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 3 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 4 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 5 is [0.022943400000000003, 0.005521]
+==>>decision pool(clock time): [0.0127034, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003]
 Decision for layer layer3: executed on device 0, end time 0.0127034
 
+Sorting criteria: device end time
+Sorted branches: ['layer4', 'inner_2']
 Begin analyzing layer layer4. 
-dependency_arrival_timepool for 0: [0.0155904, 0.0155904]
-dependency_arrival_timepool for 1: [0.025830400000000003, 0.002887]
-dependency_arrival_timepool for 2: [0.025830400000000003, 0.002887]
-dependency_arrival_timepool for 3: [0.025830400000000003, 0.002887]
-dependency_arrival_timepool for 4: [0.025830400000000003, 0.002887]
-dependency_arrival_timepool for 5: [0.025830400000000003, 0.002887]
-decision_pool(runtime): [0.0155904, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003, 0.025830400000000003]
+The arrival time pool of dependencies on device 0 is [0.0155904, 0.0155904]
+The arrival time pool of dependencies on device 1 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 2 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 3 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 4 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 5 is [0.0207104, 0.002887]
+==>>decision pool(clock time): [0.0155904, 0.0207104, 0.0207104, 0.0207104, 0.0207104, 0.0207104]
 Decision for layer layer4: executed on device 0, end time 0.0155904
 
+Sorting criteria: device end time
+Sorted branches: ['inner_3']
 Begin analyzing layer inner_3. 
-dependency_arrival_timepool for 0: [0.0157001, 0.0157001]
-dependency_arrival_timepool for 1: [0.0208201, 0.0001097]
-dependency_arrival_timepool for 2: [0.0208201, 0.0001097]
-dependency_arrival_timepool for 3: [0.0208201, 0.0001097]
-dependency_arrival_timepool for 4: [0.0208201, 0.0001097]
-dependency_arrival_timepool for 5: [0.0208201, 0.0001097]
-decision_pool(runtime): [0.0157001, 0.0208201, 0.0208201, 0.0208201, 0.0208201, 0.0208201]
+The arrival time pool of dependencies on device 0 is [0.0157001, 0.0157001]
+The arrival time pool of dependencies on device 1 is [0.0182601, 0.0001097]
+The arrival time pool of dependencies on device 2 is [0.0182601, 0.0001097]
+The arrival time pool of dependencies on device 3 is [0.0182601, 0.0001097]
+The arrival time pool of dependencies on device 4 is [0.0182601, 0.0001097]
+The arrival time pool of dependencies on device 5 is [0.0182601, 0.0001097]
+==>>decision pool(clock time): [0.0157001, 0.0182601, 0.0182601, 0.0182601, 0.0182601, 0.0182601]
 Decision for layer inner_3: executed on device 0, end time 0.0157001
 
+Sorting criteria: device end time
+Sorted branches: ['layer_3', 'interpolate__2']
 Begin analyzing layer layer_3. 
-dependency_arrival_timepool for 0: [0.015813800000000003, 0.015813800000000003]
-dependency_arrival_timepool for 1: [0.016453800000000005, 0.0001137]
-dependency_arrival_timepool for 2: [0.016453800000000005, 0.0001137]
-dependency_arrival_timepool for 3: [0.016453800000000005, 0.0001137]
-dependency_arrival_timepool for 4: [0.016453800000000005, 0.0001137]
-dependency_arrival_timepool for 5: [0.016453800000000005, 0.0001137]
-decision_pool(runtime): [0.015813800000000003, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005, 0.016453800000000005]
+The arrival time pool of dependencies on device 0 is [0.015813800000000003, 0.015813800000000003]
+The arrival time pool of dependencies on device 1 is [0.016133800000000004, 0.0001137]
+The arrival time pool of dependencies on device 2 is [0.016133800000000004, 0.0001137]
+The arrival time pool of dependencies on device 3 is [0.016133800000000004, 0.0001137]
+The arrival time pool of dependencies on device 4 is [0.016133800000000004, 0.0001137]
+The arrival time pool of dependencies on device 5 is [0.016133800000000004, 0.0001137]
+==>>decision pool(clock time): [0.015813800000000003, 0.016133800000000004, 0.016133800000000004, 0.016133800000000004, 0.016133800000000004, 0.016133800000000004]
 Decision for layer layer_3: executed on device 0, end time 0.015813800000000003
 
+Sorting criteria: device end time
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f3', 'extra']
 Begin analyzing layer rpn_parallel_f3. 
-dependency_arrival_timepool for 0: [0.018196800000000003, 0.018196800000000003]
-dependency_arrival_timepool for 1: [0.018836800000000004, 0.002383]
-dependency_arrival_timepool for 2: [0.018836800000000004, 0.002383]
-dependency_arrival_timepool for 3: [0.018836800000000004, 0.002383]
-dependency_arrival_timepool for 4: [0.018836800000000004, 0.002383]
-dependency_arrival_timepool for 5: [0.018836800000000004, 0.002383]
-decision_pool(runtime): [0.018196800000000003, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004, 0.018836800000000004]
+The arrival time pool of dependencies on device 0 is [0.018196800000000003, 0.018196800000000003]
+The arrival time pool of dependencies on device 1 is [0.018516800000000003, 0.002383]
+The arrival time pool of dependencies on device 2 is [0.018516800000000003, 0.002383]
+The arrival time pool of dependencies on device 3 is [0.018516800000000003, 0.002383]
+The arrival time pool of dependencies on device 4 is [0.018516800000000003, 0.002383]
+The arrival time pool of dependencies on device 5 is [0.018516800000000003, 0.002383]
+==>>decision pool(clock time): [0.018196800000000003, 0.018516800000000003, 0.018516800000000003, 0.018516800000000003, 0.018516800000000003, 0.018516800000000003]
 Decision for layer rpn_parallel_f3: executed on device 0, end time 0.018196800000000003
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_merger']
 Begin analyzing layer extra. 
-dependency_arrival_timepool for 0: [0.015856500000000003, 0.018239500000000002]
-dependency_arrival_timepool for 1: [0.016496500000000004, 4.27e-05]
-dependency_arrival_timepool for 2: [0.016496500000000004, 4.27e-05]
-dependency_arrival_timepool for 3: [0.016496500000000004, 4.27e-05]
-dependency_arrival_timepool for 4: [0.016496500000000004, 4.27e-05]
-dependency_arrival_timepool for 5: [0.016496500000000004, 4.27e-05]
-decision_pool(runtime): [0.018239500000000002, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004, 0.016496500000000004]
-Decision for layer extra: executed on device 1, end time 0.016496500000000004
+The arrival time pool of dependencies on device 0 is [0.015856500000000003, 0.018239500000000002]
+The arrival time pool of dependencies on device 1 is [0.016176500000000003, 4.27e-05]
+The arrival time pool of dependencies on device 2 is [0.016176500000000003, 4.27e-05]
+The arrival time pool of dependencies on device 3 is [0.016176500000000003, 4.27e-05]
+The arrival time pool of dependencies on device 4 is [0.016176500000000003, 4.27e-05]
+The arrival time pool of dependencies on device 5 is [0.016176500000000003, 4.27e-05]
+==>>decision pool(clock time): [0.018239500000000002, 0.016176500000000003, 0.016176500000000003, 0.016176500000000003, 0.016176500000000003, 0.016176500000000003]
+Decision for layer extra: executed on device 1, end time 0.016176500000000003
 
+Sorting criteria: device end time
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f4']
 Begin analyzing layer rpn_parallel_f4. 
-dependency_arrival_timepool for 0: [0.019028600000000003, 0.020555800000000003]
-dependency_arrival_timepool for 1: [0.018855500000000004, 0.018855500000000004]
-dependency_arrival_timepool for 2: [0.019028600000000003, 0.002359]
-dependency_arrival_timepool for 3: [0.019028600000000003, 0.002359]
-dependency_arrival_timepool for 4: [0.019028600000000003, 0.002359]
-dependency_arrival_timepool for 5: [0.019028600000000003, 0.002359]
-decision_pool(runtime): [0.020555800000000003, 0.018855500000000004, 0.019028600000000003, 0.019028600000000003, 0.019028600000000003, 0.019028600000000003]
-Decision for layer rpn_parallel_f4: executed on device 1, end time 0.018855500000000004
+The arrival time pool of dependencies on device 0 is [0.018622050000000005, 0.020555800000000003]
+The arrival time pool of dependencies on device 1 is [0.018535500000000003, 0.018535500000000003]
+The arrival time pool of dependencies on device 2 is [0.018622050000000005, 0.002359]
+The arrival time pool of dependencies on device 3 is [0.018622050000000005, 0.002359]
+The arrival time pool of dependencies on device 4 is [0.018622050000000005, 0.002359]
+The arrival time pool of dependencies on device 5 is [0.018622050000000005, 0.002359]
+==>>decision pool(clock time): [0.020555800000000003, 0.018535500000000003, 0.018622050000000005, 0.018622050000000005, 0.018622050000000005, 0.018622050000000005]
+Decision for layer rpn_parallel_f4: executed on device 1, end time 0.018535500000000003
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_merger']
 Begin analyzing layer interpolate__2. 
-dependency_arrival_timepool for 0: [0.015740200000000003, 0.018236900000000004]
-dependency_arrival_timepool for 1: [0.016380200000000004, 0.018895600000000005]
-dependency_arrival_timepool for 2: [0.016380200000000004, 4.01e-05]
-dependency_arrival_timepool for 3: [0.016380200000000004, 4.01e-05]
-dependency_arrival_timepool for 4: [0.016380200000000004, 4.01e-05]
-dependency_arrival_timepool for 5: [0.016380200000000004, 4.01e-05]
-decision_pool(runtime): [0.018236900000000004, 0.018895600000000005, 0.016380200000000004, 0.016380200000000004, 0.016380200000000004, 0.016380200000000004]
-Decision for layer interpolate__2: executed on device 2, end time 0.016380200000000004
+The arrival time pool of dependencies on device 0 is [0.015740200000000003, 0.018236900000000004]
+The arrival time pool of dependencies on device 1 is [0.016060200000000004, 0.018575600000000005]
+The arrival time pool of dependencies on device 2 is [0.016060200000000004, 4.01e-05]
+The arrival time pool of dependencies on device 3 is [0.016060200000000004, 4.01e-05]
+The arrival time pool of dependencies on device 4 is [0.016060200000000004, 4.01e-05]
+The arrival time pool of dependencies on device 5 is [0.016060200000000004, 4.01e-05]
+==>>decision pool(clock time): [0.018236900000000004, 0.018575600000000005, 0.016060200000000004, 0.016060200000000004, 0.016060200000000004, 0.016060200000000004]
+Decision for layer interpolate__2: executed on device 2, end time 0.016060200000000004
 
+Sorting criteria: device end time
+Sorted branches: ['add__2']
 Begin analyzing layer inner_2. 
-dependency_arrival_timepool for 0: [0.012805200000000001, 0.0182986]
-dependency_arrival_timepool for 1: [0.023045200000000002, 0.018957300000000003]
-dependency_arrival_timepool for 2: [0.023045200000000002, 0.016482000000000004]
-dependency_arrival_timepool for 3: [0.023045200000000002, 0.0001018]
-dependency_arrival_timepool for 4: [0.023045200000000002, 0.0001018]
-dependency_arrival_timepool for 5: [0.023045200000000002, 0.0001018]
-decision_pool(runtime): [0.0182986, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002, 0.023045200000000002]
-Decision for layer inner_2: executed on device 0, end time 0.0182986
+The arrival time pool of dependencies on device 0 is [0.012805200000000001, 0.0182986]
+The arrival time pool of dependencies on device 1 is [0.0179252, 0.018637300000000002]
+The arrival time pool of dependencies on device 2 is [0.0179252, 0.016162000000000003]
+The arrival time pool of dependencies on device 3 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 4 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 5 is [0.0179252, 0.0001018]
+==>>decision pool(clock time): [0.0182986, 0.018637300000000002, 0.0179252, 0.0179252, 0.0179252, 0.0179252]
+Decision for layer inner_2: executed on device 2, end time 0.0179252
 
+Sorting criteria: device end time
+Sorted branches: ['add__2']
 Begin analyzing layer add__2. 
-dependency_arrival_timepool for 0: [0.0182986, 0.018940200000000004, 0.0182986]
-dependency_arrival_timepool for 1: [0.0208586, 0.018940200000000004, 0.018855500000000004]
-dependency_arrival_timepool for 2: [0.0208586, 0.016380200000000004, 0.016380200000000004]
-dependency_arrival_timepool for 3: [0.0208586, 0.018940200000000004, 0.0]
-dependency_arrival_timepool for 4: [0.0208586, 0.018940200000000004, 0.0]
-dependency_arrival_timepool for 5: [0.0208586, 0.018940200000000004, 0.0]
-decision_pool(runtime): [0.018940200000000004, 0.0208586, 0.0208586, 0.0208586, 0.0208586, 0.0208586]
-Decision for layer add__2: executed on device 0, end time 0.018940200000000004
+The arrival time pool of dependencies on device 0 is [0.0192052, 0.017340200000000004, 0.018196800000000003]
+The arrival time pool of dependencies on device 1 is [0.0192052, 0.017340200000000004, 0.018535500000000003]
+The arrival time pool of dependencies on device 2 is [0.0179252, 0.016060200000000004, 0.0179252]
+The arrival time pool of dependencies on device 3 is [0.0192052, 0.017340200000000004, 0.0]
+The arrival time pool of dependencies on device 4 is [0.0192052, 0.017340200000000004, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0192052, 0.017340200000000004, 0.0]
+==>>decision pool(clock time): [0.0192052, 0.0192052, 0.0179252, 0.0192052, 0.0192052, 0.0192052]
+Decision for layer add__2: executed on device 2, end time 0.0179252
 
+Sorting criteria: device end time
+Sorted branches: ['layer_2', 'interpolate__1']
 Begin analyzing layer layer_2. 
-dependency_arrival_timepool for 0: [0.019046800000000003, 0.019046800000000003]
-dependency_arrival_timepool for 1: [0.021606800000000002, 0.018962100000000003]
-dependency_arrival_timepool for 2: [0.021606800000000002, 0.016486800000000003]
-dependency_arrival_timepool for 3: [0.021606800000000002, 0.0001066]
-dependency_arrival_timepool for 4: [0.021606800000000002, 0.0001066]
-dependency_arrival_timepool for 5: [0.021606800000000002, 0.0001066]
-decision_pool(runtime): [0.019046800000000003, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002, 0.021606800000000002]
-Decision for layer layer_2: executed on device 0, end time 0.019046800000000003
+The arrival time pool of dependencies on device 0 is [0.019311799999999997, 0.0183034]
+The arrival time pool of dependencies on device 1 is [0.019311799999999997, 0.0186421]
+The arrival time pool of dependencies on device 2 is [0.018031799999999997, 0.018031799999999997]
+The arrival time pool of dependencies on device 3 is [0.019311799999999997, 0.0001066]
+The arrival time pool of dependencies on device 4 is [0.019311799999999997, 0.0001066]
+The arrival time pool of dependencies on device 5 is [0.019311799999999997, 0.0001066]
+==>>decision pool(clock time): [0.019311799999999997, 0.019311799999999997, 0.018031799999999997, 0.019311799999999997, 0.019311799999999997, 0.019311799999999997]
+Decision for layer layer_2: executed on device 2, end time 0.018031799999999997
 
+Sorting criteria: device end time
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f2']
 Begin analyzing layer rpn_parallel_f2. 
-dependency_arrival_timepool for 0: [0.021458800000000004, 0.021458800000000004]
-dependency_arrival_timepool for 1: [0.024018800000000003, 0.021267500000000005]
-dependency_arrival_timepool for 2: [0.024018800000000003, 0.018792200000000005]
-dependency_arrival_timepool for 3: [0.024018800000000003, 0.002412]
-dependency_arrival_timepool for 4: [0.024018800000000003, 0.002412]
-dependency_arrival_timepool for 5: [0.024018800000000003, 0.002412]
-decision_pool(runtime): [0.021458800000000004, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003, 0.024018800000000003]
-Decision for layer rpn_parallel_f2: executed on device 0, end time 0.021458800000000004
+The arrival time pool of dependencies on device 0 is [0.021723799999999998, 0.020608800000000004]
+The arrival time pool of dependencies on device 1 is [0.021723799999999998, 0.020947500000000004]
+The arrival time pool of dependencies on device 2 is [0.020443799999999998, 0.020443799999999998]
+The arrival time pool of dependencies on device 3 is [0.021723799999999998, 0.002412]
+The arrival time pool of dependencies on device 4 is [0.021723799999999998, 0.002412]
+The arrival time pool of dependencies on device 5 is [0.021723799999999998, 0.002412]
+==>>decision pool(clock time): [0.021723799999999998, 0.021723799999999998, 0.020443799999999998, 0.021723799999999998, 0.021723799999999998, 0.021723799999999998]
+Decision for layer rpn_parallel_f2: executed on device 2, end time 0.020443799999999998
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_merger']
 Begin analyzing layer interpolate__1. 
-dependency_arrival_timepool for 0: [0.018976900000000005, 0.021495500000000004]
-dependency_arrival_timepool for 1: [0.021536900000000005, 0.018892200000000005]
-dependency_arrival_timepool for 2: [0.021536900000000005, 0.016416900000000005]
-dependency_arrival_timepool for 3: [0.021536900000000005, 3.67e-05]
-dependency_arrival_timepool for 4: [0.021536900000000005, 3.67e-05]
-dependency_arrival_timepool for 5: [0.021536900000000005, 3.67e-05]
-decision_pool(runtime): [0.021495500000000004, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005, 0.021536900000000005]
-Decision for layer interpolate__1: executed on device 0, end time 0.021495500000000004
+The arrival time pool of dependencies on device 0 is [0.0192419, 0.018233500000000003]
+The arrival time pool of dependencies on device 1 is [0.0192419, 0.018572200000000004]
+The arrival time pool of dependencies on device 2 is [0.0179619, 0.0204805]
+The arrival time pool of dependencies on device 3 is [0.0192419, 3.67e-05]
+The arrival time pool of dependencies on device 4 is [0.0192419, 3.67e-05]
+The arrival time pool of dependencies on device 5 is [0.0192419, 3.67e-05]
+==>>decision pool(clock time): [0.0192419, 0.0192419, 0.0204805, 0.0192419, 0.0192419, 0.0192419]
+Decision for layer interpolate__1: executed on device 0, end time 0.0192419
 
+Sorting criteria: device end time
+Sorted branches: ['add__1']
 Begin analyzing layer inner_1. 
-dependency_arrival_timepool for 0: [0.0077696, 0.022082700000000004]
-dependency_arrival_timepool for 1: [0.028249600000000003, 0.019442700000000004]
-dependency_arrival_timepool for 2: [0.028249600000000003, 0.016967400000000004]
-dependency_arrival_timepool for 3: [0.028249600000000003, 0.0005872]
-dependency_arrival_timepool for 4: [0.028249600000000003, 0.0005872]
-dependency_arrival_timepool for 5: [0.028249600000000003, 0.0005872]
-decision_pool(runtime): [0.022082700000000004, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003, 0.028249600000000003]
-Decision for layer inner_1: executed on device 0, end time 0.022082700000000004
+The arrival time pool of dependencies on device 0 is [0.0077696, 0.0198291]
+The arrival time pool of dependencies on device 1 is [0.0180096, 0.019122700000000003]
+The arrival time pool of dependencies on device 2 is [0.0180096, 0.021030999999999998]
+The arrival time pool of dependencies on device 3 is [0.0180096, 0.0005872]
+The arrival time pool of dependencies on device 4 is [0.0180096, 0.0005872]
+The arrival time pool of dependencies on device 5 is [0.0180096, 0.0005872]
+==>>decision pool(clock time): [0.0198291, 0.019122700000000003, 0.021030999999999998, 0.0180096, 0.0180096, 0.0180096]
+Decision for layer inner_1: executed on device 3, end time 0.0180096
 
+Sorting criteria: device end time
+Sorted branches: ['add__1']
 Begin analyzing layer add__1. 
-dependency_arrival_timepool for 0: [0.022082700000000004, 0.021495500000000004, 0.022082700000000004]
-dependency_arrival_timepool for 1: [0.0323227, 0.03173550000000001, 0.018855500000000004]
-dependency_arrival_timepool for 2: [0.0323227, 0.03173550000000001, 0.016380200000000004]
-dependency_arrival_timepool for 3: [0.0323227, 0.03173550000000001, 0.0]
-dependency_arrival_timepool for 4: [0.0323227, 0.03173550000000001, 0.0]
-dependency_arrival_timepool for 5: [0.0323227, 0.03173550000000001, 0.0]
-decision_pool(runtime): [0.022082700000000004, 0.0323227, 0.0323227, 0.0323227, 0.0323227, 0.0323227]
-Decision for layer add__1: executed on device 0, end time 0.022082700000000004
+The arrival time pool of dependencies on device 0 is [0.0231296, 0.0192419, 0.0192419]
+The arrival time pool of dependencies on device 1 is [0.0231296, 0.0243619, 0.018535500000000003]
+The arrival time pool of dependencies on device 2 is [0.0231296, 0.0243619, 0.020443799999999998]
+The arrival time pool of dependencies on device 3 is [0.0180096, 0.0243619, 0.0180096]
+The arrival time pool of dependencies on device 4 is [0.0231296, 0.0243619, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0231296, 0.0243619, 0.0]
+==>>decision pool(clock time): [0.0231296, 0.0243619, 0.0243619, 0.0243619, 0.0243619, 0.0243619]
+Decision for layer add__1: executed on device 0, end time 0.0231296
 
+Sorting criteria: device end time
+Sorted branches: ['layer_1', 'interpolate__0']
 Begin analyzing layer layer_1. 
-dependency_arrival_timepool for 0: [0.022195900000000005, 0.022195900000000005]
-dependency_arrival_timepool for 1: [0.032435900000000004, 0.018968700000000005]
-dependency_arrival_timepool for 2: [0.032435900000000004, 0.016493400000000005]
-dependency_arrival_timepool for 3: [0.032435900000000004, 0.0001132]
-dependency_arrival_timepool for 4: [0.032435900000000004, 0.0001132]
-dependency_arrival_timepool for 5: [0.032435900000000004, 0.0001132]
-decision_pool(runtime): [0.022195900000000005, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004, 0.032435900000000004]
-Decision for layer layer_1: executed on device 0, end time 0.022195900000000005
+The arrival time pool of dependencies on device 0 is [0.0232428, 0.0232428]
+The arrival time pool of dependencies on device 1 is [0.0283628, 0.018648700000000004]
+The arrival time pool of dependencies on device 2 is [0.0283628, 0.020557]
+The arrival time pool of dependencies on device 3 is [0.0283628, 0.0181228]
+The arrival time pool of dependencies on device 4 is [0.0283628, 0.0001132]
+The arrival time pool of dependencies on device 5 is [0.0283628, 0.0001132]
+==>>decision pool(clock time): [0.0232428, 0.0283628, 0.0283628, 0.0283628, 0.0283628, 0.0283628]
+Decision for layer layer_1: executed on device 0, end time 0.0232428
 
+Sorting criteria: device end time
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f1']
 Begin analyzing layer rpn_parallel_f1. 
-dependency_arrival_timepool for 0: [0.025174900000000004, 0.025174900000000004]
-dependency_arrival_timepool for 1: [0.035414900000000006, 0.021834500000000003]
-dependency_arrival_timepool for 2: [0.035414900000000006, 0.019359200000000003]
-dependency_arrival_timepool for 3: [0.035414900000000006, 0.002979]
-dependency_arrival_timepool for 4: [0.035414900000000006, 0.002979]
-dependency_arrival_timepool for 5: [0.035414900000000006, 0.002979]
-decision_pool(runtime): [0.025174900000000004, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006, 0.035414900000000006]
-Decision for layer rpn_parallel_f1: executed on device 0, end time 0.025174900000000004
+The arrival time pool of dependencies on device 0 is [0.0262218, 0.0262218]
+The arrival time pool of dependencies on device 1 is [0.0313418, 0.021514500000000002]
+The arrival time pool of dependencies on device 2 is [0.0313418, 0.023422799999999997]
+The arrival time pool of dependencies on device 3 is [0.0313418, 0.0209886]
+The arrival time pool of dependencies on device 4 is [0.0313418, 0.002979]
+The arrival time pool of dependencies on device 5 is [0.0313418, 0.002979]
+==>>decision pool(clock time): [0.0262218, 0.0313418, 0.0313418, 0.0313418, 0.0313418, 0.0313418]
+Decision for layer rpn_parallel_f1: executed on device 0, end time 0.0262218
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_merger']
 Begin analyzing layer interpolate__0. 
-dependency_arrival_timepool for 0: [0.022119900000000005, 0.025212100000000005]
-dependency_arrival_timepool for 1: [0.032359900000000004, 0.018892700000000005]
-dependency_arrival_timepool for 2: [0.032359900000000004, 0.016417400000000006]
-dependency_arrival_timepool for 3: [0.032359900000000004, 3.72e-05]
-dependency_arrival_timepool for 4: [0.032359900000000004, 3.72e-05]
-dependency_arrival_timepool for 5: [0.032359900000000004, 3.72e-05]
-decision_pool(runtime): [0.025212100000000005, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004, 0.032359900000000004]
-Decision for layer interpolate__0: executed on device 0, end time 0.025212100000000005
+The arrival time pool of dependencies on device 0 is [0.0231668, 0.026259]
+The arrival time pool of dependencies on device 1 is [0.0282868, 0.018572700000000004]
+The arrival time pool of dependencies on device 2 is [0.0282868, 0.020481]
+The arrival time pool of dependencies on device 3 is [0.0282868, 0.0180468]
+The arrival time pool of dependencies on device 4 is [0.0282868, 3.72e-05]
+The arrival time pool of dependencies on device 5 is [0.0282868, 3.72e-05]
+==>>decision pool(clock time): [0.026259, 0.0282868, 0.0282868, 0.0282868, 0.0282868, 0.0282868]
+Decision for layer interpolate__0: executed on device 0, end time 0.026259
 
+Sorting criteria: device end time
+Sorted branches: ['add__0']
 Begin analyzing layer inner_0. 
-dependency_arrival_timepool for 0: [0.0034215, 0.025318200000000006]
-dependency_arrival_timepool for 1: [0.044381500000000004, 0.018961600000000006]
-dependency_arrival_timepool for 2: [0.044381500000000004, 0.016486300000000006]
-dependency_arrival_timepool for 3: [0.044381500000000004, 0.0001061]
-dependency_arrival_timepool for 4: [0.044381500000000004, 0.0001061]
-dependency_arrival_timepool for 5: [0.044381500000000004, 0.0001061]
-decision_pool(runtime): [0.025318200000000006, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004, 0.044381500000000004]
-Decision for layer inner_0: executed on device 0, end time 0.025318200000000006
+The arrival time pool of dependencies on device 0 is [0.0034215, 0.026365100000000002]
+The arrival time pool of dependencies on device 1 is [0.023901500000000003, 0.018641600000000005]
+The arrival time pool of dependencies on device 2 is [0.023901500000000003, 0.0205499]
+The arrival time pool of dependencies on device 3 is [0.023901500000000003, 0.018115700000000002]
+The arrival time pool of dependencies on device 4 is [0.023901500000000003, 0.0001061]
+The arrival time pool of dependencies on device 5 is [0.023901500000000003, 0.0001061]
+==>>decision pool(clock time): [0.026365100000000002, 0.023901500000000003, 0.023901500000000003, 0.023901500000000003, 0.023901500000000003, 0.023901500000000003]
+Decision for layer inner_0: executed on device 1, end time 0.023901500000000003
 
+Sorting criteria: device end time
+Sorted branches: ['add__0']
 Begin analyzing layer add__0. 
-dependency_arrival_timepool for 0: [0.025318200000000006, 0.025212100000000005, 0.025318200000000006]
-dependency_arrival_timepool for 1: [0.06627820000000001, 0.06617210000000001, 0.018855500000000004]
-dependency_arrival_timepool for 2: [0.06627820000000001, 0.06617210000000001, 0.016380200000000004]
-dependency_arrival_timepool for 3: [0.06627820000000001, 0.06617210000000001, 0.0]
-dependency_arrival_timepool for 4: [0.06627820000000001, 0.06617210000000001, 0.0]
-dependency_arrival_timepool for 5: [0.06627820000000001, 0.06617210000000001, 0.0]
-decision_pool(runtime): [0.025318200000000006, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001, 0.06627820000000001]
-Decision for layer add__0: executed on device 0, end time 0.025318200000000006
+The arrival time pool of dependencies on device 0 is [0.044381500000000004, 0.026259, 0.026259]
+The arrival time pool of dependencies on device 1 is [0.023901500000000003, 0.046739, 0.023901500000000003]
+The arrival time pool of dependencies on device 2 is [0.044381500000000004, 0.046739, 0.020443799999999998]
+The arrival time pool of dependencies on device 3 is [0.044381500000000004, 0.046739, 0.0180096]
+The arrival time pool of dependencies on device 4 is [0.044381500000000004, 0.046739, 0.0]
+The arrival time pool of dependencies on device 5 is [0.044381500000000004, 0.046739, 0.0]
+==>>decision pool(clock time): [0.044381500000000004, 0.046739, 0.046739, 0.046739, 0.046739, 0.046739]
+Decision for layer add__0: executed on device 0, end time 0.044381500000000004
 
+Sorting criteria: device end time
+Sorted branches: ['layer_0']
 Begin analyzing layer layer_0. 
-dependency_arrival_timepool for 0: [0.025430700000000007, 0.025430700000000007]
-dependency_arrival_timepool for 1: [0.06639070000000001, 0.018968000000000006]
-dependency_arrival_timepool for 2: [0.06639070000000001, 0.016492700000000006]
-dependency_arrival_timepool for 3: [0.06639070000000001, 0.0001125]
-dependency_arrival_timepool for 4: [0.06639070000000001, 0.0001125]
-dependency_arrival_timepool for 5: [0.06639070000000001, 0.0001125]
-decision_pool(runtime): [0.025430700000000007, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001, 0.06639070000000001]
-Decision for layer layer_0: executed on device 0, end time 0.025430700000000007
+The arrival time pool of dependencies on device 0 is [0.044494000000000006, 0.044494000000000006]
+The arrival time pool of dependencies on device 1 is [0.064974, 0.024014000000000004]
+The arrival time pool of dependencies on device 2 is [0.064974, 0.0205563]
+The arrival time pool of dependencies on device 3 is [0.064974, 0.018122100000000002]
+The arrival time pool of dependencies on device 4 is [0.064974, 0.0001125]
+The arrival time pool of dependencies on device 5 is [0.064974, 0.0001125]
+==>>decision pool(clock time): [0.044494000000000006, 0.064974, 0.064974, 0.064974, 0.064974, 0.064974]
+Decision for layer layer_0: executed on device 0, end time 0.044494000000000006
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_parallel_f0', 'box_roi_pool']
 Begin analyzing layer rpn_parallel_f0. 
-dependency_arrival_timepool for 0: [0.031367700000000005, 0.031367700000000005]
-dependency_arrival_timepool for 1: [0.07232770000000001, 0.024792500000000002]
-dependency_arrival_timepool for 2: [0.07232770000000001, 0.022317200000000002]
-dependency_arrival_timepool for 3: [0.07232770000000001, 0.005937]
-dependency_arrival_timepool for 4: [0.07232770000000001, 0.005937]
-dependency_arrival_timepool for 5: [0.07232770000000001, 0.005937]
-decision_pool(runtime): [0.031367700000000005, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001, 0.07232770000000001]
-Decision for layer rpn_parallel_f0: executed on device 0, end time 0.031367700000000005
+The arrival time pool of dependencies on device 0 is [0.050431000000000004, 0.050431000000000004]
+The arrival time pool of dependencies on device 1 is [0.070911, 0.029838500000000004]
+The arrival time pool of dependencies on device 2 is [0.070911, 0.026380799999999996]
+The arrival time pool of dependencies on device 3 is [0.070911, 0.0239466]
+The arrival time pool of dependencies on device 4 is [0.070911, 0.005937]
+The arrival time pool of dependencies on device 5 is [0.070911, 0.005937]
+==>>decision pool(clock time): [0.050431000000000004, 0.070911, 0.070911, 0.070911, 0.070911, 0.070911]
+Decision for layer rpn_parallel_f0: executed on device 0, end time 0.050431000000000004
 
+Sorting criteria: device end time
+Sorted branches: ['rpn_merger']
 Begin analyzing layer rpn_merger. 
-dependency_arrival_timepool for 0: [0.050557700000000004, 0.0443649, 0.0406488, 0.0373868, 0.0380597, 0.050557700000000004]
-dependency_arrival_timepool for 1: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380455, 0.0380455]
-dependency_arrival_timepool for 2: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.0355702]
-dependency_arrival_timepool for 3: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
-dependency_arrival_timepool for 4: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
-dependency_arrival_timepool for 5: [0.050585700000000004, 0.0443929, 0.0406768, 0.0374148, 0.0380597, 0.01919]
-decision_pool(runtime): [0.050557700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004, 0.050585700000000004]
-Decision for layer rpn_merger: executed on device 0, end time 0.050557700000000004
+The arrival time pool of dependencies on device 0 is [0.069621, 0.0454118, 0.0396478, 0.0373868, 0.037732600000000005, 0.069621]
+The arrival time pool of dependencies on device 1 is [0.069635, 0.0454258, 0.0396478, 0.0374008, 0.0377255, 0.043091500000000005]
+The arrival time pool of dependencies on device 2 is [0.069635, 0.0454258, 0.0396338, 0.0374008, 0.037732600000000005, 0.0396338]
+The arrival time pool of dependencies on device 3 is [0.069635, 0.0454258, 0.0396478, 0.0374008, 0.037732600000000005, 0.0371996]
+The arrival time pool of dependencies on device 4 is [0.069635, 0.0454258, 0.0396478, 0.0374008, 0.037732600000000005, 0.01919]
+The arrival time pool of dependencies on device 5 is [0.069635, 0.0454258, 0.0396478, 0.0374008, 0.037732600000000005, 0.01919]
+==>>decision pool(clock time): [0.069621, 0.069635, 0.069635, 0.069635, 0.069635, 0.069635]
+Decision for layer rpn_merger: executed on device 0, end time 0.069621
 
+Sorting criteria: device end time
+Sorted branches: ['box_roi_pool', 'postprocess_detections']
 Begin analyzing layer box_roi_pool. 
-dependency_arrival_timepool for 0: [0.029677700000000008, 0.026442900000000005, 0.023293800000000003, 0.020060800000000004, 0.020916600000000004, 0.054804700000000005, 0.054804700000000005]
-dependency_arrival_timepool for 1: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020743500000000005, 0.05482070000000001, 0.023102500000000005]
-dependency_arrival_timepool for 2: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.020627200000000005]
-dependency_arrival_timepool for 3: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
-dependency_arrival_timepool for 4: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
-dependency_arrival_timepool for 5: [0.07063770000000001, 0.036682900000000004, 0.025853800000000003, 0.020700800000000005, 0.020916600000000004, 0.05482070000000001, 0.004247]
-decision_pool(runtime): [0.054804700000000005, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001, 0.07063770000000001]
-Decision for layer box_roi_pool: executed on device 0, end time 0.054804700000000005
+The arrival time pool of dependencies on device 0 is [0.04874100000000001, 0.0274898, 0.023558799999999998, 0.020060800000000004, 0.020510050000000005, 0.073868, 0.073868]
+The arrival time pool of dependencies on device 1 is [0.069221, 0.0326098, 0.023558799999999998, 0.020380800000000004, 0.020423500000000004, 0.073876, 0.028148500000000003]
+The arrival time pool of dependencies on device 2 is [0.069221, 0.0326098, 0.022278799999999998, 0.020380800000000004, 0.020510050000000005, 0.073876, 0.0246908]
+The arrival time pool of dependencies on device 3 is [0.069221, 0.0326098, 0.023558799999999998, 0.020380800000000004, 0.020510050000000005, 0.073876, 0.0222566]
+The arrival time pool of dependencies on device 4 is [0.069221, 0.0326098, 0.023558799999999998, 0.020380800000000004, 0.020510050000000005, 0.073876, 0.004247]
+The arrival time pool of dependencies on device 5 is [0.069221, 0.0326098, 0.023558799999999998, 0.020380800000000004, 0.020510050000000005, 0.073876, 0.004247]
+==>>decision pool(clock time): [0.073868, 0.073876, 0.073876, 0.073876, 0.073876, 0.073876]
+Decision for layer box_roi_pool: executed on device 0, end time 0.073868
 
+Sorting criteria: device end time
+Sorted branches: ['fc6']
 Begin analyzing layer fc6. 
-dependency_arrival_timepool for 0: [0.054922700000000005, 0.054922700000000005]
-dependency_arrival_timepool for 1: [0.10510270000000001, 0.018973500000000004]
-dependency_arrival_timepool for 2: [0.10510270000000001, 0.016498200000000005]
-dependency_arrival_timepool for 3: [0.10510270000000001, 0.000118]
-dependency_arrival_timepool for 4: [0.10510270000000001, 0.000118]
-dependency_arrival_timepool for 5: [0.10510270000000001, 0.000118]
-decision_pool(runtime): [0.054922700000000005, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001, 0.10510270000000001]
-Decision for layer fc6: executed on device 0, end time 0.054922700000000005
+The arrival time pool of dependencies on device 0 is [0.073986, 0.073986]
+The arrival time pool of dependencies on device 1 is [0.099076, 0.024019500000000003]
+The arrival time pool of dependencies on device 2 is [0.099076, 0.020561799999999998]
+The arrival time pool of dependencies on device 3 is [0.099076, 0.0181276]
+The arrival time pool of dependencies on device 4 is [0.099076, 0.000118]
+The arrival time pool of dependencies on device 5 is [0.099076, 0.000118]
+==>>decision pool(clock time): [0.073986, 0.099076, 0.099076, 0.099076, 0.099076, 0.099076]
+Decision for layer fc6: executed on device 0, end time 0.073986
 
+Sorting criteria: device end time
+Sorted branches: ['fc7']
 Begin analyzing layer fc7. 
-dependency_arrival_timepool for 0: [0.0550452, 0.0550452]
-dependency_arrival_timepool for 1: [0.059141200000000005, 0.018978000000000005]
-dependency_arrival_timepool for 2: [0.059141200000000005, 0.016502700000000006]
-dependency_arrival_timepool for 3: [0.059141200000000005, 0.0001225]
-dependency_arrival_timepool for 4: [0.059141200000000005, 0.0001225]
-dependency_arrival_timepool for 5: [0.059141200000000005, 0.0001225]
-decision_pool(runtime): [0.0550452, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005, 0.059141200000000005]
-Decision for layer fc7: executed on device 0, end time 0.0550452
+The arrival time pool of dependencies on device 0 is [0.0741085, 0.0741085]
+The arrival time pool of dependencies on device 1 is [0.07615649999999999, 0.024024000000000004]
+The arrival time pool of dependencies on device 2 is [0.07615649999999999, 0.0205663]
+The arrival time pool of dependencies on device 3 is [0.07615649999999999, 0.0181321]
+The arrival time pool of dependencies on device 4 is [0.07615649999999999, 0.0001225]
+The arrival time pool of dependencies on device 5 is [0.07615649999999999, 0.0001225]
+==>>decision pool(clock time): [0.0741085, 0.07615649999999999, 0.07615649999999999, 0.07615649999999999, 0.07615649999999999, 0.07615649999999999]
+Decision for layer fc7: executed on device 0, end time 0.0741085
 
+Sorting criteria: device end time
+Sorted branches: ['bbox_pred_roi_', 'cls_score']
 Begin analyzing layer bbox_pred_roi_. 
-dependency_arrival_timepool for 0: [0.0551356, 0.0551356]
-dependency_arrival_timepool for 1: [0.0592316, 0.018945900000000005]
-dependency_arrival_timepool for 2: [0.0592316, 0.016470600000000005]
-dependency_arrival_timepool for 3: [0.0592316, 9.04e-05]
-dependency_arrival_timepool for 4: [0.0592316, 9.04e-05]
-dependency_arrival_timepool for 5: [0.0592316, 9.04e-05]
-decision_pool(runtime): [0.0551356, 0.0592316, 0.0592316, 0.0592316, 0.0592316, 0.0592316]
-Decision for layer bbox_pred_roi_: executed on device 0, end time 0.0551356
+The arrival time pool of dependencies on device 0 is [0.0741989, 0.0741989]
+The arrival time pool of dependencies on device 1 is [0.07624689999999999, 0.023991900000000004]
+The arrival time pool of dependencies on device 2 is [0.07624689999999999, 0.0205342]
+The arrival time pool of dependencies on device 3 is [0.07624689999999999, 0.0181]
+The arrival time pool of dependencies on device 4 is [0.07624689999999999, 9.04e-05]
+The arrival time pool of dependencies on device 5 is [0.07624689999999999, 9.04e-05]
+==>>decision pool(clock time): [0.0741989, 0.07624689999999999, 0.07624689999999999, 0.07624689999999999, 0.07624689999999999, 0.07624689999999999]
+Decision for layer bbox_pred_roi_: executed on device 0, end time 0.0741989
 
+Sorting criteria: device end time
+Sorted branches: ['postprocess_detections']
 Begin analyzing layer cls_score. 
-dependency_arrival_timepool for 0: [0.055120100000000005, 0.0552105]
-dependency_arrival_timepool for 1: [0.05921610000000001, 0.018930400000000003]
-dependency_arrival_timepool for 2: [0.05921610000000001, 0.016455100000000004]
-dependency_arrival_timepool for 3: [0.05921610000000001, 7.49e-05]
-dependency_arrival_timepool for 4: [0.05921610000000001, 7.49e-05]
-dependency_arrival_timepool for 5: [0.05921610000000001, 7.49e-05]
-decision_pool(runtime): [0.0552105, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001, 0.05921610000000001]
-Decision for layer cls_score: executed on device 0, end time 0.0552105
+The arrival time pool of dependencies on device 0 is [0.0741834, 0.0742738]
+The arrival time pool of dependencies on device 1 is [0.07623139999999999, 0.023976400000000002]
+The arrival time pool of dependencies on device 2 is [0.07623139999999999, 0.020518699999999997]
+The arrival time pool of dependencies on device 3 is [0.07623139999999999, 0.0180845]
+The arrival time pool of dependencies on device 4 is [0.07623139999999999, 7.49e-05]
+The arrival time pool of dependencies on device 5 is [0.07623139999999999, 7.49e-05]
+==>>decision pool(clock time): [0.0742738, 0.07623139999999999, 0.07623139999999999, 0.07623139999999999, 0.07623139999999999, 0.07623139999999999]
+Decision for layer cls_score: executed on device 0, end time 0.0742738
 
+Sorting criteria: device end time
+Sorted branches: ['postprocess_detections']
 Begin analyzing layer postprocess_detections. 
-dependency_arrival_timepool for 0: [0.057738500000000005, 0.0576636, 0.053085700000000006, 0.057738500000000005]
-dependency_arrival_timepool for 1: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.021383500000000003]
-dependency_arrival_timepool for 2: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.018908200000000003]
-dependency_arrival_timepool for 3: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
-dependency_arrival_timepool for 4: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
-dependency_arrival_timepool for 5: [0.06183450000000001, 0.0591196, 0.05310170000000001, 0.002528]
-decision_pool(runtime): [0.057738500000000005, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001, 0.06183450000000001]
-Decision for layer postprocess_detections: executed on device 0, end time 0.057738500000000005
+The arrival time pool of dependencies on device 0 is [0.0768018, 0.0767269, 0.072149, 0.0768018]
+The arrival time pool of dependencies on device 1 is [0.0788498, 0.07745490000000001, 0.072157, 0.0264295]
+The arrival time pool of dependencies on device 2 is [0.0788498, 0.07745490000000001, 0.072157, 0.022971799999999997]
+The arrival time pool of dependencies on device 3 is [0.0788498, 0.07745490000000001, 0.072157, 0.0205376]
+The arrival time pool of dependencies on device 4 is [0.0788498, 0.07745490000000001, 0.072157, 0.002528]
+The arrival time pool of dependencies on device 5 is [0.0788498, 0.07745490000000001, 0.072157, 0.002528]
+==>>decision pool(clock time): [0.0768018, 0.0788498, 0.0788498, 0.0788498, 0.0788498, 0.0788498]
+Decision for layer postprocess_detections: executed on device 0, end time 0.0768018
 
+Sorting criteria: device end time
+Sorted branches: ['postprocess_resize']
 Begin analyzing layer postprocess_resize. 
-dependency_arrival_timepool for 0: [0.057738500000000005, 0.057738500000000005]
-dependency_arrival_timepool for 1: [0.057738500000000005, 0.018855500000000004]
-dependency_arrival_timepool for 2: [0.057738500000000005, 0.016380200000000004]
-dependency_arrival_timepool for 3: [0.057738500000000005, 0.0]
-dependency_arrival_timepool for 4: [0.057738500000000005, 0.0]
-dependency_arrival_timepool for 5: [0.057738500000000005, 0.0]
-decision_pool(runtime): [0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005, 0.057738500000000005]
-Decision for layer postprocess_resize: executed on device 0, end time 0.057738500000000005
+The arrival time pool of dependencies on device 0 is [0.0768018, 0.0768018]
+The arrival time pool of dependencies on device 1 is [0.0768018, 0.023901500000000003]
+The arrival time pool of dependencies on device 2 is [0.0768018, 0.020443799999999998]
+The arrival time pool of dependencies on device 3 is [0.0768018, 0.0180096]
+The arrival time pool of dependencies on device 4 is [0.0768018, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0768018, 0.0]
+==>>decision pool(clock time): [0.0768018, 0.0768018, 0.0768018, 0.0768018, 0.0768018, 0.0768018]
+Decision for layer postprocess_resize: executed on device 0, end time 0.0768018
 
+Sorting criteria: device end time
+Sorted branches: ['output']
 
 [30;42m=========Result=========[0m
 layer name      device         
@@ -396,15 +472,15 @@ layer3          0
 layer4          0              
 inner_3         0              
 layer_3         0              
-inner_2         0              
+inner_2         2              
 interpolate__2  2              
-add__2          0              
-layer_2         0              
-inner_1         0              
+add__2          2              
+layer_2         2              
+inner_1         3              
 interpolate__1  0              
 add__1          0              
 layer_1         0              
-inner_0         0              
+inner_0         1              
 interpolate__0  0              
 add__0          0              
 layer_0         0              
@@ -412,7 +488,7 @@ extra           1
 rpn_parallel_f0 0              
 rpn_merger      0              
 rpn_parallel_f1 0              
-rpn_parallel_f2 0              
+rpn_parallel_f2 2              
 rpn_parallel_f3 0              
 rpn_parallel_f4 1              
 box_roi_pool    0              
@@ -421,5 +497,548 @@ fc7             0
 cls_score       0              
 bbox_pred_roi_  0              
 postprocess_detections 0              
+postprocess_resize 0              
+output          0              
+
+================PRIORITIES================
+layer input      has priority range (None    , 0       ]	 (finish at 0.0)
+layer transform  has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0003419)
+layer conv1      has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0004435)
+layer bn1        has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0006271)
+layer relu       has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0006571)
+layer maxpool    has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0006973999999999999)
+layer layer1     has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0033154)
+layer layer2     has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0071824)
+layer layer3     has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0127034)
+layer layer4     has priority range (997.2222222222222, 998.6111111111111]	 (finish at 0.0155904)
+layer inner_3    has priority range (997.2222222222222, 998.6111111111111]	 (finish at 0.0157001)
+layer layer_3    has priority range (955.5555555555555, 966.6666666666666]	 (finish at 0.015813800000000003)
+layer inner_2    has priority range (998.6111111111111, 1000.0  ]	 (finish at 0.0179252)
+layer interpolate__2 has priority range (997.2222222222222, 998.6111111111111]	 (finish at 0.016060200000000004)
+layer add__2     has priority range (997.2222222222222, 1000.0  ]	 (finish at 0.0179252)
+layer layer_2    has priority range (966.6666666666666, 977.7777777777778]	 (finish at 0.018031799999999997)
+layer inner_1    has priority range (994.4444444444445, 997.2222222222222]	 (finish at 0.0180096)
+layer interpolate__1 has priority range (997.2222222222222, 1000.0  ]	 (finish at 0.0192419)
+layer add__1     has priority range (994.4444444444445, 1000.0  ]	 (finish at 0.0231296)
+layer layer_1    has priority range (977.7777777777778, 988.8888888888889]	 (finish at 0.0232428)
+layer inner_0    has priority range (988.8888888888889, 994.4444444444445]	 (finish at 0.023901500000000003)
+layer interpolate__0 has priority range (994.4444444444445, 1000.0  ]	 (finish at 0.026259)
+layer add__0     has priority range (988.8888888888889, 1000.0  ]	 (finish at 0.044381500000000004)
+layer layer_0    has priority range (988.8888888888889, 1000.0  ]	 (finish at 0.044494000000000006)
+layer extra      has priority range (955.5555555555555, 966.6666666666666]	 (finish at 0.016176500000000003)
+layer rpn_parallel_f0 has priority range (988.8888888888889, 1000.0  ]	 (finish at 0.050431000000000004)
+layer rpn_merger has priority range (944.4444444444445, 1000.0  ]	 (finish at 0.069621)
+layer rpn_parallel_f1 has priority range (977.7777777777778, 988.8888888888889]	 (finish at 0.0262218)
+layer rpn_parallel_f2 has priority range (966.6666666666666, 977.7777777777778]	 (finish at 0.020443799999999998)
+layer rpn_parallel_f3 has priority range (944.4444444444445, 955.5555555555555]	 (finish at 0.018196800000000003)
+layer rpn_parallel_f4 has priority range (955.5555555555555, 966.6666666666666]	 (finish at 0.018535500000000003)
+layer box_roi_pool has priority range (666.6666666666666, 1000.0  ]	 (finish at 0.073868)
+layer fc6        has priority range (666.6666666666666, 1000.0  ]	 (finish at 0.073986)
+layer fc7        has priority range (666.6666666666666, 1000.0  ]	 (finish at 0.0741085)
+layer cls_score  has priority range (666.6666666666666, 1000.0  ]	 (finish at 0.0742738)
+layer bbox_pred_roi_ has priority range (333.3333333333333, 666.6666666666666]	 (finish at 0.0741989)
+layer postprocess_detections has priority range (0.0     , 1000.0  ]	 (finish at 0.0768018)
+layer postprocess_resize has priority range (0.0     , 1000.0  ]	 (finish at 0.0768018)
+layer output     has priority range (0       , 1000    ]	 (finish at 0)
+==========================================
+
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+The arrival time pool of dependencies on device 0 is [0.0]
+The arrival time pool of dependencies on device 1 is [0.0]
+The arrival time pool of dependencies on device 2 is [0.0]
+The arrival time pool of dependencies on device 3 is [0.0]
+The arrival time pool of dependencies on device 4 is [0.0]
+The arrival time pool of dependencies on device 5 is [0.0]
+==>>decision pool(clock time): [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Decision for layer input: executed on device 0, end time 0.0
+
+Sorting criteria: priorities
+Sorted branches: ['transform']
+Begin analyzing layer transform. 
+The arrival time pool of dependencies on device 0 is [0.0003419, 0.0003419]
+The arrival time pool of dependencies on device 1 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 2 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 3 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 4 is [0.00064295, 0.0003419]
+The arrival time pool of dependencies on device 5 is [0.00064295, 0.0003419]
+==>>decision pool(clock time): [0.0003419, 0.00064295, 0.00064295, 0.00064295, 0.00064295, 0.00064295]
+Decision for layer transform: executed on device 0, end time 0.0003419
+
+Sorting criteria: priorities
+Sorted branches: ['conv1']
+Begin analyzing layer conv1. 
+The arrival time pool of dependencies on device 0 is [0.0004435, 0.0004435]
+The arrival time pool of dependencies on device 1 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 2 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 3 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 4 is [0.0042835, 0.0001016]
+The arrival time pool of dependencies on device 5 is [0.0042835, 0.0001016]
+==>>decision pool(clock time): [0.0004435, 0.0042835, 0.0042835, 0.0042835, 0.0042835, 0.0042835]
+Decision for layer conv1: executed on device 0, end time 0.0004435
+
+Sorting criteria: priorities
+Sorted branches: ['bn1']
+Begin analyzing layer bn1. 
+The arrival time pool of dependencies on device 0 is [0.0006271, 0.0006271]
+The arrival time pool of dependencies on device 1 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 2 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 3 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 4 is [0.0211071, 0.0001836]
+The arrival time pool of dependencies on device 5 is [0.0211071, 0.0001836]
+==>>decision pool(clock time): [0.0006271, 0.0211071, 0.0211071, 0.0211071, 0.0211071, 0.0211071]
+Decision for layer bn1: executed on device 0, end time 0.0006271
+
+Sorting criteria: priorities
+Sorted branches: ['relu']
+Begin analyzing layer relu. 
+The arrival time pool of dependencies on device 0 is [0.0006571, 0.0006571]
+The arrival time pool of dependencies on device 1 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 2 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 3 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 4 is [0.0211371, 3e-05]
+The arrival time pool of dependencies on device 5 is [0.0211371, 3e-05]
+==>>decision pool(clock time): [0.0006571, 0.0211371, 0.0211371, 0.0211371, 0.0211371, 0.0211371]
+Decision for layer relu: executed on device 0, end time 0.0006571
+
+Sorting criteria: priorities
+Sorted branches: ['maxpool']
+Begin analyzing layer maxpool. 
+The arrival time pool of dependencies on device 0 is [0.0006973999999999999, 0.0006973999999999999]
+The arrival time pool of dependencies on device 1 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 2 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 3 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 4 is [0.021177400000000002, 4.03e-05]
+The arrival time pool of dependencies on device 5 is [0.021177400000000002, 4.03e-05]
+==>>decision pool(clock time): [0.0006973999999999999, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002, 0.021177400000000002]
+Decision for layer maxpool: executed on device 0, end time 0.0006973999999999999
+
+Sorting criteria: priorities
+Sorted branches: ['layer1']
+Begin analyzing layer layer1. 
+The arrival time pool of dependencies on device 0 is [0.0033154, 0.0033154]
+The arrival time pool of dependencies on device 1 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 2 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 3 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 4 is [0.008435400000000001, 0.002618]
+The arrival time pool of dependencies on device 5 is [0.008435400000000001, 0.002618]
+==>>decision pool(clock time): [0.0033154, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001, 0.008435400000000001]
+Decision for layer layer1: executed on device 0, end time 0.0033154
+
+Sorting criteria: priorities
+Sorted branches: ['layer2', 'inner_0']
+Begin analyzing layer layer2. 
+The arrival time pool of dependencies on device 0 is [0.0071824, 0.0071824]
+The arrival time pool of dependencies on device 1 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 2 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 3 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 4 is [0.0276624, 0.003867]
+The arrival time pool of dependencies on device 5 is [0.0276624, 0.003867]
+==>>decision pool(clock time): [0.0071824, 0.0276624, 0.0276624, 0.0276624, 0.0276624, 0.0276624]
+Decision for layer layer2: executed on device 0, end time 0.0071824
+
+Sorting criteria: priorities
+Sorted branches: ['layer3', 'inner_1']
+Begin analyzing layer layer3. 
+The arrival time pool of dependencies on device 0 is [0.0127034, 0.0127034]
+The arrival time pool of dependencies on device 1 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 2 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 3 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 4 is [0.022943400000000003, 0.005521]
+The arrival time pool of dependencies on device 5 is [0.022943400000000003, 0.005521]
+==>>decision pool(clock time): [0.0127034, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003, 0.022943400000000003]
+Decision for layer layer3: executed on device 0, end time 0.0127034
+
+Sorting criteria: priorities
+Sorted branches: ['inner_2', 'layer4']
+Begin analyzing layer inner_2. 
+The arrival time pool of dependencies on device 0 is [0.012805200000000001, 0.012805200000000001]
+The arrival time pool of dependencies on device 1 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 2 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 3 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 4 is [0.0179252, 0.0001018]
+The arrival time pool of dependencies on device 5 is [0.0179252, 0.0001018]
+==>>decision pool(clock time): [0.012805200000000001, 0.0179252, 0.0179252, 0.0179252, 0.0179252, 0.0179252]
+Decision for layer inner_2: executed on device 0, end time 0.012805200000000001
+
+Sorting criteria: priorities
+Sorted branches: ['add__2']
+Begin analyzing layer layer4. 
+The arrival time pool of dependencies on device 0 is [0.0155904, 0.0156922]
+The arrival time pool of dependencies on device 1 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 2 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 3 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 4 is [0.0207104, 0.002887]
+The arrival time pool of dependencies on device 5 is [0.0207104, 0.002887]
+==>>decision pool(clock time): [0.0156922, 0.0207104, 0.0207104, 0.0207104, 0.0207104, 0.0207104]
+Decision for layer layer4: executed on device 0, end time 0.0156922
+
+Sorting criteria: priorities
+Sorted branches: ['inner_3']
+Begin analyzing layer inner_3. 
+The arrival time pool of dependencies on device 0 is [0.0158019, 0.0158019]
+The arrival time pool of dependencies on device 1 is [0.0183619, 0.0001097]
+The arrival time pool of dependencies on device 2 is [0.0183619, 0.0001097]
+The arrival time pool of dependencies on device 3 is [0.0183619, 0.0001097]
+The arrival time pool of dependencies on device 4 is [0.0183619, 0.0001097]
+The arrival time pool of dependencies on device 5 is [0.0183619, 0.0001097]
+==>>decision pool(clock time): [0.0158019, 0.0183619, 0.0183619, 0.0183619, 0.0183619, 0.0183619]
+Decision for layer inner_3: executed on device 0, end time 0.0158019
+
+Sorting criteria: priorities
+Sorted branches: ['interpolate__2', 'layer_3']
+Begin analyzing layer interpolate__2. 
+The arrival time pool of dependencies on device 0 is [0.015842000000000002, 0.015842000000000002]
+The arrival time pool of dependencies on device 1 is [0.016162000000000003, 4.01e-05]
+The arrival time pool of dependencies on device 2 is [0.016162000000000003, 4.01e-05]
+The arrival time pool of dependencies on device 3 is [0.016162000000000003, 4.01e-05]
+The arrival time pool of dependencies on device 4 is [0.016162000000000003, 4.01e-05]
+The arrival time pool of dependencies on device 5 is [0.016162000000000003, 4.01e-05]
+==>>decision pool(clock time): [0.015842000000000002, 0.016162000000000003, 0.016162000000000003, 0.016162000000000003, 0.016162000000000003, 0.016162000000000003]
+Decision for layer interpolate__2: executed on device 0, end time 0.015842000000000002
+
+Sorting criteria: priorities
+Sorted branches: ['add__2']
+Begin analyzing layer add__2. 
+The arrival time pool of dependencies on device 0 is [0.012805200000000001, 0.015842000000000002, 0.015842000000000002]
+The arrival time pool of dependencies on device 1 is [0.0140852, 0.017122000000000002, 0.0]
+The arrival time pool of dependencies on device 2 is [0.0140852, 0.017122000000000002, 0.0]
+The arrival time pool of dependencies on device 3 is [0.0140852, 0.017122000000000002, 0.0]
+The arrival time pool of dependencies on device 4 is [0.0140852, 0.017122000000000002, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0140852, 0.017122000000000002, 0.0]
+==>>decision pool(clock time): [0.015842000000000002, 0.017122000000000002, 0.017122000000000002, 0.017122000000000002, 0.017122000000000002, 0.017122000000000002]
+Decision for layer add__2: executed on device 0, end time 0.015842000000000002
+
+Sorting criteria: priorities
+Sorted branches: ['interpolate__1', 'layer_2']
+Begin analyzing layer interpolate__1. 
+The arrival time pool of dependencies on device 0 is [0.015878700000000003, 0.015878700000000003]
+The arrival time pool of dependencies on device 1 is [0.017158700000000002, 3.67e-05]
+The arrival time pool of dependencies on device 2 is [0.017158700000000002, 3.67e-05]
+The arrival time pool of dependencies on device 3 is [0.017158700000000002, 3.67e-05]
+The arrival time pool of dependencies on device 4 is [0.017158700000000002, 3.67e-05]
+The arrival time pool of dependencies on device 5 is [0.017158700000000002, 3.67e-05]
+==>>decision pool(clock time): [0.015878700000000003, 0.017158700000000002, 0.017158700000000002, 0.017158700000000002, 0.017158700000000002, 0.017158700000000002]
+Decision for layer interpolate__1: executed on device 0, end time 0.015878700000000003
+
+Sorting criteria: priorities
+Sorted branches: ['add__1']
+Begin analyzing layer layer_2. 
+The arrival time pool of dependencies on device 0 is [0.0159486, 0.0159853]
+The arrival time pool of dependencies on device 1 is [0.0172286, 0.0001066]
+The arrival time pool of dependencies on device 2 is [0.0172286, 0.0001066]
+The arrival time pool of dependencies on device 3 is [0.0172286, 0.0001066]
+The arrival time pool of dependencies on device 4 is [0.0172286, 0.0001066]
+The arrival time pool of dependencies on device 5 is [0.0172286, 0.0001066]
+==>>decision pool(clock time): [0.0159853, 0.0172286, 0.0172286, 0.0172286, 0.0172286, 0.0172286]
+Decision for layer layer_2: executed on device 0, end time 0.0159853
+
+Sorting criteria: priorities
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f2']
+Begin analyzing layer rpn_parallel_f2. 
+The arrival time pool of dependencies on device 0 is [0.018397300000000002, 0.018397300000000002]
+The arrival time pool of dependencies on device 1 is [0.0196773, 0.002412]
+The arrival time pool of dependencies on device 2 is [0.0196773, 0.002412]
+The arrival time pool of dependencies on device 3 is [0.0196773, 0.002412]
+The arrival time pool of dependencies on device 4 is [0.0196773, 0.002412]
+The arrival time pool of dependencies on device 5 is [0.0196773, 0.002412]
+==>>decision pool(clock time): [0.018397300000000002, 0.0196773, 0.0196773, 0.0196773, 0.0196773, 0.0196773]
+Decision for layer rpn_parallel_f2: executed on device 0, end time 0.018397300000000002
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_merger']
+Begin analyzing layer layer_3. 
+The arrival time pool of dependencies on device 0 is [0.015915600000000002, 0.018511000000000003]
+The arrival time pool of dependencies on device 1 is [0.016235600000000003, 0.0001137]
+The arrival time pool of dependencies on device 2 is [0.016235600000000003, 0.0001137]
+The arrival time pool of dependencies on device 3 is [0.016235600000000003, 0.0001137]
+The arrival time pool of dependencies on device 4 is [0.016235600000000003, 0.0001137]
+The arrival time pool of dependencies on device 5 is [0.016235600000000003, 0.0001137]
+==>>decision pool(clock time): [0.018511000000000003, 0.016235600000000003, 0.016235600000000003, 0.016235600000000003, 0.016235600000000003, 0.016235600000000003]
+Decision for layer layer_3: executed on device 1, end time 0.016235600000000003
+
+Sorting criteria: priorities
+Sorted branches: ['box_roi_pool', 'extra', 'rpn_parallel_f3']
+Begin analyzing layer extra. 
+The arrival time pool of dependencies on device 0 is [0.016598300000000003, 0.01844]
+The arrival time pool of dependencies on device 1 is [0.016278300000000002, 0.016278300000000002]
+The arrival time pool of dependencies on device 2 is [0.016598300000000003, 4.27e-05]
+The arrival time pool of dependencies on device 3 is [0.016598300000000003, 4.27e-05]
+The arrival time pool of dependencies on device 4 is [0.016598300000000003, 4.27e-05]
+The arrival time pool of dependencies on device 5 is [0.016598300000000003, 4.27e-05]
+==>>decision pool(clock time): [0.01844, 0.016278300000000002, 0.016598300000000003, 0.016598300000000003, 0.016598300000000003, 0.016598300000000003]
+Decision for layer extra: executed on device 1, end time 0.016278300000000002
+
+Sorting criteria: priorities
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f4']
+Begin analyzing layer rpn_parallel_f4. 
+The arrival time pool of dependencies on device 0 is [0.018723850000000004, 0.020756300000000002]
+The arrival time pool of dependencies on device 1 is [0.018637300000000002, 0.018637300000000002]
+The arrival time pool of dependencies on device 2 is [0.018723850000000004, 0.002359]
+The arrival time pool of dependencies on device 3 is [0.018723850000000004, 0.002359]
+The arrival time pool of dependencies on device 4 is [0.018723850000000004, 0.002359]
+The arrival time pool of dependencies on device 5 is [0.018723850000000004, 0.002359]
+==>>decision pool(clock time): [0.020756300000000002, 0.018637300000000002, 0.018723850000000004, 0.018723850000000004, 0.018723850000000004, 0.018723850000000004]
+Decision for layer rpn_parallel_f4: executed on device 1, end time 0.018637300000000002
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_merger']
+Begin analyzing layer rpn_parallel_f3. 
+The arrival time pool of dependencies on device 0 is [0.018938600000000003, 0.0207803]
+The arrival time pool of dependencies on device 1 is [0.018618600000000003, 0.021020300000000002]
+The arrival time pool of dependencies on device 2 is [0.018938600000000003, 0.002383]
+The arrival time pool of dependencies on device 3 is [0.018938600000000003, 0.002383]
+The arrival time pool of dependencies on device 4 is [0.018938600000000003, 0.002383]
+The arrival time pool of dependencies on device 5 is [0.018938600000000003, 0.002383]
+==>>decision pool(clock time): [0.0207803, 0.021020300000000002, 0.018938600000000003, 0.018938600000000003, 0.018938600000000003, 0.018938600000000003]
+Decision for layer rpn_parallel_f3: executed on device 2, end time 0.018938600000000003
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_merger']
+Begin analyzing layer inner_1. 
+The arrival time pool of dependencies on device 0 is [0.0077696, 0.0189845]
+The arrival time pool of dependencies on device 1 is [0.0180096, 0.019224500000000002]
+The arrival time pool of dependencies on device 2 is [0.0180096, 0.019525800000000003]
+The arrival time pool of dependencies on device 3 is [0.0180096, 0.0005872]
+The arrival time pool of dependencies on device 4 is [0.0180096, 0.0005872]
+The arrival time pool of dependencies on device 5 is [0.0180096, 0.0005872]
+==>>decision pool(clock time): [0.0189845, 0.019224500000000002, 0.019525800000000003, 0.0180096, 0.0180096, 0.0180096]
+Decision for layer inner_1: executed on device 3, end time 0.0180096
+
+Sorting criteria: priorities
+Sorted branches: ['add__1']
+Begin analyzing layer add__1. 
+The arrival time pool of dependencies on device 0 is [0.0231296, 0.015878700000000003, 0.018397300000000002]
+The arrival time pool of dependencies on device 1 is [0.0231296, 0.020998700000000002, 0.018637300000000002]
+The arrival time pool of dependencies on device 2 is [0.0231296, 0.020998700000000002, 0.018938600000000003]
+The arrival time pool of dependencies on device 3 is [0.0180096, 0.020998700000000002, 0.0180096]
+The arrival time pool of dependencies on device 4 is [0.0231296, 0.020998700000000002, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0231296, 0.020998700000000002, 0.0]
+==>>decision pool(clock time): [0.0231296, 0.0231296, 0.0231296, 0.020998700000000002, 0.0231296, 0.0231296]
+Decision for layer add__1: executed on device 3, end time 0.020998700000000002
+
+Sorting criteria: priorities
+Sorted branches: ['interpolate__0', 'layer_1']
+Begin analyzing layer interpolate__0. 
+The arrival time pool of dependencies on device 0 is [0.026155900000000003, 0.018434500000000003]
+The arrival time pool of dependencies on device 1 is [0.026155900000000003, 0.018674500000000004]
+The arrival time pool of dependencies on device 2 is [0.026155900000000003, 0.018975800000000004]
+The arrival time pool of dependencies on device 3 is [0.021035900000000003, 0.021035900000000003]
+The arrival time pool of dependencies on device 4 is [0.026155900000000003, 3.72e-05]
+The arrival time pool of dependencies on device 5 is [0.026155900000000003, 3.72e-05]
+==>>decision pool(clock time): [0.026155900000000003, 0.026155900000000003, 0.026155900000000003, 0.021035900000000003, 0.026155900000000003, 0.026155900000000003]
+Decision for layer interpolate__0: executed on device 3, end time 0.021035900000000003
+
+Sorting criteria: priorities
+Sorted branches: ['add__0']
+Begin analyzing layer layer_1. 
+The arrival time pool of dependencies on device 0 is [0.026231900000000002, 0.018510500000000003]
+The arrival time pool of dependencies on device 1 is [0.026231900000000002, 0.018750500000000003]
+The arrival time pool of dependencies on device 2 is [0.026231900000000002, 0.019051800000000004]
+The arrival time pool of dependencies on device 3 is [0.021111900000000003, 0.021149100000000004]
+The arrival time pool of dependencies on device 4 is [0.026231900000000002, 0.0001132]
+The arrival time pool of dependencies on device 5 is [0.026231900000000002, 0.0001132]
+==>>decision pool(clock time): [0.026231900000000002, 0.026231900000000002, 0.026231900000000002, 0.021149100000000004, 0.026231900000000002, 0.026231900000000002]
+Decision for layer layer_1: executed on device 3, end time 0.021149100000000004
+
+Sorting criteria: priorities
+Sorted branches: ['box_roi_pool', 'rpn_parallel_f1']
+Begin analyzing layer rpn_parallel_f1. 
+The arrival time pool of dependencies on device 0 is [0.029248100000000003, 0.0213763]
+The arrival time pool of dependencies on device 1 is [0.029248100000000003, 0.0216163]
+The arrival time pool of dependencies on device 2 is [0.029248100000000003, 0.021917600000000002]
+The arrival time pool of dependencies on device 3 is [0.024128100000000003, 0.024128100000000003]
+The arrival time pool of dependencies on device 4 is [0.029248100000000003, 0.002979]
+The arrival time pool of dependencies on device 5 is [0.029248100000000003, 0.002979]
+==>>decision pool(clock time): [0.029248100000000003, 0.029248100000000003, 0.029248100000000003, 0.024128100000000003, 0.029248100000000003, 0.029248100000000003]
+Decision for layer rpn_parallel_f1: executed on device 3, end time 0.024128100000000003
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_merger']
+Begin analyzing layer inner_0. 
+The arrival time pool of dependencies on device 0 is [0.0034215, 0.018503400000000003]
+The arrival time pool of dependencies on device 1 is [0.023901500000000003, 0.018743400000000004]
+The arrival time pool of dependencies on device 2 is [0.023901500000000003, 0.019044700000000005]
+The arrival time pool of dependencies on device 3 is [0.023901500000000003, 0.024234200000000004]
+The arrival time pool of dependencies on device 4 is [0.023901500000000003, 0.0001061]
+The arrival time pool of dependencies on device 5 is [0.023901500000000003, 0.0001061]
+==>>decision pool(clock time): [0.018503400000000003, 0.023901500000000003, 0.023901500000000003, 0.024234200000000004, 0.023901500000000003, 0.023901500000000003]
+Decision for layer inner_0: executed on device 0, end time 0.018503400000000003
+
+Sorting criteria: priorities
+Sorted branches: ['add__0']
+Begin analyzing layer add__0. 
+The arrival time pool of dependencies on device 0 is [0.018503400000000003, 0.04151590000000001, 0.018503400000000003]
+The arrival time pool of dependencies on device 1 is [0.0389834, 0.04151590000000001, 0.018637300000000002]
+The arrival time pool of dependencies on device 2 is [0.0389834, 0.04151590000000001, 0.018938600000000003]
+The arrival time pool of dependencies on device 3 is [0.0389834, 0.021035900000000003, 0.024128100000000003]
+The arrival time pool of dependencies on device 4 is [0.0389834, 0.04151590000000001, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0389834, 0.04151590000000001, 0.0]
+==>>decision pool(clock time): [0.04151590000000001, 0.04151590000000001, 0.04151590000000001, 0.0389834, 0.04151590000000001, 0.04151590000000001]
+Decision for layer add__0: executed on device 3, end time 0.0389834
+
+Sorting criteria: priorities
+Sorted branches: ['layer_0']
+Begin analyzing layer layer_0. 
+The arrival time pool of dependencies on device 0 is [0.0595759, 0.018615900000000005]
+The arrival time pool of dependencies on device 1 is [0.0595759, 0.018749800000000004]
+The arrival time pool of dependencies on device 2 is [0.0595759, 0.019051100000000005]
+The arrival time pool of dependencies on device 3 is [0.0390959, 0.0390959]
+The arrival time pool of dependencies on device 4 is [0.0595759, 0.0001125]
+The arrival time pool of dependencies on device 5 is [0.0595759, 0.0001125]
+==>>decision pool(clock time): [0.0595759, 0.0595759, 0.0595759, 0.0390959, 0.0595759, 0.0595759]
+Decision for layer layer_0: executed on device 3, end time 0.0390959
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_parallel_f0', 'box_roi_pool']
+Begin analyzing layer rpn_parallel_f0. 
+The arrival time pool of dependencies on device 0 is [0.0655129, 0.0244404]
+The arrival time pool of dependencies on device 1 is [0.0655129, 0.0245743]
+The arrival time pool of dependencies on device 2 is [0.0655129, 0.024875600000000005]
+The arrival time pool of dependencies on device 3 is [0.0450329, 0.0450329]
+The arrival time pool of dependencies on device 4 is [0.0655129, 0.005937]
+The arrival time pool of dependencies on device 5 is [0.0655129, 0.005937]
+==>>decision pool(clock time): [0.0655129, 0.0655129, 0.0655129, 0.0450329, 0.0655129, 0.0655129]
+Decision for layer rpn_parallel_f0: executed on device 3, end time 0.0450329
+
+Sorting criteria: priorities
+Sorted branches: ['rpn_merger']
+Begin analyzing layer rpn_merger. 
+The arrival time pool of dependencies on device 0 is [0.0642369, 0.0433321, 0.037587300000000004, 0.0381426, 0.037834400000000004, 0.0376934]
+The arrival time pool of dependencies on device 1 is [0.0642369, 0.0433321, 0.037601300000000004, 0.0381426, 0.0378273, 0.0378273]
+The arrival time pool of dependencies on device 2 is [0.0642369, 0.0433321, 0.037601300000000004, 0.0381286, 0.037834400000000004, 0.0381286]
+The arrival time pool of dependencies on device 3 is [0.0642229, 0.0433181, 0.037601300000000004, 0.0381426, 0.037834400000000004, 0.0642229]
+The arrival time pool of dependencies on device 4 is [0.0642369, 0.0433321, 0.037601300000000004, 0.0381426, 0.037834400000000004, 0.01919]
+The arrival time pool of dependencies on device 5 is [0.0642369, 0.0433321, 0.037601300000000004, 0.0381426, 0.037834400000000004, 0.01919]
+==>>decision pool(clock time): [0.0642369, 0.0642369, 0.0642369, 0.0642229, 0.0642369, 0.0642369]
+Decision for layer rpn_merger: executed on device 3, end time 0.0642229
+
+Sorting criteria: priorities
+Sorted branches: ['box_roi_pool', 'postprocess_detections']
+Begin analyzing layer box_roi_pool. 
+The arrival time pool of dependencies on device 0 is [0.0638229, 0.030516100000000004, 0.0202323, 0.020802600000000004, 0.020611850000000004, 0.0684779, 0.022750400000000004]
+The arrival time pool of dependencies on device 1 is [0.0638229, 0.030516100000000004, 0.0215123, 0.020482600000000004, 0.020525300000000003, 0.0684779, 0.022884300000000003]
+The arrival time pool of dependencies on device 2 is [0.0638229, 0.030516100000000004, 0.0215123, 0.020802600000000004, 0.020611850000000004, 0.0684779, 0.023185600000000004]
+The arrival time pool of dependencies on device 3 is [0.043342900000000004, 0.025396100000000005, 0.0215123, 0.020802600000000004, 0.020611850000000004, 0.0684699, 0.0684699]
+The arrival time pool of dependencies on device 4 is [0.0638229, 0.030516100000000004, 0.0215123, 0.020802600000000004, 0.020611850000000004, 0.0684779, 0.004247]
+The arrival time pool of dependencies on device 5 is [0.0638229, 0.030516100000000004, 0.0215123, 0.020802600000000004, 0.020611850000000004, 0.0684779, 0.004247]
+==>>decision pool(clock time): [0.0684779, 0.0684779, 0.0684779, 0.0684699, 0.0684779, 0.0684779]
+Decision for layer box_roi_pool: executed on device 3, end time 0.0684699
+
+Sorting criteria: priorities
+Sorted branches: ['fc6']
+Begin analyzing layer fc6. 
+The arrival time pool of dependencies on device 0 is [0.0936779, 0.018621400000000003]
+The arrival time pool of dependencies on device 1 is [0.0936779, 0.018755300000000003]
+The arrival time pool of dependencies on device 2 is [0.0936779, 0.019056600000000003]
+The arrival time pool of dependencies on device 3 is [0.0685879, 0.0685879]
+The arrival time pool of dependencies on device 4 is [0.0936779, 0.000118]
+The arrival time pool of dependencies on device 5 is [0.0936779, 0.000118]
+==>>decision pool(clock time): [0.0936779, 0.0936779, 0.0936779, 0.0685879, 0.0936779, 0.0936779]
+Decision for layer fc6: executed on device 3, end time 0.0685879
+
+Sorting criteria: priorities
+Sorted branches: ['fc7']
+Begin analyzing layer fc7. 
+The arrival time pool of dependencies on device 0 is [0.07075839999999999, 0.018625900000000004]
+The arrival time pool of dependencies on device 1 is [0.07075839999999999, 0.018759800000000004]
+The arrival time pool of dependencies on device 2 is [0.07075839999999999, 0.019061100000000004]
+The arrival time pool of dependencies on device 3 is [0.06871039999999999, 0.06871039999999999]
+The arrival time pool of dependencies on device 4 is [0.07075839999999999, 0.0001225]
+The arrival time pool of dependencies on device 5 is [0.07075839999999999, 0.0001225]
+==>>decision pool(clock time): [0.07075839999999999, 0.07075839999999999, 0.07075839999999999, 0.06871039999999999, 0.07075839999999999, 0.07075839999999999]
+Decision for layer fc7: executed on device 3, end time 0.06871039999999999
+
+Sorting criteria: priorities
+Sorted branches: ['cls_score', 'bbox_pred_roi_']
+Begin analyzing layer cls_score. 
+The arrival time pool of dependencies on device 0 is [0.07083329999999999, 0.018578300000000002]
+The arrival time pool of dependencies on device 1 is [0.07083329999999999, 0.018712200000000002]
+The arrival time pool of dependencies on device 2 is [0.07083329999999999, 0.019013500000000003]
+The arrival time pool of dependencies on device 3 is [0.0687853, 0.0687853]
+The arrival time pool of dependencies on device 4 is [0.07083329999999999, 7.49e-05]
+The arrival time pool of dependencies on device 5 is [0.07083329999999999, 7.49e-05]
+==>>decision pool(clock time): [0.07083329999999999, 0.07083329999999999, 0.07083329999999999, 0.0687853, 0.07083329999999999, 0.07083329999999999]
+Decision for layer cls_score: executed on device 3, end time 0.0687853
+
+Sorting criteria: priorities
+Sorted branches: ['postprocess_detections']
+Begin analyzing layer bbox_pred_roi_. 
+The arrival time pool of dependencies on device 0 is [0.07084879999999999, 0.018593800000000004]
+The arrival time pool of dependencies on device 1 is [0.07084879999999999, 0.018727700000000003]
+The arrival time pool of dependencies on device 2 is [0.07084879999999999, 0.019029000000000004]
+The arrival time pool of dependencies on device 3 is [0.0688008, 0.0688757]
+The arrival time pool of dependencies on device 4 is [0.07084879999999999, 9.04e-05]
+The arrival time pool of dependencies on device 5 is [0.07084879999999999, 9.04e-05]
+==>>decision pool(clock time): [0.07084879999999999, 0.07084879999999999, 0.07084879999999999, 0.0688757, 0.07084879999999999, 0.07084879999999999]
+Decision for layer bbox_pred_roi_: executed on device 3, end time 0.0688757
+
+Sorting criteria: priorities
+Sorted branches: ['postprocess_detections']
+Begin analyzing layer postprocess_detections. 
+The arrival time pool of dependencies on device 0 is [0.07336129999999999, 0.0721317, 0.0667589, 0.021031400000000002]
+The arrival time pool of dependencies on device 1 is [0.07336129999999999, 0.0721317, 0.0667589, 0.0211653]
+The arrival time pool of dependencies on device 2 is [0.07336129999999999, 0.0721317, 0.0667589, 0.021466600000000002]
+The arrival time pool of dependencies on device 3 is [0.0713133, 0.0714037, 0.0667509, 0.0714037]
+The arrival time pool of dependencies on device 4 is [0.07336129999999999, 0.0721317, 0.0667589, 0.002528]
+The arrival time pool of dependencies on device 5 is [0.07336129999999999, 0.0721317, 0.0667589, 0.002528]
+==>>decision pool(clock time): [0.07336129999999999, 0.07336129999999999, 0.07336129999999999, 0.0714037, 0.07336129999999999, 0.07336129999999999]
+Decision for layer postprocess_detections: executed on device 3, end time 0.0714037
+
+Sorting criteria: priorities
+Sorted branches: ['postprocess_resize']
+Begin analyzing layer postprocess_resize. 
+The arrival time pool of dependencies on device 0 is [0.0714037, 0.018503400000000003]
+The arrival time pool of dependencies on device 1 is [0.0714037, 0.018637300000000002]
+The arrival time pool of dependencies on device 2 is [0.0714037, 0.018938600000000003]
+The arrival time pool of dependencies on device 3 is [0.0714037, 0.0714037]
+The arrival time pool of dependencies on device 4 is [0.0714037, 0.0]
+The arrival time pool of dependencies on device 5 is [0.0714037, 0.0]
+==>>decision pool(clock time): [0.0714037, 0.0714037, 0.0714037, 0.0714037, 0.0714037, 0.0714037]
+Decision for layer postprocess_resize: executed on device 0, end time 0.0714037
+
+Sorting criteria: priorities
+Sorted branches: ['output']
+
+[30;42m=========Result=========[0m
+layer name      device         
+input           0              
+transform       0              
+conv1           0              
+bn1             0              
+relu            0              
+maxpool         0              
+layer1          0              
+layer2          0              
+layer3          0              
+layer4          0              
+inner_3         0              
+layer_3         1              
+inner_2         0              
+interpolate__2  0              
+add__2          0              
+layer_2         0              
+inner_1         3              
+interpolate__1  0              
+add__1          3              
+layer_1         3              
+inner_0         0              
+interpolate__0  3              
+add__0          3              
+layer_0         3              
+extra           1              
+rpn_parallel_f0 3              
+rpn_merger      3              
+rpn_parallel_f1 3              
+rpn_parallel_f2 0              
+rpn_parallel_f3 2              
+rpn_parallel_f4 1              
+box_roi_pool    3              
+fc6             3              
+fc7             3              
+cls_score       3              
+bbox_pred_roi_  3              
+postprocess_detections 3              
 postprocess_resize 0              
 output          0              

@@ -12,8 +12,8 @@ class Optimizer(object):
                  bandwidth=2000,
                  parallel=True,
                  ignore_latency=False,
-                 iterations = 1,
-                 dir = "",
+                 iterations=1,
+                 dir="",
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -25,7 +25,7 @@ class Optimizer(object):
         self.ignore_latency = ignore_latency
         self.iterations = iterations
         self.dir = dir
-        
+
         # load and initialize devices
         parallel = True
         print(f"Device data-compute-parallel = {parallel}")
@@ -52,10 +52,14 @@ class Optimizer(object):
                 self.partitions.write(f"layername,device\n")
                 self.optimize(write_csv=True)
                 self.partitions.close()
+
+                print(f"\n\033[30;42m=========Result=========\033[0m")
+                print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
+                for layer_name, layer in self.layers.items():
+                    print("{:<15} {:<15} {:<15}".format(layer_name, layer.device_id, layer.pr_max))
             else:
                 self.backtrace()
                 self.optimize()
-
 
     def load_dependencies(self, dep_filename):
         """
@@ -148,34 +152,43 @@ class Optimizer(object):
         self.layers["input"].device_id = 0
 
         self.device_exec("input")
-        
-        print(f"\n\033[30;42m=========Result=========\033[0m")
+
+        print("\n================DEVICE ASSIGNMENT================")
         print("{:<15} {:<15}".format("layer name", "device"))
         for layer_name, layer in self.layers.items():
             print("{:<15} {:<15}".format(layer_name, layer.device_id))
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
+        print("===============================================\n")
 
     def backtrace(self, write_csv=False):
+        print(f"\n\033[30;45m=========Backtracking=========\033[0m")
         self.layers["output"].pr_max = 1000
         self.layers["output"].pr_min = 0
         queue = ["output"]
         while queue:
+            print(f"Current queue: {queue}")
             cur_layer_name = queue.pop(0)
             cur_layer = self.layers[cur_layer_name]
             cur_layer.completed = False
             sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time)
+            print(f"On layer {cur_layer_name}, its dependencies are: {cur_layer.dependencies} (sorted by end time). ")
             for dep_layer_name in cur_layer.dependencies:
                 if dep_layer_name == "input":
+                    print(f"Reaching an input layer. Skip this iteration.")
                     continue
                 i = sorted_dep_layer_names.index(dep_layer_name)
-                pr_max_ = cur_layer.pr_min + (i + 1) / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
+                pr_max_ = cur_layer.pr_min + (i + 1) / len(cur_layer.dependencies) * (
+                            cur_layer.pr_max - cur_layer.pr_min)
                 pr_min_ = cur_layer.pr_min + i / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
                 if (not self.layers[dep_layer_name].pr_max) or self.layers[dep_layer_name].pr_max < pr_max_:
                     self.layers[dep_layer_name].pr_max = pr_max_
                     self.layers[dep_layer_name].pr_min = pr_min_
+                    print(f"Updating the priority of layer {dep_layer_name}: new priority: [{pr_min_}, {pr_max_}]. ")
                 if dep_layer_name not in queue:
                     queue.append(dep_layer_name)
+                    print(f"Adding {dep_layer_name} to the queue. ")
+            print("")
 
         self.layers["input"].completed = False
         self.layers["input"].pr_max = 0
@@ -184,7 +197,8 @@ class Optimizer(object):
 
         print("\n================PRIORITIES================")
         for name, layer in self.layers.items():
-            print(f"layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finish at {layer.end_time})")
+            print(
+                f"Layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finishing at time {layer.end_time})")
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
         print("==========================================\n")
