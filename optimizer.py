@@ -11,7 +11,7 @@ class Optimizer(object):
                  bandwidth=2000,
                  parallel=True,
                  ignore_latency=False,
-                 iterations = 3,
+                 iterations = 1,
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -40,13 +40,17 @@ class Optimizer(object):
         self.optimize()
         self.FIRST_RUN = False
         for i in range(self.iterations):
-            self.backtrace()
             if i == self.iterations - 1:
+                self.priorities = open("priority.csv", "w")
+                self.priorities.write(f"layername,priority\n")
+                self.backtrace(write_csv=True)
+                self.priorities.close()
                 self.partitions = open("part.csv", "w")
                 self.partitions.write(f"layername,device\n")
                 self.optimize(write_csv=True)
                 self.partitions.close()
             else:
+                self.backtrace()
                 self.optimize()
 
 
@@ -149,7 +153,7 @@ class Optimizer(object):
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
 
-    def backtrace(self):
+    def backtrace(self, write_csv=False):
         self.layers["output"].pr_max = 1000
         self.layers["output"].pr_min = 0
         queue = ["output"]
@@ -171,10 +175,13 @@ class Optimizer(object):
                     queue.append(dep_layer_name)
 
         self.layers["input"].completed = False
+        self.layers["input"].pr_max = 0
         for name, device in self.devices.items():
             device.available_time = 0
 
         print("\n================PRIORITIES================")
         for name, layer in self.layers.items():
             print(f"layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finish at {layer.end_time})")
+            if write_csv:
+                self.priorities.write(f"{name},{layer.pr_max}\n")
         print("==========================================\n")
