@@ -26,6 +26,8 @@ class Optimizer(object):
         self.iterations = iterations
         self.dir = dir
 
+        self.results = []
+
         # load and initialize devices
         parallel = True
         print(f"Device data-compute-parallel = {parallel}")
@@ -53,6 +55,10 @@ class Optimizer(object):
                 self.optimize(write_csv=True)
                 self.partitions.close()
 
+                best = min(self.results)
+                best_iter = self.results.index(best)
+                print(f"Best result is achieved at iteration #{best_iter}")
+                print(f"All results: {self.results}")
                 print(f"\n\033[30;42m=========Result=========\033[0m")
                 print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
                 for layer_name, layer in self.layers.items():
@@ -90,7 +96,11 @@ class Optimizer(object):
 
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
-        for device_name, device in self.devices.items():
+
+        sorted_device_names = list(self.devices.keys())
+        sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
+        for device_name in sorted_device_names:
+            device = self.devices[device_name]
             dependency_arrival_timepool = []
             for dep_name in self.layers[cur_layer_name].dependencies:
                 dep_layer = self.layers[dep_name]
@@ -106,6 +116,7 @@ class Optimizer(object):
         print(f"==>>decision pool(clock time): {device_results}")
         min_value = min(device_results)
         decision = device_results.index(min_value)
+        decision = sorted_device_names[decision]
         self.layers[cur_layer_name].end_time = min_value
         self.layers[cur_layer_name].completed = True
         self.layers[cur_layer_name].device_id = decision
@@ -128,6 +139,7 @@ class Optimizer(object):
             #         print(f"{dep}, {self.layers[dep].completed}")
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
+                    print(f"Dependency for {cur_layer_name} not satisfied. \n")
                     return
 
             decision = self.decide_one_layer(cur_layer_name)
@@ -145,6 +157,7 @@ class Optimizer(object):
                     continue
                 if next_layer_name == "output":
                     self.layers["output"].device_id = decision
+                    self.results.append(cur_layer.end_time)
                     continue
                 self.device_exec(next_layer_name)
 
