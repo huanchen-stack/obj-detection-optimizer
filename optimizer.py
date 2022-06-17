@@ -43,6 +43,7 @@ class Optimizer(object):
 
         self.FIRST_RUN = True
         self.optimize()
+        # self.forward()
         self.FIRST_RUN = False
         for i in range(self.iterations):
             if i == self.iterations - 1:
@@ -55,17 +56,19 @@ class Optimizer(object):
                 self.optimize(write_csv=True)
                 self.partitions.close()
 
-                best = min(self.results)
-                best_iter = self.results.index(best)
-                print(f"Best result is achieved at iteration #{best_iter}")
-                print(f"All results: {self.results}")
                 print(f"\n\033[30;42m=========Result=========\033[0m")
                 print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
                 for layer_name, layer in self.layers.items():
                     print("{:<15} {:<15} {:<15}".format(layer_name, layer.device_id, layer.pr_max))
+                
+                best = min(self.results)
+                best_iter = self.results.index(best)
+                print(f"Best result is achieved at iteration #{best_iter}")
+                print(f"All results: {self.results}")
             else:
                 self.backtrace()
                 self.optimize()
+                # self.forward()
 
     def load_dependencies(self, dep_filename):
         """
@@ -90,6 +93,14 @@ class Optimizer(object):
         for layername, time, cpu, cuda, size, macs in df_list:
             self.layers[layername].size = size
             self.layers[layername].macs = macs
+
+    def clean_up(self):
+        for name, layer in self.layers.items():
+            layer.end_time = 0
+            layer.device_id = None
+        for name, device in self.devices.items():
+            device.available_time = 0
+            device.cur_time = 0
 
     def decide_one_layer(self, cur_layer_name):
         print(f"Begin analyzing layer {cur_layer_name}. ")
@@ -162,6 +173,9 @@ class Optimizer(object):
                 self.device_exec(next_layer_name)
 
     def optimize(self, write_csv=False):
+
+        self.clean_up()
+
         print(f"\n\033[30;44m=========Optimizinginging=========\033[0m")
 
         self.layers["input"].end_time = 0
@@ -176,6 +190,46 @@ class Optimizer(object):
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
         print("===============================================\n")
+
+    def forward(self):
+
+        self.clean_up()
+
+        print(f"===============================================")
+        print(f"====================BFS MODE===================")
+        print(f"===============================================")
+
+        self.layers["input"].end_time = 0
+        self.layers["input"].device_id = 0
+
+        queue = ["input"]
+        while queue:
+            print(f"Current queue: {queue}")
+            cur_layer_name = queue.pop(0)
+            cur_layer = self.layers[cur_layer_name]
+
+            for dep in cur_layer.dependencies:
+                if not self.layers[dep].completed:
+                    print(f"Dependency for {cur_layer_name} not satisfied. \n")
+                    return
+
+            decision = self.decide_one_layer(cur_layer_name)
+
+            if self.FIRST_RUN:
+                print("Sorting criteria: device end time")
+                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
+            else:
+                print("Sorting criteria: priorities")
+                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
+            
+            print(f"Sorted branches: {cur_layer.next}")
+            for next_layer_name in cur_layer.next:
+                if self.layers[next_layer_name].completed:
+                    continue
+                if next_layer_name == "output":
+                    self.layers["output"].device_id = decision
+                    continue
+                queue.append(next_layer_name)
 
     def backtrace(self, write_csv=False):
         print(f"\n\033[30;45m=========Backtracking=========\033[0m")
@@ -208,8 +262,8 @@ class Optimizer(object):
 
         self.layers["input"].completed = False
         self.layers["input"].pr_max = 0
-        for name, device in self.devices.items():
-            device.available_time = 0
+        # for name, device in self.devices.items():
+        #     device.available_time = 0
 
         print("\n================PRIORITIES================")
         for name, layer in self.layers.items():
@@ -217,5 +271,3 @@ class Optimizer(object):
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
         print("==========================================\n")
-
-        print("\n================BACKTRACE_CLEANING================")

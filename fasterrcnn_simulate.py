@@ -1,6 +1,6 @@
 import os
 import sys
-from simulator import Simulator
+from simulatorv2 import Simulator
 
 path = os.path.abspath(os.getcwd())
 path = os.path.join(path, "testcases/fasterrcnn")
@@ -25,5 +25,5 @@ Simulator(
     ],
     part_filename=part,
     priority_filename=priority,
-    bandwidth = 2000,
+    bandwidth = 5000,
 )

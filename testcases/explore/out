@@ -20,95 +20,156 @@ Decision for layer A: executed on device 0, end time 2
 Sorting criteria: device end time
 Sorted branches: ['B', 'D']
 Begin analyzing layer B. 
-The arrival time pool of dependencies on device 0 is [4, 4]
 The arrival time pool of dependencies on device 1 is [5.0, 2]
 The arrival time pool of dependencies on device 2 is [5.0, 2]
-==>>decision pool(clock time): [4, 5.0, 5.0]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
 Decision for layer B: executed on device 0, end time 4
 
 Sorting criteria: device end time
 Sorted branches: ['C']
 Begin analyzing layer C. 
-The arrival time pool of dependencies on device 0 is [6, 6]
 The arrival time pool of dependencies on device 1 is [7.0, 2]
 The arrival time pool of dependencies on device 2 is [7.0, 2]
-==>>decision pool(clock time): [6, 7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
 Decision for layer C: executed on device 0, end time 6
 
 Sorting criteria: device end time
 Sorted branches: ['H']
+Dependency for H not satisfied. 
+
 Begin analyzing layer D. 
-The arrival time pool of dependencies on device 0 is [4, 8]
 The arrival time pool of dependencies on device 1 is [5.0, 2]
 The arrival time pool of dependencies on device 2 is [5.0, 2]
-==>>decision pool(clock time): [8, 5.0, 5.0]
+The arrival time pool of dependencies on device 0 is [4, 8]
+==>>decision pool(clock time): [5.0, 5.0, 8]
 Decision for layer D: executed on device 1, end time 5.0
 
 Sorting criteria: device end time
 Sorted branches: ['E', 'F']
 Begin analyzing layer E. 
-The arrival time pool of dependencies on device 0 is [8.0, 8]
-The arrival time pool of dependencies on device 1 is [7.0, 7.0]
 The arrival time pool of dependencies on device 2 is [8.0, 2]
+The arrival time pool of dependencies on device 1 is [7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [8.0, 8]
 ==>>decision pool(clock time): [8.0, 7.0, 8.0]
 Decision for layer E: executed on device 1, end time 7.0
 
 Sorting criteria: device end time
 Sorted branches: ['G']
+Dependency for G not satisfied. 
+
 Begin analyzing layer F. 
+The arrival time pool of dependencies on device 2 is [8.0, 2]
 The arrival time pool of dependencies on device 0 is [8.0, 8]
 The arrival time pool of dependencies on device 1 is [7.0, 9.0]
-The arrival time pool of dependencies on device 2 is [8.0, 2]
-==>>decision pool(clock time): [8.0, 9.0, 8.0]
-Decision for layer F: executed on device 0, end time 8.0
+==>>decision pool(clock time): [8.0, 8.0, 9.0]
+Decision for layer F: executed on device 2, end time 8.0
 
 Sorting criteria: device end time
 Sorted branches: ['G']
 Begin analyzing layer G. 
-The arrival time pool of dependencies on device 0 is [10.0, 10.0, 10.0]
+The arrival time pool of dependencies on device 0 is [10.0, 11.0, 8]
 The arrival time pool of dependencies on device 1 is [9.0, 11.0, 9.0]
-The arrival time pool of dependencies on device 2 is [10.0, 11.0, 2]
-==>>decision pool(clock time): [10.0, 11.0, 11.0]
-Decision for layer G: executed on device 0, end time 10.0
+The arrival time pool of dependencies on device 2 is [10.0, 10.0, 10.0]
+==>>decision pool(clock time): [11.0, 11.0, 10.0]
+Decision for layer G: executed on device 2, end time 10.0
 
 Sorting criteria: device end time
 Sorted branches: ['H']
 Begin analyzing layer H. 
-The arrival time pool of dependencies on device 0 is [8, 12.0, 12.0]
+The arrival time pool of dependencies on device 0 is [8, 13.0, 8]
 The arrival time pool of dependencies on device 1 is [9.0, 13.0, 9.0]
-The arrival time pool of dependencies on device 2 is [9.0, 13.0, 2]
-==>>decision pool(clock time): [12.0, 13.0, 13.0]
-Decision for layer H: executed on device 0, end time 12.0
+The arrival time pool of dependencies on device 2 is [9.0, 12.0, 12.0]
+==>>decision pool(clock time): [13.0, 13.0, 12.0]
+Decision for layer H: executed on device 2, end time 12.0
 
 Sorting criteria: device end time
 Sorted branches: ['output']
 
-[30;42m=========Result=========[0m
+================DEVICE ASSIGNMENT================
 layer name      device         
 input           0              
 A               0              
 B               0              
 C               0              
-H               0              
+H               2              
 D               1              
 E               1              
-F               0              
-G               0              
-output          0              
+F               2              
+G               2              
+output          2              
+===============================================
+
+
+[30;45m=========Backtracking=========[0m
+Current queue: ['output']
+On layer output, its dependencies are: ['H'] (sorted by end time). 
+Updating the priority of layer H: new priority: [0.0, 1000.0]. 
+Adding H to the queue. 
+
+Current queue: ['H']
+On layer H, its dependencies are: ['C', 'G'] (sorted by end time). 
+Updating the priority of layer C: new priority: [0.0, 500.0]. 
+Adding C to the queue. 
+Updating the priority of layer G: new priority: [500.0, 1000.0]. 
+Adding G to the queue. 
+
+Current queue: ['C', 'G']
+On layer C, its dependencies are: ['B'] (sorted by end time). 
+Updating the priority of layer B: new priority: [0.0, 500.0]. 
+Adding B to the queue. 
+
+Current queue: ['G', 'B']
+On layer G, its dependencies are: ['E', 'F'] (sorted by end time). 
+Updating the priority of layer E: new priority: [500.0, 750.0]. 
+Adding E to the queue. 
+Updating the priority of layer F: new priority: [750.0, 1000.0]. 
+Adding F to the queue. 
+
+Current queue: ['B', 'E', 'F']
+On layer B, its dependencies are: ['A'] (sorted by end time). 
+Updating the priority of layer A: new priority: [0.0, 500.0]. 
+Adding A to the queue. 
+
+Current queue: ['E', 'F', 'A']
+On layer E, its dependencies are: ['D'] (sorted by end time). 
+Updating the priority of layer D: new priority: [500.0, 750.0]. 
+Adding D to the queue. 
+
+Current queue: ['F', 'A', 'D']
+On layer F, its dependencies are: ['D'] (sorted by end time). 
+Updating the priority of layer D: new priority: [750.0, 1000.0]. 
+
+Current queue: ['A', 'D']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+Current queue: ['D']
+On layer D, its dependencies are: ['A'] (sorted by end time). 
+Updating the priority of layer A: new priority: [750.0, 1000.0]. 
+Adding A to the queue. 
+
+Current queue: ['A']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
 
 ================PRIORITIES================
-layer input      has priority range (None    , 0       ]	 (finish at 0)
-layer A          has priority range (750.0   , 1000.0  ]	 (finish at 2)
-layer B          has priority range (0.0     , 500.0   ]	 (finish at 4)
-layer C          has priority range (0.0     , 500.0   ]	 (finish at 6)
-layer H          has priority range (0.0     , 1000.0  ]	 (finish at 12.0)
-layer D          has priority range (750.0   , 1000.0  ]	 (finish at 5.0)
-layer E          has priority range (500.0   , 750.0   ]	 (finish at 7.0)
-layer F          has priority range (750.0   , 1000.0  ]	 (finish at 8.0)
-layer G          has priority range (500.0   , 1000.0  ]	 (finish at 10.0)
-layer output     has priority range (0       , 1000    ]	 (finish at 0)
+Layer input      has priority range (None    , 0       ]	 (finishing at time 0)
+Layer A          has priority range (750.0   , 1000.0  ]	 (finishing at time 2)
+Layer B          has priority range (0.0     , 500.0   ]	 (finishing at time 4)
+Layer C          has priority range (0.0     , 500.0   ]	 (finishing at time 6)
+Layer H          has priority range (0.0     , 1000.0  ]	 (finishing at time 12.0)
+Layer D          has priority range (750.0   , 1000.0  ]	 (finishing at time 5.0)
+Layer E          has priority range (500.0   , 750.0   ]	 (finishing at time 7.0)
+Layer F          has priority range (750.0   , 1000.0  ]	 (finishing at time 8.0)
+Layer G          has priority range (500.0   , 1000.0  ]	 (finishing at time 10.0)
+Layer output     has priority range (0       , 1000    ]	 (finishing at time 0)
 ==========================================
 
+
+================BACKTRACE_CLEANING================
 
 [30;44m=========Optimizinginging=========[0m
 Begin analyzing layer input. 
@@ -130,70 +191,74 @@ Decision for layer A: executed on device 0, end time 2
 Sorting criteria: priorities
 Sorted branches: ['D', 'B']
 Begin analyzing layer D. 
-The arrival time pool of dependencies on device 0 is [4, 4]
 The arrival time pool of dependencies on device 1 is [5.0, 2]
 The arrival time pool of dependencies on device 2 is [5.0, 2]
-==>>decision pool(clock time): [4, 5.0, 5.0]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
 Decision for layer D: executed on device 0, end time 4
 
 Sorting criteria: priorities
 Sorted branches: ['F', 'E']
 Begin analyzing layer F. 
-The arrival time pool of dependencies on device 0 is [6, 6]
 The arrival time pool of dependencies on device 1 is [7.0, 2]
 The arrival time pool of dependencies on device 2 is [7.0, 2]
-==>>decision pool(clock time): [6, 7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
 Decision for layer F: executed on device 0, end time 6
 
 Sorting criteria: priorities
 Sorted branches: ['G']
+Dependency for G not satisfied. 
+
 Begin analyzing layer E. 
-The arrival time pool of dependencies on device 0 is [6, 8]
 The arrival time pool of dependencies on device 1 is [7.0, 2]
 The arrival time pool of dependencies on device 2 is [7.0, 2]
-==>>decision pool(clock time): [8, 7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [6, 8]
+==>>decision pool(clock time): [7.0, 7.0, 8]
 Decision for layer E: executed on device 1, end time 7.0
 
 Sorting criteria: priorities
 Sorted branches: ['G']
 Begin analyzing layer G. 
+The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
 The arrival time pool of dependencies on device 0 is [10.0, 8, 8]
 The arrival time pool of dependencies on device 1 is [9.0, 9.0, 9.0]
-The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
-==>>decision pool(clock time): [10.0, 9.0, 10.0]
+==>>decision pool(clock time): [10.0, 10.0, 9.0]
 Decision for layer G: executed on device 1, end time 9.0
 
 Sorting criteria: priorities
 Sorted branches: ['H']
+Dependency for H not satisfied. 
+
 Begin analyzing layer B. 
+The arrival time pool of dependencies on device 2 is [5.0, 2]
 The arrival time pool of dependencies on device 0 is [4, 8]
 The arrival time pool of dependencies on device 1 is [5.0, 11.0]
-The arrival time pool of dependencies on device 2 is [5.0, 2]
-==>>decision pool(clock time): [8, 11.0, 5.0]
+==>>decision pool(clock time): [5.0, 8, 11.0]
 Decision for layer B: executed on device 2, end time 5.0
 
 Sorting criteria: priorities
 Sorted branches: ['C']
 Begin analyzing layer C. 
+The arrival time pool of dependencies on device 2 is [7.0, 7.0]
 The arrival time pool of dependencies on device 0 is [8.0, 8]
 The arrival time pool of dependencies on device 1 is [8.0, 11.0]
-The arrival time pool of dependencies on device 2 is [7.0, 7.0]
-==>>decision pool(clock time): [8.0, 11.0, 7.0]
+==>>decision pool(clock time): [7.0, 8.0, 11.0]
 Decision for layer C: executed on device 2, end time 7.0
 
 Sorting criteria: priorities
 Sorted branches: ['H']
 Begin analyzing layer H. 
 The arrival time pool of dependencies on device 0 is [10.0, 12.0, 8]
-The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
 The arrival time pool of dependencies on device 2 is [9.0, 12.0, 9.0]
-==>>decision pool(clock time): [12.0, 11.0, 12.0]
+The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
+==>>decision pool(clock time): [12.0, 12.0, 11.0]
 Decision for layer H: executed on device 1, end time 11.0
 
 Sorting criteria: priorities
 Sorted branches: ['output']
 
-[30;42m=========Result=========[0m
+================DEVICE ASSIGNMENT================
 layer name      device         
 input           0              
 A               0              
@@ -205,3 +270,664 @@ E               1
 F               0              
 G               1              
 output          1              
+===============================================
+
+
+[30;45m=========Backtracking=========[0m
+Current queue: ['output']
+On layer output, its dependencies are: ['H'] (sorted by end time). 
+Adding H to the queue. 
+
+Current queue: ['H']
+On layer H, its dependencies are: ['C', 'G'] (sorted by end time). 
+Adding C to the queue. 
+Adding G to the queue. 
+
+Current queue: ['C', 'G']
+On layer C, its dependencies are: ['B'] (sorted by end time). 
+Adding B to the queue. 
+
+Current queue: ['G', 'B']
+On layer G, its dependencies are: ['E', 'F'] (sorted by end time). 
+Adding E to the queue. 
+Adding F to the queue. 
+
+Current queue: ['B', 'E', 'F']
+On layer B, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['E', 'F', 'A']
+On layer E, its dependencies are: ['D'] (sorted by end time). 
+Adding D to the queue. 
+
+Current queue: ['F', 'A', 'D']
+On layer F, its dependencies are: ['D'] (sorted by end time). 
+
+Current queue: ['A', 'D']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+Current queue: ['D']
+On layer D, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['A']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+
+================PRIORITIES================
+Layer input      has priority range (None    , 0       ]	 (finishing at time 0)
+Layer A          has priority range (750.0   , 1000.0  ]	 (finishing at time 2)
+Layer B          has priority range (0.0     , 500.0   ]	 (finishing at time 5.0)
+Layer C          has priority range (0.0     , 500.0   ]	 (finishing at time 7.0)
+Layer H          has priority range (0.0     , 1000.0  ]	 (finishing at time 11.0)
+Layer D          has priority range (750.0   , 1000.0  ]	 (finishing at time 4)
+Layer E          has priority range (500.0   , 750.0   ]	 (finishing at time 7.0)
+Layer F          has priority range (750.0   , 1000.0  ]	 (finishing at time 6)
+Layer G          has priority range (500.0   , 1000.0  ]	 (finishing at time 9.0)
+Layer output     has priority range (0       , 1000    ]	 (finishing at time 0)
+==========================================
+
+
+================BACKTRACE_CLEANING================
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+The arrival time pool of dependencies on device 0 is [0]
+The arrival time pool of dependencies on device 1 is [0]
+The arrival time pool of dependencies on device 2 is [0]
+==>>decision pool(clock time): [0, 0, 0]
+Decision for layer input: executed on device 0, end time 0
+
+Sorting criteria: priorities
+Sorted branches: ['A']
+Begin analyzing layer A. 
+The arrival time pool of dependencies on device 0 is [2, 2]
+The arrival time pool of dependencies on device 1 is [2.0, 2]
+The arrival time pool of dependencies on device 2 is [2.0, 2]
+==>>decision pool(clock time): [2, 2.0, 2.0]
+Decision for layer A: executed on device 0, end time 2
+
+Sorting criteria: priorities
+Sorted branches: ['D', 'B']
+Begin analyzing layer D. 
+The arrival time pool of dependencies on device 1 is [5.0, 2]
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
+Decision for layer D: executed on device 0, end time 4
+
+Sorting criteria: priorities
+Sorted branches: ['F', 'E']
+Begin analyzing layer F. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
+Decision for layer F: executed on device 0, end time 6
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Dependency for G not satisfied. 
+
+Begin analyzing layer E. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 8]
+==>>decision pool(clock time): [7.0, 7.0, 8]
+Decision for layer E: executed on device 1, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Begin analyzing layer G. 
+The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
+The arrival time pool of dependencies on device 0 is [10.0, 8, 8]
+The arrival time pool of dependencies on device 1 is [9.0, 9.0, 9.0]
+==>>decision pool(clock time): [10.0, 10.0, 9.0]
+Decision for layer G: executed on device 1, end time 9.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Dependency for H not satisfied. 
+
+Begin analyzing layer B. 
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 8]
+The arrival time pool of dependencies on device 1 is [5.0, 11.0]
+==>>decision pool(clock time): [5.0, 8, 11.0]
+Decision for layer B: executed on device 2, end time 5.0
+
+Sorting criteria: priorities
+Sorted branches: ['C']
+Begin analyzing layer C. 
+The arrival time pool of dependencies on device 2 is [7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [8.0, 8]
+The arrival time pool of dependencies on device 1 is [8.0, 11.0]
+==>>decision pool(clock time): [7.0, 8.0, 11.0]
+Decision for layer C: executed on device 2, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Begin analyzing layer H. 
+The arrival time pool of dependencies on device 0 is [10.0, 12.0, 8]
+The arrival time pool of dependencies on device 2 is [9.0, 12.0, 9.0]
+The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
+==>>decision pool(clock time): [12.0, 12.0, 11.0]
+Decision for layer H: executed on device 1, end time 11.0
+
+Sorting criteria: priorities
+Sorted branches: ['output']
+
+================DEVICE ASSIGNMENT================
+layer name      device         
+input           0              
+A               0              
+B               2              
+C               2              
+H               1              
+D               0              
+E               1              
+F               0              
+G               1              
+output          1              
+===============================================
+
+
+[30;45m=========Backtracking=========[0m
+Current queue: ['output']
+On layer output, its dependencies are: ['H'] (sorted by end time). 
+Adding H to the queue. 
+
+Current queue: ['H']
+On layer H, its dependencies are: ['C', 'G'] (sorted by end time). 
+Adding C to the queue. 
+Adding G to the queue. 
+
+Current queue: ['C', 'G']
+On layer C, its dependencies are: ['B'] (sorted by end time). 
+Adding B to the queue. 
+
+Current queue: ['G', 'B']
+On layer G, its dependencies are: ['E', 'F'] (sorted by end time). 
+Adding E to the queue. 
+Adding F to the queue. 
+
+Current queue: ['B', 'E', 'F']
+On layer B, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['E', 'F', 'A']
+On layer E, its dependencies are: ['D'] (sorted by end time). 
+Adding D to the queue. 
+
+Current queue: ['F', 'A', 'D']
+On layer F, its dependencies are: ['D'] (sorted by end time). 
+
+Current queue: ['A', 'D']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+Current queue: ['D']
+On layer D, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['A']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+
+================PRIORITIES================
+Layer input      has priority range (None    , 0       ]	 (finishing at time 0)
+Layer A          has priority range (750.0   , 1000.0  ]	 (finishing at time 2)
+Layer B          has priority range (0.0     , 500.0   ]	 (finishing at time 5.0)
+Layer C          has priority range (0.0     , 500.0   ]	 (finishing at time 7.0)
+Layer H          has priority range (0.0     , 1000.0  ]	 (finishing at time 11.0)
+Layer D          has priority range (750.0   , 1000.0  ]	 (finishing at time 4)
+Layer E          has priority range (500.0   , 750.0   ]	 (finishing at time 7.0)
+Layer F          has priority range (750.0   , 1000.0  ]	 (finishing at time 6)
+Layer G          has priority range (500.0   , 1000.0  ]	 (finishing at time 9.0)
+Layer output     has priority range (0       , 1000    ]	 (finishing at time 0)
+==========================================
+
+
+================BACKTRACE_CLEANING================
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+The arrival time pool of dependencies on device 0 is [0]
+The arrival time pool of dependencies on device 1 is [0]
+The arrival time pool of dependencies on device 2 is [0]
+==>>decision pool(clock time): [0, 0, 0]
+Decision for layer input: executed on device 0, end time 0
+
+Sorting criteria: priorities
+Sorted branches: ['A']
+Begin analyzing layer A. 
+The arrival time pool of dependencies on device 0 is [2, 2]
+The arrival time pool of dependencies on device 1 is [2.0, 2]
+The arrival time pool of dependencies on device 2 is [2.0, 2]
+==>>decision pool(clock time): [2, 2.0, 2.0]
+Decision for layer A: executed on device 0, end time 2
+
+Sorting criteria: priorities
+Sorted branches: ['D', 'B']
+Begin analyzing layer D. 
+The arrival time pool of dependencies on device 1 is [5.0, 2]
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
+Decision for layer D: executed on device 0, end time 4
+
+Sorting criteria: priorities
+Sorted branches: ['F', 'E']
+Begin analyzing layer F. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
+Decision for layer F: executed on device 0, end time 6
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Dependency for G not satisfied. 
+
+Begin analyzing layer E. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 8]
+==>>decision pool(clock time): [7.0, 7.0, 8]
+Decision for layer E: executed on device 1, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Begin analyzing layer G. 
+The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
+The arrival time pool of dependencies on device 0 is [10.0, 8, 8]
+The arrival time pool of dependencies on device 1 is [9.0, 9.0, 9.0]
+==>>decision pool(clock time): [10.0, 10.0, 9.0]
+Decision for layer G: executed on device 1, end time 9.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Dependency for H not satisfied. 
+
+Begin analyzing layer B. 
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 8]
+The arrival time pool of dependencies on device 1 is [5.0, 11.0]
+==>>decision pool(clock time): [5.0, 8, 11.0]
+Decision for layer B: executed on device 2, end time 5.0
+
+Sorting criteria: priorities
+Sorted branches: ['C']
+Begin analyzing layer C. 
+The arrival time pool of dependencies on device 2 is [7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [8.0, 8]
+The arrival time pool of dependencies on device 1 is [8.0, 11.0]
+==>>decision pool(clock time): [7.0, 8.0, 11.0]
+Decision for layer C: executed on device 2, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Begin analyzing layer H. 
+The arrival time pool of dependencies on device 0 is [10.0, 12.0, 8]
+The arrival time pool of dependencies on device 2 is [9.0, 12.0, 9.0]
+The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
+==>>decision pool(clock time): [12.0, 12.0, 11.0]
+Decision for layer H: executed on device 1, end time 11.0
+
+Sorting criteria: priorities
+Sorted branches: ['output']
+
+================DEVICE ASSIGNMENT================
+layer name      device         
+input           0              
+A               0              
+B               2              
+C               2              
+H               1              
+D               0              
+E               1              
+F               0              
+G               1              
+output          1              
+===============================================
+
+
+[30;45m=========Backtracking=========[0m
+Current queue: ['output']
+On layer output, its dependencies are: ['H'] (sorted by end time). 
+Adding H to the queue. 
+
+Current queue: ['H']
+On layer H, its dependencies are: ['C', 'G'] (sorted by end time). 
+Adding C to the queue. 
+Adding G to the queue. 
+
+Current queue: ['C', 'G']
+On layer C, its dependencies are: ['B'] (sorted by end time). 
+Adding B to the queue. 
+
+Current queue: ['G', 'B']
+On layer G, its dependencies are: ['E', 'F'] (sorted by end time). 
+Adding E to the queue. 
+Adding F to the queue. 
+
+Current queue: ['B', 'E', 'F']
+On layer B, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['E', 'F', 'A']
+On layer E, its dependencies are: ['D'] (sorted by end time). 
+Adding D to the queue. 
+
+Current queue: ['F', 'A', 'D']
+On layer F, its dependencies are: ['D'] (sorted by end time). 
+
+Current queue: ['A', 'D']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+Current queue: ['D']
+On layer D, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['A']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+
+================PRIORITIES================
+Layer input      has priority range (None    , 0       ]	 (finishing at time 0)
+Layer A          has priority range (750.0   , 1000.0  ]	 (finishing at time 2)
+Layer B          has priority range (0.0     , 500.0   ]	 (finishing at time 5.0)
+Layer C          has priority range (0.0     , 500.0   ]	 (finishing at time 7.0)
+Layer H          has priority range (0.0     , 1000.0  ]	 (finishing at time 11.0)
+Layer D          has priority range (750.0   , 1000.0  ]	 (finishing at time 4)
+Layer E          has priority range (500.0   , 750.0   ]	 (finishing at time 7.0)
+Layer F          has priority range (750.0   , 1000.0  ]	 (finishing at time 6)
+Layer G          has priority range (500.0   , 1000.0  ]	 (finishing at time 9.0)
+Layer output     has priority range (0       , 1000    ]	 (finishing at time 0)
+==========================================
+
+
+================BACKTRACE_CLEANING================
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+The arrival time pool of dependencies on device 0 is [0]
+The arrival time pool of dependencies on device 1 is [0]
+The arrival time pool of dependencies on device 2 is [0]
+==>>decision pool(clock time): [0, 0, 0]
+Decision for layer input: executed on device 0, end time 0
+
+Sorting criteria: priorities
+Sorted branches: ['A']
+Begin analyzing layer A. 
+The arrival time pool of dependencies on device 0 is [2, 2]
+The arrival time pool of dependencies on device 1 is [2.0, 2]
+The arrival time pool of dependencies on device 2 is [2.0, 2]
+==>>decision pool(clock time): [2, 2.0, 2.0]
+Decision for layer A: executed on device 0, end time 2
+
+Sorting criteria: priorities
+Sorted branches: ['D', 'B']
+Begin analyzing layer D. 
+The arrival time pool of dependencies on device 1 is [5.0, 2]
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
+Decision for layer D: executed on device 0, end time 4
+
+Sorting criteria: priorities
+Sorted branches: ['F', 'E']
+Begin analyzing layer F. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
+Decision for layer F: executed on device 0, end time 6
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Dependency for G not satisfied. 
+
+Begin analyzing layer E. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 8]
+==>>decision pool(clock time): [7.0, 7.0, 8]
+Decision for layer E: executed on device 1, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Begin analyzing layer G. 
+The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
+The arrival time pool of dependencies on device 0 is [10.0, 8, 8]
+The arrival time pool of dependencies on device 1 is [9.0, 9.0, 9.0]
+==>>decision pool(clock time): [10.0, 10.0, 9.0]
+Decision for layer G: executed on device 1, end time 9.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Dependency for H not satisfied. 
+
+Begin analyzing layer B. 
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 8]
+The arrival time pool of dependencies on device 1 is [5.0, 11.0]
+==>>decision pool(clock time): [5.0, 8, 11.0]
+Decision for layer B: executed on device 2, end time 5.0
+
+Sorting criteria: priorities
+Sorted branches: ['C']
+Begin analyzing layer C. 
+The arrival time pool of dependencies on device 2 is [7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [8.0, 8]
+The arrival time pool of dependencies on device 1 is [8.0, 11.0]
+==>>decision pool(clock time): [7.0, 8.0, 11.0]
+Decision for layer C: executed on device 2, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Begin analyzing layer H. 
+The arrival time pool of dependencies on device 0 is [10.0, 12.0, 8]
+The arrival time pool of dependencies on device 2 is [9.0, 12.0, 9.0]
+The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
+==>>decision pool(clock time): [12.0, 12.0, 11.0]
+Decision for layer H: executed on device 1, end time 11.0
+
+Sorting criteria: priorities
+Sorted branches: ['output']
+
+================DEVICE ASSIGNMENT================
+layer name      device         
+input           0              
+A               0              
+B               2              
+C               2              
+H               1              
+D               0              
+E               1              
+F               0              
+G               1              
+output          1              
+===============================================
+
+
+[30;45m=========Backtracking=========[0m
+Current queue: ['output']
+On layer output, its dependencies are: ['H'] (sorted by end time). 
+Adding H to the queue. 
+
+Current queue: ['H']
+On layer H, its dependencies are: ['C', 'G'] (sorted by end time). 
+Adding C to the queue. 
+Adding G to the queue. 
+
+Current queue: ['C', 'G']
+On layer C, its dependencies are: ['B'] (sorted by end time). 
+Adding B to the queue. 
+
+Current queue: ['G', 'B']
+On layer G, its dependencies are: ['E', 'F'] (sorted by end time). 
+Adding E to the queue. 
+Adding F to the queue. 
+
+Current queue: ['B', 'E', 'F']
+On layer B, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['E', 'F', 'A']
+On layer E, its dependencies are: ['D'] (sorted by end time). 
+Adding D to the queue. 
+
+Current queue: ['F', 'A', 'D']
+On layer F, its dependencies are: ['D'] (sorted by end time). 
+
+Current queue: ['A', 'D']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+Current queue: ['D']
+On layer D, its dependencies are: ['A'] (sorted by end time). 
+Adding A to the queue. 
+
+Current queue: ['A']
+On layer A, its dependencies are: ['input'] (sorted by end time). 
+Reaching an input layer. Skip this iteration.
+
+
+================PRIORITIES================
+Layer input      has priority range (None    , 0       ]	 (finishing at time 0)
+Layer A          has priority range (750.0   , 1000.0  ]	 (finishing at time 2)
+Layer B          has priority range (0.0     , 500.0   ]	 (finishing at time 5.0)
+Layer C          has priority range (0.0     , 500.0   ]	 (finishing at time 7.0)
+Layer H          has priority range (0.0     , 1000.0  ]	 (finishing at time 11.0)
+Layer D          has priority range (750.0   , 1000.0  ]	 (finishing at time 4)
+Layer E          has priority range (500.0   , 750.0   ]	 (finishing at time 7.0)
+Layer F          has priority range (750.0   , 1000.0  ]	 (finishing at time 6)
+Layer G          has priority range (500.0   , 1000.0  ]	 (finishing at time 9.0)
+Layer output     has priority range (0       , 1000    ]	 (finishing at time 0)
+==========================================
+
+
+================BACKTRACE_CLEANING================
+
+[30;44m=========Optimizinginging=========[0m
+Begin analyzing layer input. 
+The arrival time pool of dependencies on device 0 is [0]
+The arrival time pool of dependencies on device 1 is [0]
+The arrival time pool of dependencies on device 2 is [0]
+==>>decision pool(clock time): [0, 0, 0]
+Decision for layer input: executed on device 0, end time 0
+
+Sorting criteria: priorities
+Sorted branches: ['A']
+Begin analyzing layer A. 
+The arrival time pool of dependencies on device 0 is [2, 2]
+The arrival time pool of dependencies on device 1 is [2.0, 2]
+The arrival time pool of dependencies on device 2 is [2.0, 2]
+==>>decision pool(clock time): [2, 2.0, 2.0]
+Decision for layer A: executed on device 0, end time 2
+
+Sorting criteria: priorities
+Sorted branches: ['D', 'B']
+Begin analyzing layer D. 
+The arrival time pool of dependencies on device 1 is [5.0, 2]
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 4]
+==>>decision pool(clock time): [5.0, 5.0, 4]
+Decision for layer D: executed on device 0, end time 4
+
+Sorting criteria: priorities
+Sorted branches: ['F', 'E']
+Begin analyzing layer F. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 6]
+==>>decision pool(clock time): [7.0, 7.0, 6]
+Decision for layer F: executed on device 0, end time 6
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Dependency for G not satisfied. 
+
+Begin analyzing layer E. 
+The arrival time pool of dependencies on device 1 is [7.0, 2]
+The arrival time pool of dependencies on device 2 is [7.0, 2]
+The arrival time pool of dependencies on device 0 is [6, 8]
+==>>decision pool(clock time): [7.0, 7.0, 8]
+Decision for layer E: executed on device 1, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['G']
+Begin analyzing layer G. 
+The arrival time pool of dependencies on device 2 is [10.0, 9.0, 2]
+The arrival time pool of dependencies on device 0 is [10.0, 8, 8]
+The arrival time pool of dependencies on device 1 is [9.0, 9.0, 9.0]
+==>>decision pool(clock time): [10.0, 10.0, 9.0]
+Decision for layer G: executed on device 1, end time 9.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Dependency for H not satisfied. 
+
+Begin analyzing layer B. 
+The arrival time pool of dependencies on device 2 is [5.0, 2]
+The arrival time pool of dependencies on device 0 is [4, 8]
+The arrival time pool of dependencies on device 1 is [5.0, 11.0]
+==>>decision pool(clock time): [5.0, 8, 11.0]
+Decision for layer B: executed on device 2, end time 5.0
+
+Sorting criteria: priorities
+Sorted branches: ['C']
+Begin analyzing layer C. 
+The arrival time pool of dependencies on device 2 is [7.0, 7.0]
+The arrival time pool of dependencies on device 0 is [8.0, 8]
+The arrival time pool of dependencies on device 1 is [8.0, 11.0]
+==>>decision pool(clock time): [7.0, 8.0, 11.0]
+Decision for layer C: executed on device 2, end time 7.0
+
+Sorting criteria: priorities
+Sorted branches: ['H']
+Begin analyzing layer H. 
+The arrival time pool of dependencies on device 0 is [10.0, 12.0, 8]
+The arrival time pool of dependencies on device 2 is [9.0, 12.0, 9.0]
+The arrival time pool of dependencies on device 1 is [10.0, 11.0, 11.0]
+==>>decision pool(clock time): [12.0, 12.0, 11.0]
+Decision for layer H: executed on device 1, end time 11.0
+
+Sorting criteria: priorities
+Sorted branches: ['output']
+
+================DEVICE ASSIGNMENT================
+layer name      device         
+input           0              
+A               0              
+B               2              
+C               2              
+H               1              
+D               0              
+E               1              
+F               0              
+G               1              
+output          1              
+===============================================
+
+Best result is achieved at iteration #1
+All results: [12.0, 11.0, 11.0, 11.0, 11.0, 11.0]
+
+[30;42m=========Result=========[0m
+layer name      device          priorities     
+input           0               0              
+A               0               1000.0         
+B               2               500.0          
+C               2               500.0          
+H               1               1000.0         
+D               0               1000.0         
+E               1               750.0          
+F               0               1000.0         
+G               1               1000.0         
+output          1               1000           
