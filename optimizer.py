@@ -56,10 +56,10 @@ class Optimizer(object):
                 self.optimize(write_csv=True)
                 self.partitions.close()
 
-                print(f"\n\033[30;42m=========Result=========\033[0m")
-                print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
-                for layer_name, layer in self.layers.items():
-                    print("{:<15} {:<15} {:<15}".format(layer_name, layer.device_id, layer.pr_max))
+                # print(f"\n\033[30;42m=========Result=========\033[0m")
+                # print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
+                # for layer_name, layer in self.layers.items():
+                #     print("{:<15} {:<15} {:<15}".format(layer_name, layer.device_id, layer.pr_max))
                 
                 best = min(self.results)
                 best_iter = self.results.index(best)
@@ -119,11 +119,11 @@ class Optimizer(object):
                 if (not self.ignore_latency) and dep_layer.device_id != device.name:
                     transfer_latency = dep_layer.size / self.bandwidth
 
-                end_time = dep_layer.end_time + transfer_latency + device.time[cur_layer_name]
+                end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)
-            dependency_arrival_timepool.append(device.available_time + device.time[cur_layer_name])
+            dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
             print(f"The arrival time pool of dependencies on device {device_name} is {dependency_arrival_timepool}")
-            device_results.append(max(dependency_arrival_timepool))
+            device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
         print(f"==>>decision pool(clock time): {device_results}")
         min_value = min(device_results)
         decision = device_results.index(min_value)
@@ -132,7 +132,8 @@ class Optimizer(object):
         self.layers[cur_layer_name].completed = True
         self.layers[cur_layer_name].device_id = decision
         self.devices[decision].available_time = min_value
-        print(f"Decision for layer {cur_layer_name}: executed on device {decision}, end time {min_value}\n")
+        print(f"Decision for layer {cur_layer_name}: executed on device {decision}, "
+              f"start at {min_value - self.devices[decision].time[cur_layer_name]}, end time {min_value}\n")
         # self.partitions.write(f"{cur_layer_name},{decision}\n")
         return decision
 
