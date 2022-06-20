@@ -11,11 +11,12 @@ class Simulator(object):
                  bandwidth=200,
                  device_names=None,
                  priority_filename=None,
-                 part_filename=None):
+                 part_filename=None,
+                 ignore_latency=False):
         super().__init__()
         self.bandwidth = bandwidth
 
-        self.ignore_latency = False
+        self.ignore_latency = ignore_latency
         self.results = []
 
         self.current_device = 0  # spin
@@ -155,16 +156,14 @@ class Simulator(object):
         if cur_layer_name == "output":
             return
         else:
+            print("")
             cur_layer = self.layers[cur_layer_name]
-            # if cur_layer_name == "add__0":
-            #     for dep in cur_layer.dependencies:
-            #         print(f"{dep}, {self.layers[dep].completed}")
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
-                    print(f"Dependency for {cur_layer_name} not satisfied. \n")
+                    print(f"Dependency for {cur_layer_name} not satisfied.")
                     return
 
-            print(cur_layer.name, cur_layer.device_id)
+            print(f"Device {cur_layer.device_id} is running: {cur_layer.name}")
             device = self.devices[str(cur_layer.device_id)]
             dependency_arrival_timepool = []
             for dep in cur_layer.dependencies:
@@ -172,6 +171,8 @@ class Simulator(object):
                 transfer_latency = 0
                 if (not self.ignore_latency) and str(dep_layer.device_id) != device.name:
                     transfer_latency = dep_layer.size / self.bandwidth
+                print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
+                      f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
                 end_time = dep_layer.end_time + transfer_latency
                 dependency_arrival_timepool.append(end_time)
 
@@ -179,12 +180,14 @@ class Simulator(object):
             dependency_arrival_timepool.append(device.available_time)
             end_time = max(dependency_arrival_timepool) + device.time[cur_layer_name]
             self.layers[cur_layer_name].end_time = end_time
-            print(f"Finish layer {cur_layer_name} at {end_time:<15}")
+            print(f"Layer {cur_layer_name} is executed from {end_time - device.time[cur_layer_name]:.4f} to {end_time:.4f}")
             self.layers[cur_layer_name].completed = True
             self.devices[str(cur_layer.device_id)].available_time = end_time
 
-
-            print("Sorting criteria: priorities")
+            if self.priorities is None:
+                print("NO priority file specified. ")
+            else:
+                print("Sorting criteria: priorities")
             cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
 
             print(f"Sorted branches: {cur_layer.next}")
@@ -192,19 +195,38 @@ class Simulator(object):
                 if self.layers[next_layer_name].completed:
                     continue
                 if next_layer_name == "output":
-                    # self.layers["output"].device_id = decision
-                    self.results.append(cur_layer.end_time)
+                    self.time_result[cur_layer_name] = cur_layer.end_time
                     continue
                 self.device_exec(next_layer_name)
 
     def simulate(self):
         self.clean_up()
 
-        print(f"\n\033[30;44m=========Optimizinginging=========\033[0m")
+        print(f"\n\033[30;44m=========Simulatinginging=========\033[0m")
 
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
 
         self.device_exec("input")
 
-        print(self.results)
+        print(f"\n\033[30;42m=========Time Result=========\033[0m")
+        print("{:<15} {:<15}".format("output_layer", "time (s)"))
+        for key, value in self.time_result.items():
+            print("{:<15} {:<15,.5f}".format(key, value))
+
+        # print(f"\n\033[30;42m=========Time Result per Device=========\033[0m")
+        # print("{:<15} {:<15}".format("device", "time (s)"))
+        # for key, value in self.time_result_seg.items():
+        #     print("{:<15} {:<15,.5f}".format(key, value))
+
+        print(f"\n\033[30;42m=========Mem Result=========\033[0m")
+        print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("device", "cpu sum (MB)", "cpu peak (MB)", "cuda sum (MB)",
+                                                          "cuda peak (MB)"))
+        for name, device in self.devices.items():
+            device.get_mem_consumption()
+
+        print(f"\n\033[30;42m=========MACs Result=========\033[0m")
+        print("{:<15} {:<15} {:<15}".format("device", "macs sum (M)", "macs peak (M)"))
+        for name, device in self.devices.items():
+            device.get_macs()
+        # print(self.results)

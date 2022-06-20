@@ -11,9 +11,11 @@ class Simulator(object):
                  bandwidth=200,
                  device_names=None,
                  priority_filename=None,
-                 part_filename=None):
+                 part_filename=None,
+                 ignore_latency=False):
         super().__init__()
         self.bandwidth = bandwidth
+        self.ignore_latency = ignore_latency
 
         self.current_device = 0  # spin
         self.device_names = []  # spinning through all devices
@@ -42,7 +44,7 @@ class Simulator(object):
 
         # load dependencies and initialize all Layers
         self.load_dependencies(dep_filename)
-        self.load_macs_size(prof_filename)
+        self.load_macs_size(prof_filenames)
 
         # if priority file is not given, init with even priorities
         if priority_filename is not None:
@@ -200,8 +202,7 @@ class Simulator(object):
                     self.time_result[start_layer_name] = device.cur_time
                     continue
                 if self.layers[next_layer_name].device_id != device_id:
-                    # transfer_latency = 0
-                    transfer_latency = cur_layer.size / self.bandwidth
+                    transfer_latency = 0 if self.ignore_latency else cur_layer.size / self.bandwidth
 
                     print(f"Device {device.name} sends layer {cur_layer.name} output at time {device.cur_time: .8f} "
                           f"to device {self.layers[next_layer_name].device_id}, "
