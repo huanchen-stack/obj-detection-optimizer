@@ -9,6 +9,7 @@ class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
+                 priority_filename,
                  bandwidth=2000,
                  parallel=True,
                  ignore_latency=False,
@@ -20,13 +21,15 @@ class Optimizer(object):
         self.devices = {}
         self.device_names = []  # spinning through all devices
         self.layers = {}  # Dictionary of Layer objects: layername -> Layer objects
-        self.priorities = {}  # Dictionary of integers: layername -> integer
+        self.pre_priorities = {}  # Used when self.FIRST_RUN is True
         self.parallel = parallel
         self.ignore_latency = ignore_latency
         self.iterations = iterations
         self.dir = dir
 
         self.results = []
+        self.priorities = None  # file output
+        self.partitions = None # file output
 
         # load and initialize devices
         parallel = True
@@ -40,6 +43,13 @@ class Optimizer(object):
         # load dependencies and initialize all Layers
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
+
+        # if priority file is not given, init with even priorities
+        if priority_filename is not None:
+            self.load_priorities(priority_filename)
+        else:
+            for name in list(self.layers.keys()):
+                self.priorities[name] = 1
 
         self.FIRST_RUN = True
         self.optimize()
@@ -93,6 +103,11 @@ class Optimizer(object):
         for layername, time, cpu, cuda, size, macs in df_list:
             self.layers[layername].size = size
             self.layers[layername].macs = macs
+
+    def load_priorities(self, priority_filename):
+        pre_priorities = pd.read_csv(priority_filename).values.tolist()
+        for layername, priority in pre_priorities:
+            self.pre_priorities[layername] = priority
 
     def clean_up(self):
         for name, layer in self.layers.items():
@@ -158,7 +173,8 @@ class Optimizer(object):
 
             if self.FIRST_RUN:
                 print("Sorting criteria: device end time")
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
+                # cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
+                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.pre_priorities[e], reverse=True)
             else:
                 print("Sorting criteria: priorities")
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)

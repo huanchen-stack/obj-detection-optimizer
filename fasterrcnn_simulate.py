@@ -25,5 +25,5 @@ Simulator(
     ],
     part_filename=part,
     priority_filename=priority,
-    bandwidth = 5000,
+    bandwidth = 2000,
 )

@@ -7,6 +7,8 @@ path = os.path.join(path, "testcases/fasterrcnn")
 
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")
+# part = os.path.join(path, "part.csv")
+priority = os.path.join(path, "priority.csv")
 
 # out = os.path.join(path, "out")
 # sys.stdout = open(out, "w")
@@ -16,15 +18,16 @@ Optimizer(
     prof_filenames=[
         prof,
         prof,
-        # prof,
+        prof,
         # prof,
         # prof,
         # prof,
         # prof,
         # prof,
     ],
-    bandwidth=1000,
+    priority_filename=priority,
+    bandwidth=5000,
     ignore_latency=False,
-    iterations=1,
+    iterations=5,
     dir="testcases/fasterrcnn"
 )
