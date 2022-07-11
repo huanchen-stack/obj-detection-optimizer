@@ -11,7 +11,7 @@ class FindLongestPath(object):
                  prof_filenames,
                  bandwidth=2000,
                  parallel=True,
-                 ignore_latency=False,
+                 ignore_latency=True,
                  iterations=1,
                  dir="",
                  ):
@@ -94,7 +94,7 @@ import os
 import sys
 
 path = os.path.abspath(os.getcwd())
-path = os.path.join(path, "testcases/fasterrcnn")
+path = os.path.join(path, "testcases/yolov4/jetson_nx")
 
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")

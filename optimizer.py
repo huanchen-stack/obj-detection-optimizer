@@ -9,27 +9,31 @@ class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
-                 priority_filename,
                  bandwidth=2000,
                  parallel=True,
                  ignore_latency=False,
                  iterations=1,
                  dir="",
+                 benchmark=None,
+                 reverse0=True,
+                 reverse1=True,
                  ):
         super().__init__()
         self.bandwidth = bandwidth
         self.devices = {}
         self.device_names = []  # spinning through all devices
         self.layers = {}  # Dictionary of Layer objects: layername -> Layer objects
-        self.pre_priorities = {}  # Used when self.FIRST_RUN is True
+        self.priorities = {}  # Dictionary of integers: layername -> integer
         self.parallel = parallel
         self.ignore_latency = ignore_latency
         self.iterations = iterations
         self.dir = dir
 
+        self.reverse0 = reverse0
+        self.reverse1 = reverse1
+
         self.results = []
-        self.priorities = None  # file output
-        self.partitions = None # file output
+        self.has_fixed = False
 
         # load and initialize devices
         parallel = True
@@ -43,13 +47,6 @@ class Optimizer(object):
         # load dependencies and initialize all Layers
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
-
-        # if priority file is not given, init with even priorities
-        if priority_filename is not None:
-            self.load_priorities(priority_filename)
-        else:
-            for name in list(self.layers.keys()):
-                self.priorities[name] = 1
 
         self.FIRST_RUN = True
         self.optimize()
@@ -66,14 +63,16 @@ class Optimizer(object):
                 self.optimize(write_csv=True)
                 self.partitions.close()
 
-                # print(f"\n\033[30;42m=========Result=========\033[0m")
-                # print("{:<15} {:<15} {:<15}".format("layer name", "device", "priorities"))
-                # for layer_name, layer in self.layers.items():
-                #     print("{:<15} {:<15} {:<15}".format(layer_name, layer.device_id, layer.pr_max))
-                
                 best = min(self.results)
                 best_iter = self.results.index(best)
                 print(f"Best result is achieved at iteration #{best_iter}")
+
+                for layer in self.layers.values():
+                    if layer.fixed is not None:
+                        print(f"Fixed layers: {layer.name} - {layer.fixed}")
+
+                if benchmark is not None:
+                    print(f"Optimization performance: {(benchmark - best) / benchmark}")
                 print(f"All results: {self.results}")
             else:
                 self.backtrace()
@@ -104,11 +103,6 @@ class Optimizer(object):
             self.layers[layername].size = size
             self.layers[layername].macs = macs
 
-    def load_priorities(self, priority_filename):
-        pre_priorities = pd.read_csv(priority_filename).values.tolist()
-        for layername, priority in pre_priorities:
-            self.pre_priorities[layername] = priority
-
     def clean_up(self):
         for name, layer in self.layers.items():
             layer.end_time = 0
@@ -132,21 +126,46 @@ class Optimizer(object):
                 dep_layer = self.layers[dep_name]
                 transfer_latency = 0
                 if (not self.ignore_latency) and dep_layer.device_id != device.name:
-                    transfer_latency = dep_layer.size / self.bandwidth
-
+                    transfer_latency = dep_layer.size / self.bandwidth * 1000
                 end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)
             dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
             print(f"The arrival time pool of dependencies on device {device_name} is {dependency_arrival_timepool}")
             device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
         print(f"==>>decision pool(clock time): {device_results}")
-        min_value = min(device_results)
-        decision = device_results.index(min_value)
-        decision = sorted_device_names[decision]
-        self.layers[cur_layer_name].end_time = min_value
+
+        if self.layers[cur_layer_name].fixed is not None:
+            decision = self.layers[self.layers[cur_layer_name].fixed].device_id
+            min_value = device_results[sorted_device_names.index(decision)]
+            # min_value = device_results[decision]
+            self.layers[cur_layer_name].device_id = decision
+            # self.layers[cur_layer_name].fixed = None
+        else:
+            min_value = min(device_results)
+            decision = sorted_device_names[device_results.index(min_value)]
+            self.layers[cur_layer_name].device_id = decision
+
         self.layers[cur_layer_name].completed = True
-        self.layers[cur_layer_name].device_id = decision
+        self.layers[cur_layer_name].end_time = min_value
         self.devices[decision].available_time = min_value
+
+        same_source_dep_time = []
+        for dep_layer_name in self.layers[cur_layer_name].dependencies:
+            if self.layers[dep_layer_name].device_id == decision:
+                same_source_dep_time.append(self.layers[dep_layer_name].end_time)
+        if same_source_dep_time:
+            earliest_ready_time = max(same_source_dep_time)
+            possible_opt_pool = {}
+            curr_start_time = self.layers[cur_layer_name].end_time - self.devices[decision].time[cur_layer_name]
+            for dep_layer_name in self.layers[cur_layer_name].dependencies:
+                if self.layers[dep_layer_name].device_id != decision:
+                    possible_opt_pool[dep_layer_name] = (
+                                curr_start_time - (earliest_ready_time + self.devices[decision].time[dep_layer_name]))
+            if possible_opt_pool and max(possible_opt_pool.values()) > 0:
+                can_opt_dep_name = max(possible_opt_pool, key=possible_opt_pool.get)
+                self.layers[can_opt_dep_name].fixed = self.layers[can_opt_dep_name].dependencies[0]
+                self.layers[cur_layer_name].fixed = can_opt_dep_name
+
         print(f"Decision for layer {cur_layer_name}: executed on device {decision}, "
               f"start at {min_value - self.devices[decision].time[cur_layer_name]}, end time {min_value}\n")
         # self.partitions.write(f"{cur_layer_name},{decision}\n")
@@ -173,11 +192,10 @@ class Optimizer(object):
 
             if self.FIRST_RUN:
                 print("Sorting criteria: device end time")
-                # cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.pre_priorities[e], reverse=True)
+                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=self.reverse0)
             else:
                 print("Sorting criteria: priorities")
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
+                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
 
             print(f"Sorted branches: {cur_layer.next}")
             for next_layer_name in cur_layer.next:
@@ -238,7 +256,7 @@ class Optimizer(object):
             else:
                 print("Sorting criteria: priorities")
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
-            
+
             print(f"Sorted branches: {cur_layer.next}")
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
@@ -258,7 +276,8 @@ class Optimizer(object):
             cur_layer_name = queue.pop(0)
             cur_layer = self.layers[cur_layer_name]
             cur_layer.completed = False
-            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time + (self.layers[e].size / self.bandwidth if self.layers[e].device_id != cur_layer.device_id else 0))
+            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time + (
+                self.layers[e].size / self.bandwidth if self.layers[e].device_id != cur_layer.device_id else 0))
             print(f"On layer {cur_layer_name}, its dependencies are: {cur_layer.dependencies} (sorted by end time). ")
             for dep_layer_name in cur_layer.dependencies:
                 if dep_layer_name == "input":
@@ -266,7 +285,7 @@ class Optimizer(object):
                     continue
                 i = sorted_dep_layer_names.index(dep_layer_name)
                 pr_max_ = cur_layer.pr_min + (i + 1) / len(cur_layer.dependencies) * (
-                            cur_layer.pr_max - cur_layer.pr_min)
+                        cur_layer.pr_max - cur_layer.pr_min)
                 pr_min_ = cur_layer.pr_min + i / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
                 if (not self.layers[dep_layer_name].pr_max) or self.layers[dep_layer_name].pr_max < pr_max_:
                     self.layers[dep_layer_name].pr_max = pr_max_
@@ -284,7 +303,16 @@ class Optimizer(object):
 
         print("\n================PRIORITIES================")
         for name, layer in self.layers.items():
-            print(f"Layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finishing at time {layer.end_time})")
+            print(
+                f"Layer {name:<10} has priority range ({str(layer.pr_min):<8}, {str(layer.pr_max):<8}]\t (finishing at time {layer.end_time})")
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
         print("==========================================\n")
+
+    def report(self):
+        best = min(self.results)
+        best_iter = self.results.index(best)
+        # r0 = "T" if self.reverse0 else "F"
+        # r1 = "T" if self.reverse1 else "F"
+        return best, best_iter, self.reverse0, self.reverse1
+

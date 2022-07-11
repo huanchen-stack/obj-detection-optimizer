@@ -114,40 +114,6 @@ class Simulator(object):
             device.available_time = 0
             device.cur_time = 0
 
-    def decide_one_layer(self, cur_layer_name):
-        print(f"Begin analyzing layer {cur_layer_name}. ")
-
-        # min(max(max(end_time + transfer_time), device_clock) + execution_time)
-        device_results = []
-
-        sorted_device_names = list(self.devices.keys())
-        sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
-        for device_name in sorted_device_names:
-            device = self.devices[device_name]
-            dependency_arrival_timepool = []
-            for dep_name in self.layers[cur_layer_name].dependencies:
-                dep_layer = self.layers[dep_name]
-                transfer_latency = 0
-                if (not self.ignore_latency) and dep_layer.device_id != device.name:
-                    transfer_latency = dep_layer.size / self.bandwidth
-
-                end_time = dep_layer.end_time + transfer_latency + device.time[cur_layer_name]
-                dependency_arrival_timepool.append(end_time)
-            dependency_arrival_timepool.append(device.available_time + device.time[cur_layer_name])
-            print(f"The arrival time pool of dependencies on device {device_name} is {dependency_arrival_timepool}")
-            device_results.append(max(dependency_arrival_timepool))
-        print(f"==>>decision pool(clock time): {device_results}")
-        min_value = min(device_results)
-        decision = device_results.index(min_value)
-        decision = sorted_device_names[decision]
-        self.layers[cur_layer_name].end_time = min_value
-        self.layers[cur_layer_name].completed = True
-        self.layers[cur_layer_name].device_id = decision
-        self.devices[decision].available_time = min_value
-        print(f"Decision for layer {cur_layer_name}: executed on device {decision}, end time {min_value}\n")
-        # self.partitions.write(f"{cur_layer_name},{decision}\n")
-        return decision
-
     def device_exec(self, cur_layer_name):
         """
         Update device current time.
@@ -170,7 +136,7 @@ class Simulator(object):
                 dep_layer = self.layers[dep]
                 transfer_latency = 0
                 if (not self.ignore_latency) and str(dep_layer.device_id) != device.name:
-                    transfer_latency = dep_layer.size / self.bandwidth
+                    transfer_latency = dep_layer.size / self.bandwidth * 1000
                 print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
                       f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
                 end_time = dep_layer.end_time + transfer_latency

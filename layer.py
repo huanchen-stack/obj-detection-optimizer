@@ -11,6 +11,7 @@ class Layer(object):
         self.dependencies = []  # all sources to this layer
         self.next = []  # all destinations from this layer
         self.size = 0
+        self.possible_end_time = 0
 
         # Updated after partitions
         self.device_id = None
@@ -19,3 +20,5 @@ class Layer(object):
         self.end_time = 0
         self.pr_max = None
         self.pr_min = None
+
+        self.fixed = None

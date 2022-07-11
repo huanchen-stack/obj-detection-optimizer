@@ -124,7 +124,7 @@ import os
 import sys
 
 path = os.path.abspath(os.getcwd())
-path = os.path.join(path, "testcases/fasterrcnn")
+path = os.path.join(path, "testcases/yolov4/jetson_nx")
 
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")
@@ -139,5 +139,5 @@ FindSlack(
     [
         prof,
     ],
-    dir="testcases/fasterrcnn"
+    dir="testcases/yolov4/jetson_nx"
 )
