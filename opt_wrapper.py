@@ -1,11 +1,27 @@
 from optimizer import Optimizer
 from simulatorv2 import Simulator
 
-bandwidth = 1000
+bandwidth = 1
 ignore_latency = False
 iteration = 5
-# benchmark = 114.46748520400001  # agx
-benchmark = 69.7  # clarity32
+prof_filenames = [
+        "prof.csv",
+        "prof.csv",
+        "prof.csv",
+        "prof.csv",
+        # "prof.csv",
+        # "prof.csv",
+        # "prof.csv",
+        # "prof.csv",
+    ]
+benchmark = 114.46748520400001  # agx
+# benchmark = 194.446187  # agx no warm up
+# benchmark = 274.2038  # agx time.time()
+# benchmark = 47.999  # clarity32_new
+# benchmark = 69.7  # clarity32
+# benchmark = 139.144019769287  # nx
+# benchmark = 331.0782  # cpu_vit
+
 
 results = []
 best = []
@@ -15,16 +31,7 @@ r1 = []
 
 opt0 = Optimizer(
     dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-    ],
+    prof_filenames=prof_filenames,
     bandwidth=bandwidth,  # MBps
     ignore_latency=ignore_latency,
     iterations=iteration,
@@ -36,16 +43,7 @@ results.append(opt0.report())
 
 opt1 = Optimizer(
     dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-    ],
+    prof_filenames=prof_filenames,
     bandwidth=bandwidth,  # MBps
     ignore_latency=ignore_latency,
     iterations=iteration,
@@ -57,16 +55,7 @@ results.append(opt1.report())
 
 opt2 = Optimizer(
     dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-    ],
+    prof_filenames=prof_filenames,
     bandwidth=bandwidth,  # MBps
     ignore_latency=ignore_latency,
     iterations=iteration,
@@ -78,16 +67,7 @@ results.append(opt2.report())
 
 opt3 = Optimizer(
     dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-    ],
+    prof_filenames=prof_filenames,
     bandwidth=bandwidth,  # MBps
     ignore_latency=ignore_latency,
     iterations=iteration,
@@ -105,16 +85,7 @@ for result in results:
 
 Optimizer(
     dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-        # "prof.csv",
-    ],
+    prof_filenames=prof_filenames,
     bandwidth=bandwidth,  # MBps
     ignore_latency=ignore_latency,
     iterations=best_iter[best.index(min(best))],
