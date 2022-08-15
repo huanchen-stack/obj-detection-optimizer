@@ -2,7 +2,7 @@ import os
 import sys
 from optimizer_ori import Optimizer
 
-config = "yolor-nano"
+config = "faster-agx"
 
 path = os.path.abspath(os.getcwd())
 path = os.path.join(path, f"testcases/{config}")
@@ -23,7 +23,7 @@ Optimizer(
     dep_filename=dep,
     prof_filenames = [prof] * num_devices,
     priority_filename=priority,
-    bandwidth=bandwidth,
+    bandwidth=bandwidth * 125,
     ignore_latency=False,
     iterations=iterations,
     dir=f"testcases/{config}"

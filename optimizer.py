@@ -128,7 +128,7 @@ class Optimizer(object):
                 if (not self.ignore_latency) and dep_layer.device_id != device.name:
                     print(type(dep_layer.size))
                     print(type(self.bandwidth))
-                    transfer_latency = dep_layer.size / self.bandwidth * 1000
+                    transfer_latency = dep_layer.size / self.bandwidth
 
                 end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)

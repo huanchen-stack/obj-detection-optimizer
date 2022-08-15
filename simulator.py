@@ -33,6 +33,8 @@ class Simulator(object):
         #      dependencies are not fulfilled
         #      need to change device
 
+        self.payload_agg = 0
+
         # load and initialize devices
         parallel = True
         print(f"Device parallel = {parallel}")
@@ -66,6 +68,8 @@ class Simulator(object):
         print(f"Layer priority: {self.priorities}")
 
         self.simulate()
+
+        self.get_payload_agg()
 
     def load_dependencies(self, dep_filename):
         """
@@ -202,6 +206,7 @@ class Simulator(object):
                     self.time_result[start_layer_name] = device.cur_time
                     continue
                 if self.layers[next_layer_name].device_id != device_id:
+                    self.payload_agg += cur_layer.size
                     transfer_latency = 0 if self.ignore_latency else cur_layer.size / self.bandwidth
 
                     print(f"Device {device.name} sends layer {cur_layer.name} output at time {device.cur_time: .8f} "
@@ -248,3 +253,6 @@ class Simulator(object):
         print("{:<15} {:<15} {:<15}".format("device", "macs sum (M)", "macs peak (M)"))
         for name, device in self.devices.items():
             device.get_macs()
+
+    def get_payload_agg(self):
+        print(f"{self.payload_agg:<6}")

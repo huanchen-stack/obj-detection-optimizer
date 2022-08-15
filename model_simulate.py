@@ -2,8 +2,10 @@ import os
 import sys
 from simulatorv2 import Simulator
 
+config = "faster-agx"
+
 path = os.path.abspath(os.getcwd())
-path = os.path.join(path, "testcases/fasterrcnn")
+path = os.path.join(path, f"testcases/{config}")
 
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")
@@ -22,8 +24,9 @@ Simulator(
         prof,
         prof,
         prof,
+        prof,
     ],
     part_filename=part,
     priority_filename=priority,
-    bandwidth = 2000,
+    bandwidth = 125 * float(input("Bandwidth: ")),
 )
