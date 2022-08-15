@@ -1,9 +1,11 @@
 import os
 import sys
-from optimizer import Optimizer
+from optimizer_ori import Optimizer
+
+config = "yolor-nano"
 
 path = os.path.abspath(os.getcwd())
-path = os.path.join(path, "testcases/fasterrcnn")
+path = os.path.join(path, f"testcases/{config}")
 
 dep = os.path.join(path, "dep.csv")
 prof = os.path.join(path, "prof.csv")
@@ -13,21 +15,16 @@ priority = os.path.join(path, "priority.csv")
 # out = os.path.join(path, "out")
 # sys.stdout = open(out, "w")
 
+iterations = int(input("Iterations: "))
+bandwidth = int(input("Bandwidth: "))
+num_devices = int(input("Number of devices: "))
+
 Optimizer(
     dep_filename=dep,
-    prof_filenames=[
-        prof,
-        prof,
-        prof,
-        # prof,
-        # prof,
-        # prof,
-        # prof,
-        # prof,
-    ],
+    prof_filenames = [prof] * num_devices,
     priority_filename=priority,
-    bandwidth=5000,
+    bandwidth=bandwidth,
     ignore_latency=False,
-    iterations=5,
-    dir="testcases/fasterrcnn"
+    iterations=iterations,
+    dir=f"testcases/{config}"
 )

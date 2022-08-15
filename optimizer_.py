@@ -100,8 +100,8 @@ class Optimizer(object):
     def load_macs_size(self, prof_filename):
         df_list = pd.read_csv(prof_filename).values.tolist()
         for layername, time, cpu, cuda, size, macs in df_list:
-            self.layers[layername].size = size
-            self.layers[layername].macs = macs
+            self.layers[layername].size = float(size)
+            self.layers[layername].macs = float(macs)
 
     def clean_up(self):
         for name, layer in self.layers.items():
@@ -126,7 +126,10 @@ class Optimizer(object):
                 dep_layer = self.layers[dep_name]
                 transfer_latency = 0
                 if (not self.ignore_latency) and dep_layer.device_id != device.name:
+                    print(type(dep_layer.size))
+                    print(type(self.bandwidth))
                     transfer_latency = dep_layer.size / self.bandwidth * 1000
+
                 end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
                 dependency_arrival_timepool.append(end_time)
             dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
