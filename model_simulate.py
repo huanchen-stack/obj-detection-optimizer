@@ -2,7 +2,7 @@ import os
 import sys
 from simulatorv2 import Simulator
 
-config = "yolor-agx"
+config = "yolor-nano"
 
 path = os.path.abspath(os.getcwd())
 path = os.path.join(path, f"testcases/{config}")

@@ -2,7 +2,7 @@ from optimizer import Optimizer
 from simulatorv2 import Simulator
 import os
 
-config = "yolor-agx"
+config = "yolor-nano"
 path = os.path.abspath(os.getcwd())
 path = os.path.join(path, f"testcases/{config}")
 
@@ -28,7 +28,9 @@ ignore_latency = False
 # benchmark = 0.509311  # faster-agx
 # benchmark = 1.905703  # faster-nano
 # benchmark = 0.063555  # faster-clarity32
-benchmark = 0.1736289  # yolor-agx
+
+# benchmark = 0.1736289  # yolor-agx
+benchmark = 1.458861  # yolor-nano
 
 
 results = []
