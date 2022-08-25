@@ -59,7 +59,7 @@ class Simulator(object):
         self.load_partitions(part_filename)  # Intermediate result of partition, now load from handcoded csv
         # self.partition(part_filename)
 
-        print(self.device_names)
+        # print(self.device_names)
         # for device in list(self.devices.values()):
         #     TODO: Now exec has not much to do with assigned layers
             # print(f"Device name: {device.name}, with layers: {device.assigned_layer}")
@@ -108,6 +108,7 @@ class Simulator(object):
             self.devices[str(device_id)].assigned_layer.append(layername)
 
     def clean_up(self):
+        self.total_data_sent = 0
         for name, layer in self.layers.items():
             layer.end_time = 0
             # layer.device_id = None
@@ -123,7 +124,7 @@ class Simulator(object):
         if cur_layer_name == "output":
             return
         else:
-            print("")
+            # print("")
             cur_layer = self.layers[cur_layer_name]
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:

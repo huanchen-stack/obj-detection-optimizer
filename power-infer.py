@@ -11,9 +11,11 @@ from sklearn.tree import DecisionTreeRegressor
 
 class power_inferer(object):
     def __init__(self):
-        self.config = ['yolox-agx', 'yolox-nano']
+        self.configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
+        self.result = []
 
-        for config in self.config:
+        for config in self.configs:
+            self.result.clear()
             df = pd.read_csv(self.get_path(config))
             df.columns = ["bandwidth", "optimizer", "energy", "device", "payload"]
             for i in range(len(df)-1):
@@ -21,12 +23,14 @@ class power_inferer(object):
                 self.tempfile.write("nr_ssRsrp,avg_power,downlink_mbps,uplink_mbps,data_size\n")
                 self.tempfile.write(f"0.75,0,{df['bandwidth'][i]},0,{df['payload'][i]}\n")
                 self.tempfile.close()
-                print(self.predict())
+                res = self.predict()
+                df.at[i, 'energy'] = res
+            df.to_csv(self.get_path(config), sep=',', index=False)
 
     def calculate_energy(self, data_size, power, speed):
         if speed == 0:
             return 0
-        return data_size / speed * 2 * power
+        return data_size / speed * power
 
     def get_path(self, config):
         path = os.path.abspath(os.getcwd())

@@ -26,14 +26,16 @@ class OPT_WRAPPER(object):
     }
     
     bandwidths = {
-        'agx': [
-            750, 1000, 1250, 1500, 1750, 
-            2000, 2250, 2500, 2750, 3000, float('inf'),
-        ],
-        'nano': [
-            375, 500, 625, 750, 875, 
-            1000, 1250, 1500, 1750, 2000, 3000, float('inf'),
-        ]
+        # 'agx': [
+        #     750, 1000, 1250, 1500, 1750,
+        #     2000, 2250, 2500, 2750, 3000, float('inf'),
+        # ],
+        # 'nano': [
+        #     375, 500, 625, 750, 875,
+        #     1000, 1250, 1500, 1750, 2000, 3000, float('inf'),
+        # ]
+        'agx': [*range(100, 2000, 100)],
+        'nano': [*range(100, 2000, 100)],
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -154,7 +156,7 @@ if __name__ == '__main__':
     # config = input("config {model}-{device}: ")
     # threshold = float(input("threshold: "))
     # 'faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano',
-    configs = ['yolox-agx', 'yolox-nano']
+    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
     threshold = 0.99
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one \
 results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")

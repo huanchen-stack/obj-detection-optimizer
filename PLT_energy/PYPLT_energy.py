@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import tqdm
+from tqdm import tqdm
 
 def draw(config):
 
@@ -12,7 +12,8 @@ def draw(config):
     for i in df_year['bandwidth']:
         x1_list.append(i)
 
-    b1 = ax1.bar(x1_list, df_year['energy'], width=0.003, label='Prediceted energy consumption',
+    w = (df_year['bandwidth'][len(df_year['bandwidth'])-1] - df_year['bandwidth'][0]) / len(df_year) * 0.5
+    b1 = ax1.bar(x1_list, df_year['energy'], width=w, label='Prediceted energy consumption',
                 color=sns.xkcd_rgb["denim blue"])
 
     ax2 = ax1.twinx()
@@ -25,14 +26,12 @@ def draw(config):
     for i, j, d in zip(df_year['bandwidth'], df_year["optimizer"], df_year["device"]):
         ax2.annotate('%s' % d, xy=(i, j), xytext=(-13, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
 
-    ax2.set_ylim([0, 18])
-    ax1.set_ylim([20000, 70000])
     note = ax2.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
 
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
     ax1.set_ylabel("Energy (mJ)", fontsize=12)
     ax2.set_ylabel("Optimization (%)", fontsize=12)
-    ax1.set_title("Yolox on Jetson-Nano", fontsize=14)
+    ax1.set_title(f"{config}", fontsize=14)
 
     # 双Y轴标签颜色设置
     ax2.yaxis.label.set_color(line1.get_color())
@@ -45,11 +44,11 @@ def draw(config):
     # 图例设置
     plt.legend(handles=[p1, b1, note])
     plt.grid()
-    plt.savefig("yolox-nano-energy.png", bbox_inches='tight', dpi=100)
-    plt.savefig(f"{config}.png")
+    plt.savefig(f"{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
-    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano']
+    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
+    # configs = ['yolox-agx', 'yolox-nano']
     for config in tqdm(configs):
         draw(config)
