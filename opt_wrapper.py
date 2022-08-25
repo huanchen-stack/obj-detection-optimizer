@@ -20,7 +20,9 @@ class OPT_WRAPPER(object):
         'faster-nano': 1.905703,
         'faster-clarity32': 0.063555,
         'yolor-agx': 0.1736289,
-        'yolor-nano': 1.458861
+        'yolor-nano': 1.458861,
+        'yolox-agx': 0.0916212,
+        'yolox-nano': 1.76330,
     }
     
     bandwidths = {
@@ -52,6 +54,7 @@ class OPT_WRAPPER(object):
         self.results = []
         self.opt_num_devices = []
         self.opt_speedup_rate = []
+        self.payload = []
 
     def get_path(self):
         path = os.path.abspath(os.getcwd())
@@ -59,6 +62,19 @@ class OPT_WRAPPER(object):
         self.dep = os.path.join(path, "dep.csv")
         self.prof = os.path.join(path, "prof.csv")
         self.priority = os.path.join(path, "priority.csv")
+        self.part = os.path.join(path, "part.csv")
+
+    def run_simulatev2(self, bandwidth, num_devices):
+        simv2 = Simulator(
+            dep_filename=self.dep,
+            prof_filenames=[self.prof] * num_devices,
+            bandwidth=bandwidth,
+            priority_filename=self.priority,
+            part_filename= self.part,
+            ignore_latency=False,
+        )
+        return simv2.total_data_sent
+
 
     def optimize_once(self, bandwidth, num_devices, reverse0, reverse1):
         opt = Optimizer(
@@ -100,12 +116,16 @@ class OPT_WRAPPER(object):
                     self.opt_num_devices.append(i+2)
                     self.opt_speedup_rate.append(across_devices[i][1])
                     break
+            self.optimize_once(bandwidth, self.opt_num_devices[-1], best[2], best[3])
+            payload = self.run_simulatev2(bandwidth, self.opt_num_devices[-1])
+            self.payload.append(payload)
 
     def report(self):
         return {
             'bandwidths': OPT_WRAPPER.bandwidths[self.config.split('-')[1]],
             'opt_num_devices': self.opt_num_devices,
             'opt_speedup_rate': self.opt_speedup_rate,
+            "payload": self.payload,
         }
         
 def run(config, threshold):
@@ -125,16 +145,16 @@ def run(config, threshold):
 
     # export
     with open(f'PLT_energy/{config}.csv', 'w') as f:
-        f.write(f"bandwidth,optimizer,energy,device\n")
+        f.write(f"bandwidth,optimizer,energy,device,payload\n")
         for i in range(len(res['bandwidths'])):
-            f.write(f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]}\n")
+            f.write(f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]},{res['payload'][i]}\n")
 
 if __name__ == '__main__':
     # # customized input
     # config = input("config {model}-{device}: ")
     # threshold = float(input("threshold: "))
-
-    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano']
+    # 'faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano',
+    configs = ['yolox-agx', 'yolox-nano']
     threshold = 0.99
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one \
 results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")

@@ -49,8 +49,31 @@ class Optimizer(object):
         self.load_macs_size(prof_filenames[0])
 
         self.FIRST_RUN = True
-        self.optimize()
-        # self.forward()
+        if self.iterations == 0:
+            self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
+            self.priorities.write(f"layername,priority\n")
+            self.backtrace(write_csv=True)
+            self.priorities.close()
+            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
+            self.partitions.write(f"layername,device\n")
+            self.optimize(write_csv=True)
+            self.partitions.close()
+
+            best = min(self.results)
+            best_iter = self.results.index(best)
+            print(f"Best result is achieved at iteration #{best_iter}")
+
+            for layer in self.layers.values():
+                if layer.fixed is not None:
+                    print(f"Fixed layers: {layer.name} - {layer.fixed}")
+
+            if benchmark is not None:
+                print(f"Optimization performance: {(benchmark - best) / benchmark}")
+            print(f"All results: {self.results}")
+        else:
+            self.optimize()
+            # self.forward()
+
         self.FIRST_RUN = False
         for i in range(self.iterations):
             if i == self.iterations - 1:
@@ -220,15 +243,14 @@ class Optimizer(object):
         self.layers["input"].device_id = 0
 
         self.device_exec("input")
-
-        if VERBOSE:
-            print("\n================DEVICE ASSIGNMENT================")
-            print("{:<15} {:<15}".format("layer name", "device"))
+        if write_csv:
+            # print("\n================DEVICE ASSIGNMENT================")
+            # print("{:<15} {:<15}".format("layer name", "device"))
             for layer_name, layer in self.layers.items():
-                print("{:<15} {:<15}".format(layer_name, layer.device_id))
+                # print("{:<15} {:<15}".format(layer_name, layer.device_id))
                 if write_csv:
                     self.partitions.write(f"{layer_name},{layer.device_id}\n")
-            print("===============================================\n")
+            # print("===============================================\n")
 
     def forward(self):
 
