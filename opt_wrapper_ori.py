@@ -106,20 +106,20 @@ class OPT_WRAPPER(object):
             'opt_speedup_rate': self.opt_speedup_rate,
         }
         
-opt_wrapper = OPT_WRAPPER(
-    config=input("config {model}-{device}: "),
-    bandwidth_list=None,
-    threshold=0.99,
-)
-print("Note: current threshold is 0.99, \
-meaning that if increasing num_devices by one\
- results in a change of speed up \
-rate less than 0.01, opt_num_devices won't be updated\n")
-opt_wrapper.optimize()
-print(opt_wrapper.report())
-exit(1)
+# opt_wrapper = OPT_WRAPPER(
+#     config=input("config {model}-{device}: "),
+#     bandwidth_list=None,
+#     threshold=0.99,
+# )
+# print("Note: current threshold is 0.99, \
+# meaning that if increasing num_devices by one\
+#  results in a change of speed up \
+# rate less than 0.01, opt_num_devices won't be updated\n")
+# opt_wrapper.optimize()
+# print(opt_wrapper.report())
+# exit(1)
 
-config = "yolor-nano"
+config = input("config {model}-{device}: ")
 
 # find files
 path = os.path.abspath(os.getcwd())
@@ -139,7 +139,9 @@ configs = {
     'faster-nano': 1.905703,
     'faster-clarity32': 0.063555,
     'yolor-agx': 0.1736289,
-    'yolor-nano': 1.458861
+    'yolor-nano': 1.458861,
+    'yolov4-agx': 1,
+    'yolov4-nano': 1,
 }
 benchmark = configs[config]
 
