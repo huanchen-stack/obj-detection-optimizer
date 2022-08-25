@@ -1,9 +1,7 @@
 from queue import Empty
-from random import expovariate
 from optimizer import Optimizer
 from simulatorv2 import Simulator
 import os
-from tqdm import tqdm
 
 
 [
@@ -30,7 +28,7 @@ class OPT_WRAPPER(object):
         ],
         'nano': [
             375, 500, 625, 750, 875, 
-            1000, 1250, 1500, 1750, 2000, 3000, float('inf'),
+            1000, 1250, 1500, 1750, 2000, float('inf'),
         ]
     }
 
@@ -108,35 +106,122 @@ class OPT_WRAPPER(object):
             'opt_speedup_rate': self.opt_speedup_rate,
         }
         
-def run(config, threshold):
-    # config = input("config {model}-{device}: ")
-    # threshold = float(input("threshold: "))
-    opt_wrapper = OPT_WRAPPER(
-        config=config,
-        bandwidth_list=None,
-        threshold=threshold,
-    )
-    opt_wrapper.optimize()
-    res = opt_wrapper.report()
+opt_wrapper = OPT_WRAPPER(
+    config=input("config {model}-{device}: "),
+    bandwidth_list=None,
+    threshold=0.99,
+)
+print("Note: current threshold is 0.99, \
+meaning that if increasing num_devices by one\
+ results in a change of speed up \
+rate less than 0.01, opt_num_devices won't be updated\n")
+opt_wrapper.optimize()
+print(opt_wrapper.report())
+exit(1)
 
-    # for key, value in res.items():
-    #     print(key)
-    #     print(value)
+config = "yolor-nano"
 
-    # export
-    with open(f'PLT_energy/{config}.csv', 'w') as f:
-        f.write(f"bandwidth,optimizer,energy,device\n")
-        for i in range(len(res['bandwidths'])):
-            f.write(f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]}\n")
+# find files
+path = os.path.abspath(os.getcwd())
+path = os.path.join(path, f"testcases/{config}")
+dep = os.path.join(path, "dep.csv")
+prof = os.path.join(path, "prof.csv")
+priority = os.path.join(path, "priority.csv")
 
-if __name__ == '__main__':
-    # # customized input
-    # config = input("config {model}-{device}: ")
-    # threshold = float(input("threshold: "))
+# independent variables (need automation)
+bandwidth = 0.125 * float(input("Bandwidth/[Mbps]: "))
+iteration = int(input("Iteration: "))
+prof_filenames = [prof] * int(input("Num Devices: "))
+ignore_latency = False
 
-    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano']
-    threshold = 0.99
-    print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one \
-results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
-    for config in tqdm(configs):
-        run(config, threshold)
+configs = {
+    'faster-agx': 0.509311,
+    'faster-nano': 1.905703,
+    'faster-clarity32': 0.063555,
+    'yolor-agx': 0.1736289,
+    'yolor-nano': 1.458861
+}
+benchmark = configs[config]
+
+results = []
+best = []
+best_iter = []
+r0 = []
+r1 = []
+
+opt0 = Optimizer(
+    dep_filename=dep,
+    prof_filenames=prof_filenames,
+    bandwidth=bandwidth,  # MBps
+    ignore_latency=ignore_latency,
+    iterations=iteration,
+    benchmark=benchmark,
+    reverse0=True,
+    reverse1=True,
+    dir=f"testcases/{config}",
+)
+print(opt0.report())
+results.append(opt0.report())
+
+opt1 = Optimizer(
+    dep_filename=dep,
+    prof_filenames=prof_filenames,
+    bandwidth=bandwidth,  # MBps
+    ignore_latency=ignore_latency,
+    iterations=iteration,
+    benchmark=benchmark,
+    reverse0=False,
+    reverse1=True,
+    dir=f"testcases/{config}",
+)
+results.append(opt1.report())
+
+opt2 = Optimizer(
+    dep_filename=dep,
+    prof_filenames=prof_filenames,
+    bandwidth=bandwidth,  # MBps
+    ignore_latency=ignore_latency,
+    iterations=iteration,
+    benchmark=benchmark,
+    reverse0=False,
+    reverse1=False,
+    dir=f"testcases/{config}",
+)
+results.append(opt2.report())
+
+opt3 = Optimizer(
+    dep_filename=dep,
+    prof_filenames=prof_filenames,
+    bandwidth=bandwidth,  # MBps
+    ignore_latency=ignore_latency,
+    iterations=iteration,
+    benchmark=benchmark,
+    reverse0=True,
+    reverse1=False,
+    dir=f"testcases/{config}",
+)
+results.append(opt3.report())
+
+for result in results:
+    best.append(result[0])
+    best_iter.append(result[1])
+    r0.append(result[2])
+    r1.append(result[3])
+
+Optimizer(
+    dep_filename=dep,
+    prof_filenames=prof_filenames,
+    bandwidth=bandwidth,  # MBps
+    ignore_latency=ignore_latency,
+    iterations=best_iter[best.index(min(best))],
+    benchmark=benchmark,
+    reverse0=r0[best.index(min(best))],
+    reverse1=r1[best.index(min(best))],
+    dir=f"testcases/{config}",
+)
+
+print(f"\n\033[30;42m=========Result=========\033[0m")
+print(f"Best result: {min(best)}")
+print(f"Performance: {(benchmark - min(best)) / benchmark}")
+print(f"Iteration: {best_iter[best.index(min(best))]}")
+print(f"Setting: {r0[best.index(min(best))]}, {r1[best.index(min(best))]}")

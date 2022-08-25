@@ -3,7 +3,7 @@ import pandas as pd
 from layer import Layer
 from device import Device
 
-
+VERBOSE = False
 class Optimizer(object):
 
     def __init__(self,
@@ -37,7 +37,7 @@ class Optimizer(object):
 
         # load and initialize devices
         parallel = True
-        print(f"Device data-compute-parallel = {parallel}")
+        # print(f"Device data-compute-parallel = {parallel}")
 
         self.num_devices = len(prof_filenames)
         self.device_names = [i for i in range(len(prof_filenames))]
@@ -65,15 +65,15 @@ class Optimizer(object):
 
                 best = min(self.results)
                 best_iter = self.results.index(best)
-                print(f"Best result is achieved at iteration #{best_iter}")
+                # print(f"Best result is achieved at iteration #{best_iter}")
 
-                for layer in self.layers.values():
-                    if layer.fixed is not None:
-                        print(f"Fixed layers: {layer.name} - {layer.fixed}")
+                # for layer in self.layers.values():
+                #     if layer.fixed is not None:
+                #         print(f"Fixed layers: {layer.name} - {layer.fixed}")
 
-                if benchmark is not None:
-                    print(f"Optimization performance: {(benchmark - best) / benchmark}")
-                print(f"All results: {self.results}")
+                # if benchmark is not None:
+                #     print(f"Optimization performance: {(benchmark - best) / benchmark}")
+                # print(f"All results: {self.results}")
             else:
                 self.backtrace()
                 self.optimize()
@@ -112,7 +112,7 @@ class Optimizer(object):
             device.cur_time = 0
 
     def decide_one_layer(self, cur_layer_name):
-        print(f"Begin analyzing layer {cur_layer_name}. ")
+        # print(f"Begin analyzing layer {cur_layer_name}. ")
 
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
@@ -169,8 +169,8 @@ class Optimizer(object):
                 self.layers[can_opt_dep_name].fixed = self.layers[can_opt_dep_name].dependencies[0]
                 self.layers[cur_layer_name].fixed = can_opt_dep_name
 
-        print(f"Decision for layer {cur_layer_name}: executed on device {decision}, "
-              f"start at {min_value - self.devices[decision].time[cur_layer_name]}, end time {min_value}\n")
+        # print(f"Decision for layer {cur_layer_name}: executed on device {decision}, "
+        #       f"start at {min_value - self.devices[decision].time[cur_layer_name]}, end time {min_value}\n")
         # self.partitions.write(f"{cur_layer_name},{decision}\n")
         return decision
 
@@ -214,28 +214,29 @@ class Optimizer(object):
 
         self.clean_up()
 
-        print(f"\n\033[30;44m=========Optimizinginging=========\033[0m")
+        # print(f"\n\033[30;44m=========Optimizinginging=========\033[0m")
 
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
 
         self.device_exec("input")
 
-        print("\n================DEVICE ASSIGNMENT================")
-        print("{:<15} {:<15}".format("layer name", "device"))
-        for layer_name, layer in self.layers.items():
-            print("{:<15} {:<15}".format(layer_name, layer.device_id))
-            if write_csv:
-                self.partitions.write(f"{layer_name},{layer.device_id}\n")
-        print("===============================================\n")
+        if VERBOSE:
+            print("\n================DEVICE ASSIGNMENT================")
+            print("{:<15} {:<15}".format("layer name", "device"))
+            for layer_name, layer in self.layers.items():
+                print("{:<15} {:<15}".format(layer_name, layer.device_id))
+                if write_csv:
+                    self.partitions.write(f"{layer_name},{layer.device_id}\n")
+            print("===============================================\n")
 
     def forward(self):
 
         self.clean_up()
 
-        print(f"===============================================")
-        print(f"====================BFS MODE===================")
-        print(f"===============================================")
+        # print(f"===============================================")
+        # print(f"====================BFS MODE===================")
+        # print(f"===============================================")
 
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
@@ -317,5 +318,5 @@ class Optimizer(object):
         best_iter = self.results.index(best)
         # r0 = "T" if self.reverse0 else "F"
         # r1 = "T" if self.reverse1 else "F"
-        return best, best_iter, self.reverse0, self.reverse1
+        return [best, best_iter, self.reverse0, self.reverse1]
 
