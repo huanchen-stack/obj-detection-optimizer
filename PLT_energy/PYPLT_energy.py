@@ -48,7 +48,8 @@ def draw(config):
 
 
 if __name__ == "__main__":
-    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
+    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano', 'yolov4-agx',
+               'yolov4-nano']
     # configs = ['yolox-agx', 'yolox-nano']
     for config in tqdm(configs):
         draw(config)

@@ -156,7 +156,7 @@ if __name__ == '__main__':
     # config = input("config {model}-{device}: ")
     # threshold = float(input("threshold: "))
     # 'faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano',
-    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
+    configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano', 'yolov4-agx', 'yolov4-nano']
     threshold = 0.99
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one \
 results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")

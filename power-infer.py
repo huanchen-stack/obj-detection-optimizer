@@ -11,7 +11,8 @@ from sklearn.tree import DecisionTreeRegressor
 
 class power_inferer(object):
     def __init__(self):
-        self.configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']
+        configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano', 'yolov4-agx',
+                   'yolov4-nano']
         self.result = []
 
         for config in self.configs:
