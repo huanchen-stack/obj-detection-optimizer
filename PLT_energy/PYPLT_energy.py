@@ -11,8 +11,8 @@ def draw(config):
         'yolor-agx': 0,
         'yolox-agx': 0,
         'yolov4-agx': 0,
-        'faster-nano': 0,
-        'yolor-nano': 0,
+        'faster-nano': 14213.7446,
+        'yolor-nano': 10447.9559,
         'yolox-nano': 13460.1792,
         'yolov4-nano': 0,
     }
