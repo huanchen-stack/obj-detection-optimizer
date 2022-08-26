@@ -11,11 +11,11 @@ from sklearn.tree import DecisionTreeRegressor
 
 class power_inferer(object):
     def __init__(self):
-        configs = ['faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano', 'yolov4-agx',
-                   'yolov4-nano']
+        self.config = ['faster-agx'] # , 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano'] # , 'yolov4-agx',
+                   # 'yolov4-nano']
         self.result = []
 
-        for config in self.configs:
+        for config in self.config:
             self.result.clear()
             df = pd.read_csv(self.get_path(config))
             df.columns = ["bandwidth", "optimizer", "energy", "device", "payload"]
@@ -24,7 +24,14 @@ class power_inferer(object):
                 self.tempfile.write("nr_ssRsrp,avg_power,downlink_mbps,uplink_mbps,data_size\n")
                 self.tempfile.write(f"0.75,0,{df['bandwidth'][i]},0,{df['payload'][i]}\n")
                 self.tempfile.close()
-                res = self.predict()
+                res = self.predict("down")
+
+                self.tempfile = open("input.csv", "w")
+                self.tempfile.write("nr_ssRsrp,avg_power,downlink_mbps,uplink_mbps,data_size\n")
+                self.tempfile.write(f"0.75,0,0,{df['bandwidth'][i]},{df['payload'][i]}\n")
+                self.tempfile.close()
+                res += self.predict("up")
+
                 df.at[i, 'energy'] = res
             df.to_csv(self.get_path(config), sep=',', index=False)
 
@@ -37,7 +44,7 @@ class power_inferer(object):
         path = os.path.abspath(os.getcwd())
         return os.path.join(path, f"PLT_energy/{config}.csv")
 
-    def predict(self):
+    def predict(self, type):
 
         df = pd.read_csv("input.csv")
 
@@ -53,10 +60,11 @@ class power_inferer(object):
         dtr_vz_mn_model = pickle.load(open("power_infer/dtr_vz_mn_model.pickle", "rb"))
 
         e_mn = dtr_vz_mn_model.predict(X)
-
-        uplink_energy = self.calculate_energy(data_size, e_mn[0], speed_up)
-        downlink_energy = self.calculate_energy(data_size, e_mn[0], speed_down)
-        return uplink_energy + downlink_energy
+        if type == "down":
+            res = self.calculate_energy(data_size, e_mn[0], speed_down)
+        else:
+            res = self.calculate_energy(data_size, e_mn[0], speed_up)
+        return res
 
 
 if __name__ == '__main__':

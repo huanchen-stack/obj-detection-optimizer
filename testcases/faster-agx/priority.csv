@@ -10,7 +10,7 @@ layer2,1000.0
 layer3,1000.0
 layer4,1000.0
 inner_3,1000.0
-layer_3,1000.0
+layer_3,988.8888888888889
 inner_2,1000.0
 interpolate__2,1000.0
 add__2,1000.0
@@ -27,7 +27,7 @@ extra,977.7777777777778
 rpn_parallel_f0,1000.0
 rpn_parallel_f1,988.8888888888889
 rpn_parallel_f2,977.7777777777778
-rpn_parallel_f3,1000.0
+rpn_parallel_f3,988.8888888888889
 rpn_parallel_f4,977.7777777777778
 rpn_merger,1000.0
 box_roi_pool,1000.0
@@ -36,5 +36,4 @@ fc7,1000.0
 cls_score,1000.0
 bbox_pred,1000.0
 postprocess_detections,1000.0
-resize,1000.0
 output,1000
