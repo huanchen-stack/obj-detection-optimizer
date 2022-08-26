@@ -198,4 +198,4 @@ class Simulator(object):
         # print("{:<15} {:<15} {:<15}".format("device", "macs sum (M)", "macs peak (M)"))
         # for name, device in self.devices.items():
         #     device.get_macs()
-        print(f"\n\033[30;42m========={self.total_data_sent}MB data sent=========\033[0m")
+        # print(f"\n\033[30;42m========={self.total_data_sent}MB data sent=========\033[0m")

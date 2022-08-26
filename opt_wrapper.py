@@ -5,16 +5,10 @@ from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
 
-
-[
-    250, 375, 500, 625, 750, 875, 
-    1000, 1125, 1250, 1375, 1500, 1625, 1750, 1875,
-    2000, 2125, 2250, 2375, 2500, 2625, 2750, 2875,
-    3000, float('inf')
-]
-
 class OPT_WRAPPER(object):
-
+    configs = [
+        'faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano', 'yolov4-agx', 'yolov4-nano']
+        # 'yolov4-agx', 'yolov4-nano']
     benchmarks = {
         'faster-agx': 0.509311,
         'faster-nano': 1.905703,
@@ -23,8 +17,8 @@ class OPT_WRAPPER(object):
         'yolor-nano': 1.458861,
         'yolox-agx': 0.0916212,
         'yolox-nano': 1.76330,
-        # 'yolov4-agx': ,
-        # 'yolov4-nano': ,
+        'yolov4-agx': 0.274311065,
+        'yolov4-nano': 8.38082,
     }
     
     bandwidths = {
@@ -34,10 +28,11 @@ class OPT_WRAPPER(object):
         # ],
         # 'nano': [
         #     375, 500, 625, 750, 875,
-        #     1000, 1250, 1500, 1750, 2000, 3000, float('inf'),
-        # ]
-        'agx': [*range(100, 3000, 500)],
-        'nano': [*range(100, 3000, 500)],
+        #     1000, 1250, 1500, 1750, 2000, 3000,
+        # ],
+        'agx': [*range(1200, 3500, 100)],
+        # 'nano': [*range(375, 1500, 125)],  # good graph
+        'nano': [*range(375, 1500, 100)],
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -98,7 +93,6 @@ class OPT_WRAPPER(object):
         self.get_path()
 
         for bandwidth in self.bandwidth_list:
-            # bandwidth = 100
             across_devices = []
             for num_devices in range(1, self.num_devices_max + 1):
                 self.results.clear()
@@ -119,9 +113,10 @@ class OPT_WRAPPER(object):
                 if (across_devices[i][0] - best[0]) / best[0] <= 1 - self.threshold:
                     self.opt_num_devices.append(i+1)
                     self.opt_speedup_rate.append(across_devices[i][1])
+                    best = across_devices[i]
                     break
-
-            self.optimize_once(bandwidth, self.opt_num_devices[-1], best[2], best[3])
+            self.iterations_default = best[2]
+            self.optimize_once(bandwidth, self.opt_num_devices[-1], best[3], best[4])
             payload = self.run_simulatev2(bandwidth, self.opt_num_devices[-1])
             self.payload.append(payload)
 
@@ -159,9 +154,8 @@ if __name__ == '__main__':
     # config = input("config {model}-{device}: ")
     # threshold = float(input("threshold: "))
     # 'faster-agx', 'faster-nano', 'yolor-agx', 'yolor-nano',
-    configs = ['faster-agx']  #, 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano']  # , 'yolov4-agx', 'yolov4-nano']
-    threshold = 0.999
+    threshold = 0.99
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one \
 results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
-    for config in tqdm(configs):
+    for config in tqdm(OPT_WRAPPER.configs):
         run(config, threshold)

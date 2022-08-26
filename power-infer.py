@@ -3,6 +3,7 @@ import pandas as pd
 import sys
 import os
 import pickle
+from opt_wrapper import OPT_WRAPPER
 import argparse
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, SCORERS
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
@@ -11,8 +12,7 @@ from sklearn.tree import DecisionTreeRegressor
 
 class power_inferer(object):
     def __init__(self):
-        self.config = ['faster-agx'] # , 'faster-nano', 'yolor-agx', 'yolor-nano', 'yolox-agx', 'yolox-nano'] # , 'yolov4-agx',
-                   # 'yolov4-nano']
+        self.config = OPT_WRAPPER.configs
         self.result = []
 
         for config in self.config:
