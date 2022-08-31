@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
-from opt_wrapper import OPT_WRAPPER
+# from .opt_wrapper import OPT_WRAPPER
 
 def draw(config):
     baseE = {
@@ -23,14 +23,14 @@ def draw(config):
     for i in df_year['bandwidth']:
         x1_list.append(i)
 
-    base = 10000
+    base = 0
     if baseE[config] != 0:
         base = baseE[config]
 
     w = (df_year['bandwidth'][len(df_year['bandwidth'])-1] - df_year['bandwidth'][0]) / len(df_year) * 0.5
-    b0 = ax1.bar(x1_list, base, width=w, label='Energy (base)',
+    b0 = ax1.bar(x1_list, base, width=w, label='Energy: Computation',
                  color=sns.xkcd_rgb["denim blue"])
-    b1 = ax1.bar(x1_list, df_year['energy'], width=w, label='Predicted energy (transfer)',
+    b1 = ax1.bar(x1_list, df_year['energy'], width=w, label='Energy: Communication',
                  bottom=base, color=sns.xkcd_rgb["maize"])
 
     ax2 = ax1.twinx()
@@ -66,7 +66,12 @@ def draw(config):
 
 
 if __name__ == "__main__":
-    configs = OPT_WRAPPER.configs
-    # configs = ['yolox-agx', 'yolox-nano']
+    # configs = OPT_WRAPPER.configs
+    configs = [
+        'faster-agx', 'faster-nano', 
+        'yolor-agx', 'yolor-nano', 
+        'yolox-agx', 'yolox-nano', 
+        # 'yolov4-agx', 'yolov4-nano'
+    ]
     for config in tqdm(configs):
         draw(config)

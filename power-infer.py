@@ -8,64 +8,63 @@ import argparse
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, SCORERS
 from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
 from sklearn.tree import DecisionTreeRegressor
+import tqdm
 
+class EnergyInferer(object):
 
-class power_inferer(object):
-    def __init__(self):
-        self.config = OPT_WRAPPER.configs
-        self.result = []
-
-        for config in self.config:
-            self.result.clear()
-            df = pd.read_csv(self.get_path(config))
-            df.columns = ["bandwidth", "optimizer", "energy", "device", "payload"]
-            for i in range(len(df)-1):
-                self.tempfile = open("input.csv", "w")
-                self.tempfile.write("nr_ssRsrp,avg_power,downlink_mbps,uplink_mbps,data_size\n")
-                self.tempfile.write(f"0.75,0,{df['bandwidth'][i]},0,{df['payload'][i]}\n")
-                self.tempfile.close()
-                res = self.predict("down")
-
-                self.tempfile = open("input.csv", "w")
-                self.tempfile.write("nr_ssRsrp,avg_power,downlink_mbps,uplink_mbps,data_size\n")
-                self.tempfile.write(f"0.75,0,0,{df['bandwidth'][i]},{df['payload'][i]}\n")
-                self.tempfile.close()
-                res += self.predict("up")
-
-                df.at[i, 'energy'] = res
-            df.to_csv(self.get_path(config), sep=',', index=False)
-
-    def calculate_energy(self, data_size, power, speed):
-        if speed == 0:
-            return 0
-        return data_size / speed * power
+    def __init__(self, config, multicast=True):
+        self.config = config
+        self.dtr_vz_mn_model = pickle.load(open("power_infer/dtr_vz_mn_model.pickle", "rb"))
+        self.multicast = multicast
 
     def get_path(self, config):
         path = os.path.abspath(os.getcwd())
         return os.path.join(path, f"PLT_energy/{config}.csv")
 
-    def predict(self, type):
+    def predict_POW(self, uplink_mbps, downlink_mbps):
+        X = np.array([uplink_mbps, downlink_mbps]).reshape(1, 2)
+        POW_mn = self.dtr_vz_mn_model.predict(X)
+        assert uplink_mbps == 0 or downlink_mbps == 0, "Either uplink_mbps or downlink_mbps must be zero."
+        assert uplink_mbps != 0 or downlink_mbps != 0, "Only one of uplink_mbps or downlink_mbps can be zero."
+        return POW_mn
 
-        df = pd.read_csv("input.csv")
+    def predict_energy(self):
+        df = pd.read_csv(self.get_path(self.config))
+        df.columns = ["bandwidth", "optimizer", "energy", "device", "payload"]
 
-        df.columns = ["nr_ssRsrp", "avg_power", "downlink_mbps", "uplink_mbps", "data_size"]
-        X_column = ["downlink_mbps", "uplink_mbps"]
+        for i in range(len(df)):
+            # for uplink_mbps and downlink_mbps
+            bandwidth = df['bandwidth'][i]
+            # get specific datasizes for multicasting
+            transfer_data_summary_raw = df['payload'][i].replace('|', ',')
+            transfer_data_summary = eval(transfer_data_summary_raw)                
+            multicaster = {}
+            for _, d in transfer_data_summary.items():
+                if d['count'] not in multicaster:
+                    multicaster[d['count']] = 0
+                multicaster[d['count']] += d['size']
+            
+            print(self.config, bandwidth, multicaster)
+            
+            total_energy = 0
+            for mult, size in multicaster.items():
+                bandwidth_pseudo = bandwidth * mult
+                POW_up = self.predict_POW(uplink_mbps=bandwidth_pseudo, downlink_mbps=0)
+                POW_down = self.predict_POW(uplink_mbps=0, downlink_mbps=bandwidth_pseudo)
+                size_pseudo = size * 8 / mult  # convert Byte to bits; apply multicast
+                total_energy  += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
 
-        data_size = df["data_size"].to_numpy()[0] * 8
-        speed_up = df["uplink_mbps"].to_numpy()[0]
-        speed_down = df["downlink_mbps"].to_numpy()[0]
+            df.at[i, 'energy'] = total_energy
 
-        X = df[X_column].to_numpy()
+        df.to_csv(self.get_path(self.config), sep=',', index=False)
 
-        dtr_vz_mn_model = pickle.load(open("power_infer/dtr_vz_mn_model.pickle", "rb"))
 
-        e_mn = dtr_vz_mn_model.predict(X)
-        if type == "down":
-            res = self.calculate_energy(data_size, e_mn[0], speed_down)
-        else:
-            res = self.calculate_energy(data_size, e_mn[0], speed_up)
-        return res
+def driver(config, multicast):
+    inferer = EnergyInferer(config, multicast)
+    inferer.predict_energy()
 
 
 if __name__ == '__main__':
-    power_inferer()
+
+    for config in OPT_WRAPPER.configs:
+        driver(config, True)

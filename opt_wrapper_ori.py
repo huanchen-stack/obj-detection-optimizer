@@ -162,7 +162,6 @@ opt0 = Optimizer(
     reverse1=True,
     dir=f"testcases/{config}",
 )
-print(opt0.report())
 results.append(opt0.report())
 
 opt1 = Optimizer(
@@ -204,11 +203,16 @@ opt3 = Optimizer(
 )
 results.append(opt3.report())
 
+
+print(bandwidth, len(prof_filenames), results)
+
 for result in results:
     best.append(result[0])
     best_iter.append(result[1])
     r0.append(result[2])
     r1.append(result[3])
+
+print(best)
 
 Optimizer(
     dep_filename=dep,

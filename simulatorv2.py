@@ -19,6 +19,7 @@ class Simulator(object):
         self.ignore_latency = ignore_latency
         self.results = []
         self.total_data_sent = 0
+        self.transfer_data_summary = {}
 
         self.current_device = 0  # spin
         self.device_names = []  # spinning through all devices
@@ -30,6 +31,8 @@ class Simulator(object):
         self.time_result = {}
         self.mem_result = {}
         self.time_result_seg = {}
+
+        self.total_time = 0
 
         self.stack = []  # for DFS
         self.waiting_queue = []  # for DFS: when layer cannot be explored due to
@@ -139,7 +142,11 @@ class Simulator(object):
                 transfer_latency = 0
                 if (not self.ignore_latency) and str(dep_layer.device_id) != device.name:
                     self.total_data_sent += dep_layer.size
-                    transfer_latency = dep_layer.size / self.bandwidth * 1000
+                    if dep != 'input':
+                        if dep not in self.transfer_data_summary:
+                            self.transfer_data_summary[dep] = {'count': 0, 'size': dep_layer.size}
+                        self.transfer_data_summary[dep]['count'] += 1
+                        transfer_latency = dep_layer.size / self.bandwidth
                 # print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
                 #       f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
                 end_time = dep_layer.end_time + transfer_latency
@@ -182,6 +189,8 @@ class Simulator(object):
         # print("{:<15} {:<15}".format("output_layer", "time (s)"))
         # for key, value in self.time_result.items():
         #     print("{:<15} {:<15,.5f}".format(key, value))
+
+        self.total_time = list(self.time_result.values())[0]
 
         # print(f"\n\033[30;42m=========Time Result per Device=========\033[0m")
         # print("{:<15} {:<15}".format("device", "time (s)"))

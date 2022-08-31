@@ -1,0 +1,10 @@
+echo "START RUNNING..."
+echo "Optimizing models inference..."
+python3 opt_wrapper.py
+echo "Estimating inference energy..."
+python3 power-infer.py
+cd PLT_energy
+echo "Plotting graphs..."
+python3 PYPLT_energy.py
+cd ..
+echo "DONE!"
