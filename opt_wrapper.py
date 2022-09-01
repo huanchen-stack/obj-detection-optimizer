@@ -9,10 +9,14 @@ from tqdm import tqdm
 class OPT_WRAPPER(object):
 
     configs = [
-        'faster-agx', 'faster-nano', 
-        'yolor-agx', 'yolor-nano', 
-        'yolox-agx', 'yolox-nano', 
-        # 'yolov4-agx', 'yolov4-nano'
+        # 'faster-agx',
+        'faster-nano',
+        # 'yolor-agx',
+        'yolor-nano',
+        # 'yolox-agx',
+        'yolox-nano',
+        # 'yolov4-agx',
+        'yolov4-nano'
     ]
     benchmarks = {
         'faster-agx': 0.509311,
@@ -23,7 +27,7 @@ class OPT_WRAPPER(object):
         'yolox-agx': 0.0916212,
         'yolox-nano': 1.76330,
         'yolov4-agx': 0.274311065,
-        'yolov4-nano': 8.38082,
+        'yolov4-nano': 0.91332531,
     }
     bandwidths = {
         # 'agx': [
@@ -34,9 +38,18 @@ class OPT_WRAPPER(object):
         #     375, 500, 625, 750, 875,
         #     1000, 1250, 1500, 1750, 2000, 3000,
         # ],
-        'agx': [*range(900, 3400, 100)],
+        # 'agx': [*range(900, 3400, 100)],
+        'agx':
+            {'yolox': [*range(900, 3400, 100)],
+             'yolor': [*range(900, 3400, 100)],
+             'yolov4': [*range(900, 3400, 100)],
+             'faster': [*range(900, 3400, 100)]},
         # 'nano': [*range(375, 1500, 125)],  # good graph
-        'nano': [*range(250, 2125, 75)],
+        'nano':
+            {'yolox': [*range(250, 4500, 150)],
+             'yolor': [*range(250, 4500, 150)],
+             'yolov4': [*range(250, 8000, 250)],
+             'faster': [*range(250, 2125, 75)]},
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -45,10 +58,10 @@ class OPT_WRAPPER(object):
         self.benchmark = OPT_WRAPPER.benchmarks[self.config]
 
         if bandwidth_list is None:
-            self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]]
+            self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]][config.split('-')[0]]
         else:
             self.bandwidth_list = bandwidth_list
-        self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]
+        self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]  # turn to MBps
 
         self.iterations_default = 5
         self.num_devices_max = 7
@@ -132,7 +145,7 @@ class OPT_WRAPPER(object):
             transfer_data_summary = simv2.transfer_data_summary
             transfer_data_summary_raw = str(transfer_data_summary).replace(',', '|')  # for panda df read
             self.payload.append(transfer_data_summary_raw)
-            print(self.config, bandwidth, simv2.total_data_sent)
+            # print(self.config, bandwidth, simv2.total_data_sent)
 
         self.sanitize()
 
@@ -155,7 +168,7 @@ class OPT_WRAPPER(object):
 
     def report(self):
         return {
-            'bandwidths': OPT_WRAPPER.bandwidths[self.config.split('-')[1]],
+            'bandwidths': OPT_WRAPPER.bandwidths[self.config.split('-')[1]][self.config.split('-')[0]],
             'opt_num_devices': self.opt_num_devices,
             'opt_speedup_rate': self.opt_speedup_rate,
             'payload': self.payload,

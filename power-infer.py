@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split, cross_val_score, cross_val
 from sklearn.tree import DecisionTreeRegressor
 import tqdm
 
+
 class EnergyInferer(object):
 
     def __init__(self, config, multicast=True):
@@ -37,22 +38,22 @@ class EnergyInferer(object):
             bandwidth = df['bandwidth'][i]
             # get specific datasizes for multicasting
             transfer_data_summary_raw = df['payload'][i].replace('|', ',')
-            transfer_data_summary = eval(transfer_data_summary_raw)                
+            transfer_data_summary = eval(transfer_data_summary_raw)
             multicaster = {}
             for _, d in transfer_data_summary.items():
                 if d['count'] not in multicaster:
                     multicaster[d['count']] = 0
                 multicaster[d['count']] += d['size']
-            
+
             print(self.config, bandwidth, multicaster)
-            
+
             total_energy = 0
             for mult, size in multicaster.items():
                 bandwidth_pseudo = bandwidth * mult
                 POW_up = self.predict_POW(uplink_mbps=bandwidth_pseudo, downlink_mbps=0)
                 POW_down = self.predict_POW(uplink_mbps=0, downlink_mbps=bandwidth_pseudo)
                 size_pseudo = size * 8 / mult  # convert Byte to bits; apply multicast
-                total_energy  += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
+                total_energy += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
 
             df.at[i, 'energy'] = total_energy
 

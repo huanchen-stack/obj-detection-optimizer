@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
-# from .opt_wrapper import OPT_WRAPPER
+from opt_wrapper import OPT_WRAPPER
 
 def draw(config):
     baseE = {
@@ -14,7 +14,7 @@ def draw(config):
         'faster-nano': 14213.7446,
         'yolor-nano': 10447.9559,
         'yolox-nano': 13460.1792,
-        'yolov4-nano': 0,
+        'yolov4-nano': 9055.3908,
     }
 
     fig, ax1 = plt.subplots()
@@ -66,12 +66,7 @@ def draw(config):
 
 
 if __name__ == "__main__":
-    # configs = OPT_WRAPPER.configs
-    configs = [
-        'faster-agx', 'faster-nano', 
-        'yolor-agx', 'yolor-nano', 
-        'yolox-agx', 'yolox-nano', 
-        # 'yolov4-agx', 'yolov4-nano'
-    ]
+    configs = OPT_WRAPPER.configs
+
     for config in tqdm(configs):
         draw(config)
