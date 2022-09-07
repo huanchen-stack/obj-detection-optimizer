@@ -20,7 +20,7 @@ class EnergyInferer(object):
 
     def get_path(self, config):
         path = os.path.abspath(os.getcwd())
-        return os.path.join(path, f"PLT_energy/{config}.csv")
+        return os.path.join(path, f"data/{config}.csv")
 
     def predict_POW(self, uplink_mbps, downlink_mbps):
         X = np.array([uplink_mbps, downlink_mbps]).reshape(1, 2)

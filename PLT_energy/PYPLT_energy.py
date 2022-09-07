@@ -18,7 +18,7 @@ def draw(config):
     }
 
     fig, ax1 = plt.subplots()
-    df_year = pd.read_csv(f"{config}.csv")
+    df_year = pd.read_csv(f"../data/{config}.csv")
     x1_list = []
     for i in df_year['bandwidth']:
         x1_list.append(i)

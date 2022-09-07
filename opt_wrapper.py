@@ -49,7 +49,7 @@ class OPT_WRAPPER(object):
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(250, 2125, 75)]},
+             'faster': [*range(400, 2500, 100)]},
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -184,7 +184,7 @@ def driver(config, threshold):
     opt_wrapper.optimize()
     res = opt_wrapper.report()
 
-    with open(f'PLT_energy/{config}.csv', 'w') as f:
+    with open(f'data/{config}.csv', 'w') as f:
         f.write(f"bandwidth,optimizer,energy,device,payload\n")
         for i in range(len(res['bandwidths'])):
             f.write(f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]},{res['payload'][i]}\n")
