@@ -23,13 +23,13 @@ cls_preds_0,2
 reg_preds_0,2
 obj_preds_0,2
 partial_out_0,2
-output_decode,2
-cls_convs_1,2
+output_decode,1
+cls_convs_1,3
 reg_convs_1,2
-cls_preds_1,2
+cls_preds_1,3
 reg_preds_1,2
 obj_preds_1,2
-partial_out_1,2
+partial_out_1,3
 stems_2,0
 cls_convs_2,1
 reg_convs_2,0
@@ -37,4 +37,4 @@ cls_preds_2,1
 reg_preds_2,0
 obj_preds_2,0
 partial_out_2,1
-output,2
+output,1

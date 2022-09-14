@@ -6,17 +6,17 @@ from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
 
-class OPT_WRAPPER(object):
 
+class OPT_WRAPPER(object):
     configs = [
         # 'faster-agx',
-        'faster-nano',
+        # 'faster-nano',
         # 'yolor-agx',
-        'yolor-nano',
+        # 'yolor-nano',
         # 'yolox-agx',
-        'yolox-nano',
-        # 'yolov4-agx',
-        'yolov4-nano'
+        # 'yolox-nano',
+        'yolov4-agx',
+        # 'yolov4-nano'
     ]
     benchmarks = {
         'faster-agx': 0.509311,
@@ -26,7 +26,7 @@ class OPT_WRAPPER(object):
         'yolor-nano': 1.458861,
         'yolox-agx': 0.0916212,
         'yolox-nano': 1.76330,
-        'yolov4-agx': 0.274311065,
+        'yolov4-agx': 0.170569897,
         'yolov4-nano': 0.91332531,
     }
     bandwidths = {
@@ -42,7 +42,7 @@ class OPT_WRAPPER(object):
         'agx':
             {'yolox': [*range(900, 3400, 100)],
              'yolor': [*range(900, 3400, 100)],
-             'yolov4': [*range(900, 3400, 100)],
+             'yolov4': [*range(250, 5000, 150)],
              'faster': [*range(900, 3400, 100)]},
         # 'nano': [*range(375, 1500, 125)],  # good graph
         'nano':
@@ -117,12 +117,12 @@ class OPT_WRAPPER(object):
                 opt2 = self.optimize_once(bandwidth, num_devices, True, False)
                 opt3 = self.optimize_once(bandwidth, num_devices, False, True)
                 opt4 = self.optimize_once(bandwidth, num_devices, False, False)
-                
+
                 results = [opt1, opt2, opt3, opt4]
                 results = [opt.report() for opt in results]
                 results = sorted(results, key=lambda e: e[0])
                 t = results[0]
-                t.insert(1, 100-100*t[0]/self.benchmark)
+                t.insert(1, 100 - 100 * t[0] / self.benchmark)
                 across_devices.append(t)
 
             # find optimal num_devices
@@ -153,18 +153,19 @@ class OPT_WRAPPER(object):
         for i in range(len(self.bandwidth_list)):
             if i == 0:
                 continue
-            if self.opt_speedup_rate[i] < self.opt_speedup_rate[i-1]:  # Optimizer made a bad decision
+            if self.opt_speedup_rate[i] < self.opt_speedup_rate[i - 1]:  # Optimizer made a bad decision
                 # get partitions from prev results
-                self.optimize_once(*self.args[i-1])
+                self.optimize_once(*self.args[i - 1])
                 # use prev partition results and cur bandwidth to calculate new_opt latency & rate
                 simv2 = self.simulate(self.bandwidth_list[i])
                 new_opt_latency = simv2.total_time
                 new_opt_rate = 100 - 100 * new_opt_latency / self.benchmark
                 # update to output list
-                self.opt_num_devices[i] = self.opt_num_devices[i-1]
-                self.opt_speedup_rate[i] = max(new_opt_rate, self.opt_speedup_rate[i-1])  # FIXME: debug and remove max
-                self.payload[i] = self.payload[i-1]
-                self.args[i] = self.args[i-1]
+                self.opt_num_devices[i] = self.opt_num_devices[i - 1]
+                self.opt_speedup_rate[i] = max(new_opt_rate,
+                                               self.opt_speedup_rate[i - 1])  # FIXME: debug and remove max
+                self.payload[i] = self.payload[i - 1]
+                self.args[i] = self.args[i - 1]
 
     def report(self):
         return {
@@ -173,9 +174,9 @@ class OPT_WRAPPER(object):
             'opt_speedup_rate': self.opt_speedup_rate,
             'payload': self.payload,
         }
-        
-def driver(config, threshold):
 
+
+def driver(config, threshold):
     opt_wrapper = OPT_WRAPPER(
         config=config,
         bandwidth_list=None,
@@ -187,15 +188,16 @@ def driver(config, threshold):
     with open(f'data/{config}.csv', 'w') as f:
         f.write(f"bandwidth,optimizer,energy,device,payload\n")
         for i in range(len(res['bandwidths'])):
-            f.write(f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]},{res['payload'][i]}\n")
+            f.write(
+                f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]},{res['payload'][i]}\n")
 
 
 if __name__ == '__main__':
 
-    threshold = 0.95
-    print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
+    threshold = 0.99
+    print(f"Note: current threshold is {threshold}, "
+          f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold},"
+          f" opt_num_devices won't be updated\n")
 
     for config in tqdm(OPT_WRAPPER.configs):
         driver(config, threshold)
-
-    # driver('yolor-agx', threshold)

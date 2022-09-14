@@ -27,7 +27,7 @@ d4_resblock,0
 d4_conv4,0
 d4_conv5,0
 d5_conv1,0
-d5_conv2,2
+d5_conv2,1
 d5_conv3,0
 d5_resblock,0
 d5_conv4,0
@@ -57,9 +57,9 @@ nk_conv17,0
 nk_conv18,0
 nk_conv19,0
 nk_conv20,0
-hd_conv1,2
+hd_conv1,1
 hd_conv3,0
-hd_conv2,2
+hd_conv2,1
 hd_conv4,0
 hd_conv5,0
 hd_conv6,0
@@ -75,9 +75,9 @@ hd_conv15,0
 hd_conv16,0
 hd_conv17,0
 hd_conv18,0
-decode1,2
+decode1,1
 decode2,1
 decode3,0
 non_max_suppression,1
-wrapping_up,1
-output,1
+wrapping_up,0
+output,0

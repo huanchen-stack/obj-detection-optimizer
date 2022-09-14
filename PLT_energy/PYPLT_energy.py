@@ -5,17 +5,18 @@ import seaborn as sns
 from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER
 
+baseE = {
+    'faster-agx': 0,
+    'yolor-agx': 0,
+    'yolox-agx': 7179.3893,
+    'yolov4-agx': 4213.3583,
+    'faster-nano': 14213.7446,
+    'yolor-nano': 10447.9559,
+    'yolox-nano': 13460.1792,
+    'yolov4-nano': 9055.3908,
+}
+
 def draw(config):
-    baseE = {
-        'faster-agx': 0,
-        'yolor-agx': 0,
-        'yolox-agx': 0,
-        'yolov4-agx': 0,
-        'faster-nano': 14213.7446,
-        'yolor-nano': 10447.9559,
-        'yolox-nano': 13460.1792,
-        'yolov4-nano': 9055.3908,
-    }
 
     fig, ax1 = plt.subplots()
     df_year = pd.read_csv(f"../data/{config}.csv")
