@@ -29,19 +29,12 @@ class Simulator(object):
         self.cut_points = {}
 
         self.time_result = {}
-        self.mem_result = {}
-        self.time_result_seg = {}
-
         self.total_time = 0
 
-        self.stack = []  # for DFS
-        self.waiting_queue = []  # for DFS: when layer cannot be explored due to
-        #      dependencies are not fulfilled
-        #      need to change device
+        self.critical_path_graph = {}
 
         # load and initialize devices
         parallel = True
-        # print(f"Device parallel = {parallel}")
         if device_names is None:
             # TODO: should #device determined by prof?
             self.device_names = [str(i) for i in range(len(prof_filenames))]
@@ -60,16 +53,6 @@ class Simulator(object):
                 self.priorities[name] = 1
 
         self.load_partitions(part_filename)  # Intermediate result of partition, now load from handcoded csv
-        # self.partition(part_filename)
-
-        # print(self.device_names)
-        # for device in list(self.devices.values()):
-        #     TODO: Now exec has not much to do with assigned layers
-            # print(f"Device name: {device.name}, with layers: {device.assigned_layer}")
-        # print("{:<15} {:<15}".format("layer", "device"))
-        # for layer in list(self.layers.values()):
-        #     print("{:<15} {:<15}".format(layer.name, layer.device_id))
-        # print(f"Layer priority: {self.priorities}")
 
         self.simulate()
 
@@ -125,16 +108,17 @@ class Simulator(object):
         Returns the next layers.
         """
         if cur_layer_name == "output":
+            self.critical_path_graph["output"] = {
+                'layername': cur_layer_name,
+                'device_id': -1
+            }
             return
         else:
-            # print("")
             cur_layer = self.layers[cur_layer_name]
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
-                    # print(f"Dependency for {cur_layer_name} not satisfied.")
                     return
 
-            # print(f"Device {cur_layer.device_id} is running: {cur_layer.name}")
             device = self.devices[str(cur_layer.device_id)]
             dependency_arrival_timepool = []
             for dep in cur_layer.dependencies:
@@ -150,61 +134,113 @@ class Simulator(object):
                 # print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
                 #       f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
                 end_time = dep_layer.end_time + transfer_latency
-                dependency_arrival_timepool.append(end_time)
+                dependency_arrival_timepool.append((end_time, dep))
 
             device = self.devices[str(cur_layer.device_id)]
-            dependency_arrival_timepool.append(device.available_time)
-            end_time = max(dependency_arrival_timepool) + device.time[cur_layer_name]
-            self.layers[cur_layer_name].end_time = end_time
-            # print(f"Layer {cur_layer_name} is executed from {end_time - device.time[cur_layer_name]:.4f} to {end_time:.4f}")
-            self.layers[cur_layer_name].completed = True
-            self.devices[str(cur_layer.device_id)].available_time = end_time
+            dependency_arrival_timepool.append((device.available_time, device.last_exec_layername))
+            
+            # find critical path
+            if max(dependency_arrival_timepool)[1]:
+                self.critical_path_graph[cur_layer_name] = {
+                    'layername': max(dependency_arrival_timepool)[1],
+                    'device_id': self.layers[max(dependency_arrival_timepool)[1]].device_id
+                }
 
-            # if self.priorities is None:
-                # print("NO priority file specified. ")
-            # else:
-                # print("Sorting criteria: priorities")
+            end_time = max(dependency_arrival_timepool)[0] + device.time[cur_layer_name]
+            self.layers[cur_layer_name].end_time = end_time
+            self.layers[cur_layer_name].completed = True
+
+            self.devices[str(cur_layer.device_id)].available_time = end_time
+            self.devices[str(cur_layer.device_id)].last_exec_layername = cur_layer_name
+
             cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
 
-            # print(f"Sorted branches: {cur_layer.next}")
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
                     continue
                 if next_layer_name == "output":
                     self.time_result[cur_layer_name] = cur_layer.end_time
+                    self.critical_path_graph["output"] = {
+                        "layername": cur_layer_name,
+                        "device_id": self.layers[cur_layer_name].device_id
+                    }
                     continue
                 self.device_exec(next_layer_name)
 
     def simulate(self):
         self.clean_up()
 
-        # print(f"\n\033[30;44m=========Simulatinginging=========\033[0m")
-
         self.layers["input"].end_time = 0
-        self.layers["input"].device_id = 0
+        self.layers["input"].device_id = '0'
 
         self.device_exec("input")
 
-        # print(f"\n\033[30;42m=========Time Result=========\033[0m")
-        # print("{:<15} {:<15}".format("output_layer", "time (s)"))
-        # for key, value in self.time_result.items():
-        #     print("{:<15} {:<15,.5f}".format(key, value))
-
         self.total_time = list(self.time_result.values())[0]
 
-        # print(f"\n\033[30;42m=========Time Result per Device=========\033[0m")
-        # print("{:<15} {:<15}".format("device", "time (s)"))
-        # for key, value in self.time_result_seg.items():
-        #     print("{:<15} {:<15,.5f}".format(key, value))
+    def single_cast(self):
+        for _, d in self.transfer_data_summary.items():
+            d['size'] *= d['count']
+            d['count'] = 1
 
-        # print(f"\n\033[30;42m=========Mem Result=========\033[0m")
-        # print("{:<15} {:<15} {:<15} {:<15} {:<15}".format("device", "cpu sum (MB)", "cpu peak (MB)", "cuda sum (MB)",
-        #                                                   "cuda peak (MB)"))
-        # for name, device in self.devices.items():
-        #     device.get_mem_consumption()
-        #
-        # print(f"\n\033[30;42m=========MACs Result=========\033[0m")
-        # print("{:<15} {:<15} {:<15}".format("device", "macs sum (M)", "macs peak (M)"))
-        # for name, device in self.devices.items():
-        #     device.get_macs()
-        # print(f"\n\033[30;42m========={self.total_data_sent}MB data sent=========\033[0m")
+    def find_critical_path(self):
+
+        critical_path = [
+            {
+                "layername": "output",
+                "device_id": -1,
+            }
+        ]
+        # inserting from end to back
+        while critical_path[0]["layername"] in self.critical_path_graph:
+            critical_path.insert(0, self.critical_path_graph[critical_path[0]["layername"]])
+
+        # sanitize device assignment
+        #   in case transfer data size is set to 0 
+        for node in critical_path:
+            layername = node["layername"]
+            if layername in self.transfer_data_summary and self.transfer_data_summary[layername]["size"] == 0:
+                for childname in self.layers[layername].next:
+                    for node_ in critical_path:
+                        if childname == node_["layername"]:
+                            node_["device_id"] = node["device_id"]
+                            break
+
+        critical_path[5]["device_id"] = '1'
+
+        self.transfer_data_summary['relu'] = {
+            'count': 1,
+            'size': 1000,
+        }
+        self.transfer_data_summary['maxpool'] = {
+            'count': 1,
+            'size': 1000,
+        }
+
+        res = []
+        tmp = {
+            'type': 'exec',
+            'content': [],
+        }
+        prev_node = critical_path[0]
+        for node in critical_path:
+
+            if node["layername"] == "output":
+                res.append(tmp)
+                continue
+
+            if node["device_id"] != prev_node["device_id"]:
+                res.append(tmp.copy())
+                tmp = {
+                    'type': "data",
+                    'content': self.transfer_data_summary[prev_node['layername']]['size']
+                }
+                res.append(tmp.copy())
+                tmp = {
+                    'type': 'exec',
+                    'content': [],
+                }
+
+            tmp["content"].append(node["layername"])
+            prev_node = node
+
+        return res

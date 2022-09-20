@@ -63,7 +63,6 @@ class Optimizer(object):
             best_iter = self.results.index(best)
         else:
             self.optimize()
-            # self.forward()
         self.FIRST_RUN = False
 
         for i in range(self.iterations):
@@ -82,7 +81,6 @@ class Optimizer(object):
             else:
                 self.backtrace()
                 self.optimize()
-                # self.forward()
 
     def load_dependencies(self, dep_filename):
         """
@@ -217,37 +215,6 @@ class Optimizer(object):
         for layer_name, layer in self.layers.items():
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
-
-    def forward(self):
-
-        self.clean_up()
-
-        self.layers["input"].end_time = 0
-        self.layers["input"].device_id = 0
-
-        queue = ["input"]
-        while queue:
-            cur_layer_name = queue.pop(0)
-            cur_layer = self.layers[cur_layer_name]
-
-            for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
-                    return
-
-            decision = self.decide_one_layer(cur_layer_name)
-
-            if self.FIRST_RUN:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
-            else:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
-
-            for next_layer_name in cur_layer.next:
-                if self.layers[next_layer_name].completed:
-                    continue
-                if next_layer_name == "output":
-                    self.layers["output"].device_id = decision
-                    continue
-                queue.append(next_layer_name)
 
     def backtrace(self, write_csv=False):
         self.layers["output"].pr_max = 1000

@@ -36,7 +36,8 @@ class OPT_WRAPPER(object):
         # ],
         'agx': [*range(900, 3400, 100)],
         # 'nano': [*range(375, 1500, 125)],  # good graph
-        'nano': [*range(250, 2125, 75)],
+        # 'nano': [*range(250, 2125, 75)],  # FIXME: use this
+        'nano': [1000]
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -56,6 +57,7 @@ class OPT_WRAPPER(object):
 
         self.opt_num_devices = []
         self.opt_speedup_rate = []
+        self.opt_speedup_rate_experiment = []
         self.payload = []
         self.args = []
 
@@ -127,12 +129,24 @@ class OPT_WRAPPER(object):
             args = [bandwidth, self.opt_num_devices[-1], best[3], best[4], best[2]]
             self.args.append(args)
             self.optimize_once(*args)
-            # simulate to get payload info
+
+            # SIMULATE
             simv2 = self.simulate(bandwidth)
+            
+            # simulate to get payload info
             transfer_data_summary = simv2.transfer_data_summary
             transfer_data_summary_raw = str(transfer_data_summary).replace(',', '|')  # for panda df read
             self.payload.append(transfer_data_summary_raw)
             print(self.config, bandwidth, simv2.total_data_sent)
+            assert 0.999 < simv2.total_time / best[0] < 1.001, f"{simv2.total_time}, {best[0]}"
+
+            # simulate to get critical path
+            critical_path = simv2.find_critical_path()
+            for ele in critical_path:
+                print(ele)
+
+            # REcalculate runtime using critical path:
+            
 
         self.sanitize()
 
@@ -182,7 +196,7 @@ if __name__ == '__main__':
     threshold = 0.95
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
 
-    for config in tqdm(OPT_WRAPPER.configs):
-        driver(config, threshold)
+    # for config in tqdm(OPT_WRAPPER.configs):
+    #     driver(config, threshold)
 
-    # driver('yolor-agx', threshold)
+    driver('faster-nano', threshold)
