@@ -1,5 +1,9 @@
 [
     {
+        "type": "bandwidth",
+        "content": 3000.0
+    },
+    {
         "type": "exec",
         "content": [
             "input"

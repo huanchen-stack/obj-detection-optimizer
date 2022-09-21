@@ -214,7 +214,12 @@ class Simulator(object):
         #                     node_["device_id"] = node["device_id"]
         #                     break
 
-        res = []
+        res = [
+            {
+                'type': 'bandwidth',
+                'content': self.bandwidth * 8
+            }
+        ]
         tmp = {
             'type': 'exec',
             'content': [],
