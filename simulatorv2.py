@@ -95,10 +95,10 @@ class Simulator(object):
 
     def clean_up(self):
         self.total_data_sent = 0
-        for name, layer in self.layers.items():
+        for _, layer in self.layers.items():
             layer.end_time = 0
             # layer.device_id = None
-        for name, device in self.devices.items():
+        for _, device in self.devices.items():
             device.available_time = 0
             device.cur_time = 0
 
@@ -107,65 +107,69 @@ class Simulator(object):
         Update device current time.
         Returns the next layers.
         """
-        if cur_layer_name == "output":
-            self.critical_path_graph["output"] = {
-                'layername': cur_layer_name,
-                'device_id': -1
-            }
-            return
+        # if cur_layer_name == "output":
+        #     self.critical_path_graph["output"] = {
+        #         'layername': cur_layer_name,
+        #         'device_id': -1
+        #     }
+        #     return
+        # else:
+        cur_layer = self.layers[cur_layer_name]
+        for dep in cur_layer.dependencies:
+            if not self.layers[dep].completed:
+                return
+
+        device = self.devices[str(cur_layer.device_id)]
+        dependency_arrival_timepool = []
+        for dep in cur_layer.dependencies:
+            dep_layer = self.layers[dep]
+            transfer_latency = 0
+            if (not self.ignore_latency) and str(dep_layer.device_id) != device.name:
+                self.total_data_sent += dep_layer.size
+                if dep != 'input':
+                    if dep not in self.transfer_data_summary:
+                        self.transfer_data_summary[dep] = {'count': 0, 'size': dep_layer.size}
+                    self.transfer_data_summary[dep]['count'] += 1
+                    transfer_latency = dep_layer.size / self.bandwidth
+            # print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
+            #       f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
+            end_time = dep_layer.end_time + transfer_latency
+            dependency_arrival_timepool.append((end_time, dep))
+
+        device = self.devices[str(cur_layer.device_id)]
+        if device.last_exec_layername is None:
+            assert device.available_time == 0
+            dependency_arrival_timepool.append((0, ''))
         else:
-            cur_layer = self.layers[cur_layer_name]
-            for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
-                    return
-
-            device = self.devices[str(cur_layer.device_id)]
-            dependency_arrival_timepool = []
-            for dep in cur_layer.dependencies:
-                dep_layer = self.layers[dep]
-                transfer_latency = 0
-                if (not self.ignore_latency) and str(dep_layer.device_id) != device.name:
-                    self.total_data_sent += dep_layer.size
-                    if dep != 'input':
-                        if dep not in self.transfer_data_summary:
-                            self.transfer_data_summary[dep] = {'count': 0, 'size': dep_layer.size}
-                        self.transfer_data_summary[dep]['count'] += 1
-                        transfer_latency = dep_layer.size / self.bandwidth
-                # print(f"Receiving layer {dep} data from device {dep_layer.device_id}, "
-                #       f"starting at {dep_layer.end_time:.4f}, latency {transfer_latency}.")
-                end_time = dep_layer.end_time + transfer_latency
-                dependency_arrival_timepool.append((end_time, dep))
-
-            device = self.devices[str(cur_layer.device_id)]
             dependency_arrival_timepool.append((device.available_time, device.last_exec_layername))
-            
-            # find critical path
-            if max(dependency_arrival_timepool)[1]:
-                self.critical_path_graph[cur_layer_name] = {
-                    'layername': max(dependency_arrival_timepool)[1],
-                    'device_id': self.layers[max(dependency_arrival_timepool)[1]].device_id
+
+        # find critical path
+        if max(dependency_arrival_timepool)[1]:
+            self.critical_path_graph[cur_layer_name] = {
+                'layername': max(dependency_arrival_timepool)[1],
+                'device_id': self.layers[max(dependency_arrival_timepool)[1]].device_id
+            }
+
+        end_time = max(dependency_arrival_timepool)[0] + device.time[cur_layer_name]
+        self.layers[cur_layer_name].end_time = end_time
+        self.layers[cur_layer_name].completed = True
+
+        self.devices[str(cur_layer.device_id)].available_time = end_time
+        self.devices[str(cur_layer.device_id)].last_exec_layername = cur_layer_name
+
+        cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
+
+        for next_layer_name in cur_layer.next:
+            if self.layers[next_layer_name].completed:
+                continue
+            if next_layer_name == "output":
+                self.time_result[cur_layer_name] = cur_layer.end_time
+                self.critical_path_graph["output"] = {
+                    "layername": cur_layer_name,
+                    "device_id": self.layers[cur_layer_name].device_id
                 }
-
-            end_time = max(dependency_arrival_timepool)[0] + device.time[cur_layer_name]
-            self.layers[cur_layer_name].end_time = end_time
-            self.layers[cur_layer_name].completed = True
-
-            self.devices[str(cur_layer.device_id)].available_time = end_time
-            self.devices[str(cur_layer.device_id)].last_exec_layername = cur_layer_name
-
-            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
-
-            for next_layer_name in cur_layer.next:
-                if self.layers[next_layer_name].completed:
-                    continue
-                if next_layer_name == "output":
-                    self.time_result[cur_layer_name] = cur_layer.end_time
-                    self.critical_path_graph["output"] = {
-                        "layername": cur_layer_name,
-                        "device_id": self.layers[cur_layer_name].device_id
-                    }
-                    continue
-                self.device_exec(next_layer_name)
+                continue
+            self.device_exec(next_layer_name)
 
     def simulate(self):
         self.clean_up()
@@ -184,6 +188,11 @@ class Simulator(object):
 
     def find_critical_path(self):
 
+        if "input" not in self.transfer_data_summary:
+            self.transfer_data_summary["input"] = {
+                "size": 0
+            }
+
         critical_path = [
             {
                 "layername": "output",
@@ -196,25 +205,14 @@ class Simulator(object):
 
         # sanitize device assignment
         #   in case transfer data size is set to 0 
-        for node in critical_path:
-            layername = node["layername"]
-            if layername in self.transfer_data_summary and self.transfer_data_summary[layername]["size"] == 0:
-                for childname in self.layers[layername].next:
-                    for node_ in critical_path:
-                        if childname == node_["layername"]:
-                            node_["device_id"] = node["device_id"]
-                            break
-
-        critical_path[5]["device_id"] = '1'
-
-        self.transfer_data_summary['relu'] = {
-            'count': 1,
-            'size': 1000,
-        }
-        self.transfer_data_summary['maxpool'] = {
-            'count': 1,
-            'size': 1000,
-        }
+        # for node in critical_path:
+        #     layername = node["layername"]
+        #     if layername in self.transfer_data_summary and self.transfer_data_summary[layername]["size"] == 0:
+        #         for childname in self.layers[layername].next:
+        #             for node_ in critical_path:
+        #                 if childname == node_["layername"]:
+        #                     node_["device_id"] = node["device_id"]
+        #                     break
 
         res = []
         tmp = {

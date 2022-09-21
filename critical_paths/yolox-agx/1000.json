@@ -1,0 +1,36 @@
+[
+    {
+        "type": "exec",
+        "content": [
+            "input",
+            "stem",
+            "dark2",
+            "dark3",
+            "dark4",
+            "dark5",
+            "lateral_conv0",
+            "upsample_P5",
+            "C3_p4",
+            "reduce_conv1",
+            "upsample_P4",
+            "C3_p3"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 3.125
+    },
+    {
+        "type": "exec",
+        "content": [
+            "stems_0",
+            "cls_convs_0",
+            "cls_preds_0",
+            "reg_convs_0",
+            "reg_preds_0",
+            "obj_preds_0",
+            "partial_out_0",
+            "output_decode"
+        ]
+    }
+]

@@ -1,10 +1,8 @@
-from queue import Empty
-from random import expovariate
-import re
 from optimizer import Optimizer
 from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
+import json
 
 class OPT_WRAPPER(object):
 
@@ -12,7 +10,7 @@ class OPT_WRAPPER(object):
         'faster-agx', 'faster-nano', 
         'yolor-agx', 'yolor-nano', 
         'yolox-agx', 'yolox-nano', 
-        # 'yolov4-agx', 'yolov4-nano'
+        'yolov4-agx', 'yolov4-nano'
     ]
     benchmarks = {
         'faster-agx': 0.509311,
@@ -36,8 +34,8 @@ class OPT_WRAPPER(object):
         # ],
         'agx': [*range(900, 3400, 100)],
         # 'nano': [*range(375, 1500, 125)],  # good graph
-        # 'nano': [*range(250, 2125, 75)],  # FIXME: use this
-        'nano': [1000]
+        'nano': [*range(250, 2125, 75)],  # FIXME: use this
+        # 'nano': [1000]
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -138,15 +136,15 @@ class OPT_WRAPPER(object):
             transfer_data_summary_raw = str(transfer_data_summary).replace(',', '|')  # for panda df read
             self.payload.append(transfer_data_summary_raw)
             print(self.config, bandwidth, simv2.total_data_sent)
-            assert 0.999 < simv2.total_time / best[0] < 1.001, f"{simv2.total_time}, {best[0]}"
+            if not 0.999 < simv2.total_time / best[0] < 1.001:
+                print( f"{simv2.total_time}, {best[0]}" )
 
             # simulate to get critical path
             critical_path = simv2.find_critical_path()
-            for ele in critical_path:
-                print(ele)
 
-            # REcalculate runtime using critical path:
-            
+            f = open(f"critical_paths/{self.config}/{int(bandwidth)*8}.json", "w")
+            json.dump(critical_path, f, indent=4)
+            f.close()
 
         self.sanitize()
 
@@ -196,7 +194,7 @@ if __name__ == '__main__':
     threshold = 0.95
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
 
-    # for config in tqdm(OPT_WRAPPER.configs):
-    #     driver(config, threshold)
+    for config in tqdm(OPT_WRAPPER.configs):
+        driver(config, threshold)
 
-    driver('faster-nano', threshold)
+    # driver('faster-nano', threshold)

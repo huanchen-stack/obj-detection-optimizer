@@ -1,0 +1,46 @@
+[
+    {
+        "type": "exec",
+        "content": [
+            "input",
+            "stem",
+            "dark2",
+            "dark3",
+            "dark4",
+            "dark5",
+            "lateral_conv0",
+            "upsample_P5",
+            "C3_p4",
+            "reduce_conv1",
+            "upsample_P4",
+            "C3_p3"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 7.8125
+    },
+    {
+        "type": "exec",
+        "content": [
+            "bu_conv2",
+            "C3_n3",
+            "bu_conv1",
+            "C3_n4",
+            "stems_2"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 0.4883
+    },
+    {
+        "type": "exec",
+        "content": [
+            "cls_convs_2",
+            "cls_preds_2",
+            "partial_out_2",
+            "output_decode"
+        ]
+    }
+]
