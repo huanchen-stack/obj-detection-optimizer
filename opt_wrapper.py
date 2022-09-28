@@ -16,7 +16,7 @@ class OPT_WRAPPER(object):
         # 'yolov4-agx', 'yolov4-nano'
     ]
     benchmarks = {
-        'faster-agx': 0.509311,
+        'faster-agx': 0.278682,
         'faster-nano': 1.850331667,
         'faster-clarity32': 0.063555,
         'yolor-agx': 0.1736289,
@@ -149,7 +149,7 @@ class OPT_WRAPPER(object):
             json.dump(critical_path, f, indent=4)
             f.close()
 
-        self.sanitize()
+        self.sanitize()            
 
     def sanitize(self):
         for i in range(len(self.bandwidth_list)):
@@ -167,6 +167,12 @@ class OPT_WRAPPER(object):
                 self.opt_speedup_rate[i] = max(new_opt_rate, self.opt_speedup_rate[i-1])  # FIXME: debug and remove max
                 self.payload[i] = self.payload[i-1]
                 self.args[i] = self.args[i-1]
+
+                # rewrite json file for critical path
+                critical_path = simv2.find_critical_path()
+                f = open(f"critical_paths/{self.config}/{int(self.bandwidth_list[i]*8)}.json", "w")
+                json.dump(critical_path, f, indent=4)
+                f.close()
 
     def report(self):
         return {
