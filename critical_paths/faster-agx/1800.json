@@ -16,33 +16,20 @@
             "layer2",
             "layer3",
             "layer4",
-            "inner_3"
-        ]
-    },
-    {
-        "type": "data",
-        "content": 0.64
-    },
-    {
-        "type": "exec",
-        "content": [
-            "layer_3"
-        ]
-    },
-    {
-        "type": "data",
-        "content": 0.64
-    },
-    {
-        "type": "exec",
-        "content": [
-            "rpn_parallel_f3",
+            "inner_3",
             "interpolate__2",
+            "layer_3",
+            "extra",
+            "rpn_parallel_f4",
             "inner_2",
             "add__2",
             "interpolate__1",
+            "layer_2",
+            "rpn_parallel_f2",
             "inner_1",
             "add__1",
+            "layer_1",
+            "rpn_parallel_f1",
             "interpolate__0",
             "inner_0",
             "add__0",
@@ -52,8 +39,8 @@
             "box_roi_pool",
             "fc6",
             "fc7",
-            "bbox_pred",
             "cls_score",
+            "bbox_pred",
             "postprocess_detections"
         ]
     }

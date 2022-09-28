@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 2900.0
+        "content": 1100.0
     },
     {
         "type": "exec",
@@ -28,6 +28,8 @@
             "add__0",
             "layer_0",
             "rpn_parallel_f0",
+            "layer_1",
+            "rpn_parallel_f1",
             "rpn_merger",
             "box_roi_pool",
             "fc6",

@@ -7,10 +7,12 @@ import json
 class OPT_WRAPPER(object):
 
     configs = [
-        # 'faster-agx', 
-        'faster-nano', 
-        # 'yolor-agx', 'yolor-nano', 
-        # 'yolox-agx', 'yolox-nano', 
+        'faster-agx', 
+        # 'faster-nano', 
+        # 'yolor-agx', 
+        # 'yolor-nano', 
+        # 'yolox-agx', 
+        # 'yolox-nano', 
         # 'yolov4-agx', 'yolov4-nano'
     ]
     benchmarks = {
