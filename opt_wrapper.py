@@ -8,7 +8,7 @@ class OPT_WRAPPER(object):
 
     configs = [
         'faster-agx', 
-        # 'faster-nano', 
+        'faster-nano', 
         # 'yolor-agx', 
         # 'yolor-nano', 
         # 'yolox-agx', 
@@ -27,17 +27,17 @@ class OPT_WRAPPER(object):
         'yolov4-nano': 8.38082,
     }
     bandwidths = {
-        # 'agx': [
-        #     750, 1000, 1250, 1500, 1750,
-        #     2000, 2250, 2500, 2750, 3000, float('inf'),
-        # ],
-        # 'nano': [
-        #     375, 500, 625, 750, 875,
-        #     1000, 1250, 1500, 1750, 2000, 3000,
-        # ],
-        'agx': [*range(900, 3400, 100)],
+        'agx': [
+            750, 1000, 1250, 1500, 1750,
+            2000, 2250, 2500, 2750, 3000, 3500, 4000,
+        ],
+        'nano': [
+            375, 500, 625, 750, 875,
+            1000, 1250, 1500, 1750, 2000, 3000, 3500,
+        ],
+        # 'agx': [*range(900, 3400, 100)],
         # 'nano': [*range(375, 1500, 125)],  # good graph
-        'nano': [*range(250, 2125, 75)],  # FIXME: use this
+        # 'nano': [*range(250, 2125, 75)],  # FIXME: use this
         # 'nano': [1000]
     }
 
