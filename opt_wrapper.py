@@ -9,14 +9,14 @@ class OPT_WRAPPER(object):
     configs = [
         'faster-agx', 
         'faster-nano', 
-        # 'yolor-agx', 
+        'yolor-agx', 
         # 'yolor-nano', 
         # 'yolox-agx', 
         # 'yolox-nano', 
         # 'yolov4-agx', 'yolov4-nano'
     ]
     benchmarks = {
-        'faster-agx': 0.278682,
+        'faster-agx': 0.293688333,
         'faster-nano': 1.850331667,
         'faster-clarity32': 0.063555,
         'yolor-agx': 0.1736289,
