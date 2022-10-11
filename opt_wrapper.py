@@ -3,13 +3,14 @@ from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
 import json
+import pandas as pd
 
 class OPT_WRAPPER(object):
 
     configs = [
         'faster-agx', 
-        'faster-nano', 
-        'yolor-agx', 
+        # 'faster-nano', 
+        # 'yolor-agx', 
         # 'yolor-nano', 
         # 'yolox-agx', 
         # 'yolox-nano', 
@@ -44,7 +45,8 @@ class OPT_WRAPPER(object):
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
         super().__init__()
         self.config = config
-        self.benchmark = OPT_WRAPPER.benchmarks[self.config]
+        # self.benchmark = OPT_WRAPPER.benchmarks[self.config]
+        self.benchmark = None
 
         if bandwidth_list is None:
             self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]]
@@ -70,6 +72,13 @@ class OPT_WRAPPER(object):
         self.priority = os.path.join(path, "priority.csv")
         self.part = os.path.join(path, "part.csv")
 
+    def get_benchmark(self):
+        cul = 0
+        df_list = pd.read_csv(self.prof).values.tolist()
+        for layername, time, cpu, cuda, size, macs in df_list:
+            cul += time
+        self.benchmark = cul
+
     def simulate(self, bandwidth):
         simv2 = Simulator(
             dep_filename=self.dep,
@@ -89,7 +98,7 @@ class OPT_WRAPPER(object):
             bandwidth=bandwidth,
             ignore_latency=False,  # always False
             iterations=iterations,
-            benchmark=self.benchmark,
+            # benchmark=self.benchmark,
             reverse0=reverse0,
             reverse1=reverse1,
             dir=f"testcases/{self.config}",
@@ -98,6 +107,7 @@ class OPT_WRAPPER(object):
 
     def optimize(self):
         self.get_path()
+        self.get_benchmark()
 
         for bandwidth in self.bandwidth_list:
             across_devices = []
@@ -203,7 +213,8 @@ if __name__ == '__main__':
     threshold = 0.95
     print(f"Note: current threshold is {threshold}, meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold}, opt_num_devices won't be updated\n")
 
-    for config in tqdm(OPT_WRAPPER.configs):
-        driver(config, threshold)
+    # for config in tqdm(OPT_WRAPPER.configs):
+    #     driver(config, threshold)
 
-    # driver('faster-nano', threshold)
+    # driver(input("config: "), threshold)
+    driver('yolor-agx', threshold)
