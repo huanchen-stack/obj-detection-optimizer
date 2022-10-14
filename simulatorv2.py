@@ -135,6 +135,8 @@ class Simulator(object):
                     return
 
             # print(f"Device {cur_layer.device_id} is running: {cur_layer.name}")
+            if cur_layer.device_id is None:
+                a = 1
             device = self.devices[str(cur_layer.device_id)]
             dependency_arrival_timepool = []
             for dep in cur_layer.dependencies:

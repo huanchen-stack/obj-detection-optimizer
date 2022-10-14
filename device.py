@@ -33,6 +33,13 @@ class Device(object):
             self.cuda_mem[layername] = cuda_mem
             self.macs[layername] = macs
 
+
+    def current_cuda_mem(self):
+        cuda_sum = 0
+        for layername in self.assigned_layer:
+            cuda_sum += self.cuda_mem[layername]
+        return cuda_sum
+
     def get_mem_consumption(self):
         cpu_peak, cpu_sum = 0.0, 0.0
         cuda_peak, cuda_sum = 0.0, 0.0

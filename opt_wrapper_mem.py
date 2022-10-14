@@ -1,10 +1,12 @@
 from queue import Empty
 from random import expovariate
 import re
-from optimizer import Optimizer
+from optimizer_mem import Optimizer
 from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
+
+memory_constrain = 1024*4
 
 
 class OPT_WRAPPER(object):
@@ -13,22 +15,22 @@ class OPT_WRAPPER(object):
         'faster-nano',
         'yolor-agx',
         'yolor-nano',
-        # 'yolox-agx',
+        'yolox-agx',
         'yolox-nano',
         'yolov4-agx',
         'yolov4-nano'
     ]
     benchmarks = {
         "0": {
-            'faster-agx': 0.349021,
-            'faster-nano': 1.967904,
+            'faster-agx': 0.509311,
+            'faster-nano': 1.905703,
             'faster-clarity32': 0.063555,
             'yolor-agx': 0.1736289,
             'yolor-nano': 1.458861,
-            # 'yolox-agx': 2.6009,
-            'yolox-nano': 1.6617,
-            'yolov4-agx': 0.1969,
-            'yolov4-nano': 1.1422,
+            'yolox-agx': 0.0916212,
+            'yolox-nano': 1.76330,
+            'yolov4-agx': 0.170569897,
+            'yolov4-nano': 0.91332531,
         },
         "1": {
             'faster-agx': 1.157999,
@@ -41,7 +43,6 @@ class OPT_WRAPPER(object):
             'yolov4-agx': 0.6596,
             'yolov4-nano': 1.5723,
         },
-
     }
     bandwidths = {
         # 'agx': [
@@ -54,16 +55,18 @@ class OPT_WRAPPER(object):
         # ],
         # 'agx': [*range(900, 3400, 100)],
         'agx':
-            {'yolox': [*range(250, 4500, 150)],
-             'yolor': [*range(250, 4500, 150)],
+            {'yolox': [*range(250, 4500, 250)],
+             'yolor': [*range(250, 4500, 250)],
              'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(900, 3400, 100)]},
+             'faster': [*range(750, 3400, 250)]},
         # 'nano': [*range(375, 1500, 125)],  # good graph
         'nano':
-            {'yolox': [*range(250, 4500, 150)],
-             'yolor': [*range(250, 4500, 150)],
+            {'yolox': [*range(250, 4500, 250)],
+             'yolor': [*range(250, 4500, 250)],
              'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(900, 3400, 100)]},
+             # 'yolov4': [*range(250, 251, 1)],
+             'faster': [*range(750, 3400, 250)]},
+
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -117,6 +120,7 @@ class OPT_WRAPPER(object):
             reverse0=reverse0,
             reverse1=reverse1,
             dir=f"testcases/{self.config}",
+            memory_constrain=memory_constrain
         )
         return opt
 
@@ -125,24 +129,29 @@ class OPT_WRAPPER(object):
 
         for bandwidth in self.bandwidth_list:
             across_devices = []
-            for num_devices in range(2, self.num_devices_max + 1):
+            for num_devices in range(1, self.num_devices_max + 1):
                 # try different optimization heuristics
                 opt1 = self.optimize_once(bandwidth, num_devices, True, True)
                 opt2 = self.optimize_once(bandwidth, num_devices, True, False)
                 opt3 = self.optimize_once(bandwidth, num_devices, False, True)
                 opt4 = self.optimize_once(bandwidth, num_devices, False, False)
+                if not (opt1.success or opt2.success or opt3.success or opt4.success):
+                    continue
 
                 results = [opt1, opt2, opt3, opt4]
                 results = [opt.report() for opt in results]
                 results = sorted(results, key=lambda e: e[0])
                 t = results[0]
                 t.insert(1, 100 - 100 * t[0] / self.benchmark)
+                t.insert(len(t) + 1, num_devices)
                 across_devices.append(t)
 
+            if len(across_devices) == 0:
+                return False
             # find optimal num_devices
             best = min(across_devices, key=lambda e: e[0])
             for i in range(len(across_devices)):
-                num_devices = i + 2
+                num_devices = across_devices[i][5]
                 # if (across_devices[i][0] - best[0]) / best[0] <= 1 - self.threshold:
                 if across_devices[i][0] * self.threshold <= best[0]:
                     self.opt_num_devices.append(num_devices)
@@ -196,11 +205,13 @@ def driver(config, threshold):
         bandwidth_list=None,
         threshold=threshold,
     )
-    opt_wrapper.optimize()
+    success = opt_wrapper.optimize()
     res = opt_wrapper.report()
 
     with open(f'data/{config}.csv', 'w') as f:
         f.write(f"bandwidth,optimizer,energy,device,payload\n")
+        if len(res['opt_num_devices']) == 0:
+            return
         for i in range(len(res['bandwidths'])):
             f.write(
                 f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,{res['opt_num_devices'][i]},{res['payload'][i]}\n")
@@ -210,7 +221,7 @@ if __name__ == '__main__':
 
     threshold = 0.95
     print(f"Note: current threshold is {threshold}, "
-          f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold},"
+          f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")
 
     for config in tqdm(OPT_WRAPPER.configs):

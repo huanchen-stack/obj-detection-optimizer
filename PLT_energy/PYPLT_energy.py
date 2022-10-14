@@ -6,27 +6,44 @@ from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER
 
 baseE = {
-    'faster-agx': 0,
-    'yolor-agx': 0,
-    'yolox-agx': 7179.3893,
-    'yolov4-agx': 4213.3583,
-    'faster-nano': 14213.7446,
-    'yolor-nano': 10447.9559,
-    'yolox-nano': 13460.1792,
-    'yolov4-nano': 9055.3908,
+    "0": {
+        'faster-agx': 8639.9460,
+        'yolor-agx': 7679.2450,
+        'yolox-agx': 7179.3893,
+        'yolov4-agx': 4213.3583,
+        'faster-nano': 14213.7446,
+        'yolor-nano': 10447.9559,
+        'yolox-nano': 13460.1792,
+        'yolov4-nano': 9055.3908,
+    },
+    "1": {
+        'faster-agx': 8724.0558,
+        'yolor-agx': 9049.7275,
+        'yolox-agx': 24857.6348,
+        'yolov4-agx': 7468.0064,
+        'faster-nano': 12406.4492,
+        'yolor-nano': 9158.5191,
+        'yolox-nano': 38119.5639,
+        'yolov4-nano': 10734.7091,
+    }
+
 }
 
 def draw(config):
-
+    power = "0"
     fig, ax1 = plt.subplots()
     df_year = pd.read_csv(f"../data/{config}.csv")
+    if len(df_year['bandwidth']) == 0:
+        print("No results printed")
+        return
+
     x1_list = []
     for i in df_year['bandwidth']:
         x1_list.append(i)
 
     base = 0
-    if baseE[config] != 0:
-        base = baseE[config]
+    if baseE[power][config] != 0:
+        base = baseE[power][config]
 
     w = (df_year['bandwidth'][len(df_year['bandwidth'])-1] - df_year['bandwidth'][0]) / len(df_year) * 0.5
     b0 = ax1.bar(x1_list, base, width=w, label='Energy: Computation',
