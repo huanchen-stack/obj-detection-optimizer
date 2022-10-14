@@ -50,5 +50,11 @@
             "bbox_pred",
             "postprocess_detections"
         ]
+    },
+    {
+        "type": "theoretical",
+        "partition": 0.2517721818181818,
+        "baseline": 0.27243799999999996,
+        "speedup": 0.07585512366783698
     }
 ]

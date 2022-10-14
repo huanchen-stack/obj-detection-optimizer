@@ -79,7 +79,7 @@ class OPT_WRAPPER(object):
             cul += time
         self.benchmark = cul
 
-    def simulate(self, bandwidth):
+    def simulate(self, bandwidth, reverse1):
         simv2 = Simulator(
             dep_filename=self.dep,
             prof_filenames=[self.prof] * self.num_devices_max,
@@ -87,6 +87,7 @@ class OPT_WRAPPER(object):
             priority_filename=self.priority,
             part_filename=self.part,
             ignore_latency=False,
+            reverse1=reverse1,
         )
         return simv2
 
@@ -142,7 +143,7 @@ class OPT_WRAPPER(object):
             self.optimize_once(*args)
 
             # SIMULATE
-            simv2 = self.simulate(bandwidth)
+            simv2 = self.simulate(bandwidth, best[-1])
             
             # simulate to get payload info
             transfer_data_summary = simv2.transfer_data_summary
@@ -150,7 +151,7 @@ class OPT_WRAPPER(object):
             self.payload.append(transfer_data_summary_raw)
             print(self.config, bandwidth, simv2.total_data_sent)
             if not 0.999 < simv2.total_time / best[0] < 1.001:
-                print( f"{simv2.total_time}, {best[0]}" )
+                print( f"{simv2.total_time}, {best[0]} || {best}" )
 
             # simulate to get critical path
             critical_path = simv2.find_critical_path()
@@ -179,6 +180,7 @@ class OPT_WRAPPER(object):
                 self.args[i] = self.args[i-1]
 
                 # rewrite json file for critical path
+                print(f"Rewriting critical path for {self.config} under bandwidth: {int(self.bandwidth_list[i] * 8)}")
                 critical_path = simv2.find_critical_path()
                 f = open(f"critical_paths/{self.config}/{int(self.bandwidth_list[i]*8)}.json", "w")
                 json.dump(critical_path, f, indent=4)
@@ -217,4 +219,4 @@ if __name__ == '__main__':
     #     driver(config, threshold)
 
     # driver(input("config: "), threshold)
-    driver('yolor-agx', threshold)
+    driver('yolox-agx', threshold)

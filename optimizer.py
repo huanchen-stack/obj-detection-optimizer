@@ -176,31 +176,28 @@ class Optimizer(object):
         """
         if cur_layer_name == "output":
             return
+        
+        cur_layer = self.layers[cur_layer_name]
+        for dep in cur_layer.dependencies:
+            if not self.layers[dep].completed:
+                return
+
+        decision = self.decide_one_layer(cur_layer_name)
+
+        if self.FIRST_RUN:
+            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e],
+                                    reverse=self.reverse0)
         else:
-            cur_layer = self.layers[cur_layer_name]
-            # if cur_layer_name == "add__0":
-            #     for dep in cur_layer.dependencies:
-            #         print(f"{dep}, {self.layers[dep].completed}")
-            for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
-                    return
+            cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
 
-            decision = self.decide_one_layer(cur_layer_name)
-
-            if self.FIRST_RUN:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e],
-                                        reverse=self.reverse0)
-            else:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
-
-            for next_layer_name in cur_layer.next:
-                if self.layers[next_layer_name].completed:
-                    continue
-                if next_layer_name == "output":
-                    self.layers["output"].device_id = decision
-                    self.results.append(cur_layer.end_time)
-                    continue
-                self.device_exec(next_layer_name)
+        for next_layer_name in cur_layer.next:
+            if self.layers[next_layer_name].completed:
+                continue
+            if next_layer_name == "output":
+                self.layers["output"].device_id = decision
+                self.results.append(cur_layer.end_time)
+                continue
+            self.device_exec(next_layer_name)
 
     def optimize(self, write_csv=False):
 
@@ -251,6 +248,5 @@ class Optimizer(object):
     def report(self):
         best = min(self.results)
         best_iter = self.results.index(best)
-        # r0 = "T" if self.reverse0 else "F"
-        # r1 = "T" if self.reverse1 else "F"
+
         return [best, best_iter, self.reverse0, self.reverse1]

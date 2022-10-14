@@ -19,31 +19,39 @@
             "upsample_P4",
             "C3_p3",
             "bu_conv2",
-            "C3_n3"
+            "C3_n3",
+            "stems_1",
+            "reg_convs_1"
         ]
     },
     {
         "type": "data",
-        "content": 1.5625
+        "content": 0.1221
     },
     {
         "type": "exec",
         "content": [
-            "stems_1",
-            "reg_convs_1",
-            "reg_preds_1",
             "obj_preds_1",
-            "cls_convs_1",
-            "cls_preds_1",
-            "partial_out_1",
             "stems_0",
-            "cls_convs_0",
-            "cls_preds_0",
             "reg_convs_0",
-            "reg_preds_0",
-            "obj_preds_0",
+            "reg_preds_0"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 3.125
+    },
+    {
+        "type": "exec",
+        "content": [
             "partial_out_0",
             "output_decode"
         ]
+    },
+    {
+        "type": "theoretical",
+        "partition": 0.23314721538391114,
+        "baseline": 0.2714262008666992,
+        "speedup": 0.14102907295079947
     }
 ]

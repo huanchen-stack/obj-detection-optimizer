@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 1000.0
+        "content": 750.0
     },
     {
         "type": "exec",
@@ -18,6 +18,16 @@
             "reduce_conv1",
             "upsample_P4",
             "C3_p3",
+            "bu_conv2",
+            "C3_n3",
+            "bu_conv1",
+            "C3_n4",
+            "stems_2",
+            "reg_convs_2",
+            "reg_preds_2",
+            "cls_convs_2",
+            "cls_preds_2",
+            "partial_out_2",
             "stems_0",
             "cls_convs_0",
             "cls_preds_0"
@@ -31,21 +41,13 @@
         "type": "exec",
         "content": [
             "partial_out_0",
-            "bu_conv1",
-            "C3_n4",
-            "stems_2",
-            "reg_convs_2",
-            "obj_preds_2",
-            "cls_convs_2",
-            "cls_preds_2",
-            "partial_out_2",
             "output_decode"
         ]
     },
     {
         "type": "theoretical",
-        "partition": 0.25052824020385744,
+        "partition": 0.27722147305806477,
         "baseline": 0.2714262008666992,
-        "speedup": 0.076993159083802
+        "speedup": -0.02135118928408719
     }
 ]

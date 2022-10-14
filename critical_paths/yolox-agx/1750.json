@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 1000.0
+        "content": 1750.0
     },
     {
         "type": "exec",
@@ -18,9 +18,23 @@
             "reduce_conv1",
             "upsample_P4",
             "C3_p3",
+            "bu_conv2",
+            "C3_n3",
+            "stems_1",
+            "reg_convs_1"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 0.1221
+    },
+    {
+        "type": "exec",
+        "content": [
+            "obj_preds_1",
             "stems_0",
-            "cls_convs_0",
-            "cls_preds_0"
+            "reg_convs_0",
+            "reg_preds_0"
         ]
     },
     {
@@ -31,21 +45,13 @@
         "type": "exec",
         "content": [
             "partial_out_0",
-            "bu_conv1",
-            "C3_n4",
-            "stems_2",
-            "reg_convs_2",
-            "obj_preds_2",
-            "cls_convs_2",
-            "cls_preds_2",
-            "partial_out_2",
             "output_decode"
         ]
     },
     {
         "type": "theoretical",
-        "partition": 0.25052824020385744,
+        "partition": 0.23500270109819685,
         "baseline": 0.2714262008666992,
-        "speedup": 0.076993159083802
+        "speedup": 0.13419301324705346
     }
 ]

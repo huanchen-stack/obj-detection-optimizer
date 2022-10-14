@@ -220,5 +220,11 @@
         "content": [
             "output_"
         ]
+    },
+    {
+        "type": "theoretical",
+        "partition": 0.10882182222222223,
+        "baseline": 0.10962799999999999,
+        "speedup": 0.007353757961266916
     }
 ]

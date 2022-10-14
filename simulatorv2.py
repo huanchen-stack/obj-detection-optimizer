@@ -12,7 +12,9 @@ class Simulator(object):
                  device_names=None,
                  priority_filename=None,
                  part_filename=None,
-                 ignore_latency=False):
+                 ignore_latency=False,
+                 reverse1=True
+                 ):
         super().__init__()
         self.bandwidth = bandwidth
 
@@ -32,6 +34,8 @@ class Simulator(object):
         self.total_time = 0
 
         self.critical_path_graph = {}
+
+        self.reverse1 = reverse1
 
         # load and initialize devices
         parallel = True
@@ -157,7 +161,7 @@ class Simulator(object):
         self.devices[str(cur_layer.device_id)].available_time = end_time
         self.devices[str(cur_layer.device_id)].last_exec_layername = cur_layer_name
 
-        cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
+        cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
 
         for next_layer_name in cur_layer.next:
             if self.layers[next_layer_name].completed:
@@ -199,10 +203,14 @@ class Simulator(object):
                 "device_id": -1,
             }
         ]
+
+        tmpset = set()
+        tmpset.add("output")
         # inserting from end to back
         while critical_path[0]["layername"] in self.critical_path_graph:
             critical_path.insert(0, self.critical_path_graph[critical_path[0]["layername"]])
-
+            tmpset.add(critical_path[0]['layername'])
+        
         # sanitize device assignment
         #   in case transfer data size is set to 0 
         # for node in critical_path:
@@ -245,5 +253,24 @@ class Simulator(object):
 
             tmp["content"].append(node["layername"])
             prev_node = node
+
+        # theoretical improvements
+        theoretical = {
+            'type': 'theoretical',
+            'partition': 0,
+            'baseline': 0,
+            'speedup': 0
+        }
+        for layer in self.layers:
+            theoretical['baseline'] += self.devices['0'].time[layer]
+            if layer in tmpset:
+                theoretical['partition'] += self.devices['0'].time[layer]
+        d_tot = 0
+        for r in res:
+            if r['type'] == 'data':
+                d_tot += r['content']
+        theoretical['partition'] += d_tot / self.bandwidth
+        theoretical['speedup'] = 1 - theoretical['partition'] / theoretical['baseline']
+        res.append(theoretical)
 
         return res
