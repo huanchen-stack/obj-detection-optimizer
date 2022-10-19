@@ -1,11 +1,18 @@
 import os
+
+import numpy
 import pandas as pd
 from layer import Layer
 from device import Device
+from power_infer_battery import EnergyInferer
+
+# Here we use layer.completed as a flag to indicate whether a layer has been sorted
+from simulatorv2 import Simulator
 
 VERBOSE = False
-class Optimizer(object):
 
+
+class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
@@ -14,9 +21,10 @@ class Optimizer(object):
                  ignore_latency=False,
                  iterations=1,
                  dir="",
-                 benchmark=None,
+                 benchmark_energy=None,
                  reverse0=True,
                  reverse1=True,
+                 config=None
                  ):
         super().__init__()
         self.bandwidth = bandwidth
@@ -28,6 +36,14 @@ class Optimizer(object):
         self.ignore_latency = ignore_latency
         self.iterations = iterations
         self.dir = dir
+        self.benchmark_energy = benchmark_energy
+        self.config = config
+        path = os.path.abspath(os.getcwd())
+        path = os.path.join(path, f"testcases/{self.config}")
+        self.dep = os.path.join(path, "dep.csv")
+        self.prof = os.path.join(path, "prof.csv")
+        self.priority = os.path.join(path, "priority.csv")
+        self.part = os.path.join(path, "part.csv")
 
         self.reverse0 = reverse0
         self.reverse1 = reverse1
@@ -48,41 +64,9 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
-        self.FIRST_RUN = True
-
-        if self.iterations == 0:
-            self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
-            self.priorities.write(f"layername,priority\n")
-            self.backtrace(write_csv=True)
-            self.priorities.close()
-            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
-            self.partitions.write(f"layername,device\n")
-            self.optimize(write_csv=True)
-            self.partitions.close()
-            best = min(self.results)
-            best_iter = self.results.index(best)
-        else:
-            self.optimize()
-            # self.forward()
-        self.FIRST_RUN = False
-
-        for i in range(self.iterations):
-            if i == self.iterations - 1:
-                self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
-                self.priorities.write(f"layername,priority\n")
-                self.backtrace(write_csv=True)
-                self.priorities.close()
-                self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
-                self.partitions.write(f"layername,device\n")
-                self.optimize(write_csv=True)
-                self.partitions.close()
-
-                best = min(self.results)
-                best_iter = self.results.index(best)
-            else:
-                self.backtrace()
-                self.optimize()
-                # self.forward()
+        self.optimize()
+        best = min(self.results)
+        best_iter = self.results.index(best)
 
     def load_dependencies(self, dep_filename):
         """
@@ -108,181 +92,80 @@ class Optimizer(object):
             self.layers[layername].size = size
             self.layers[layername].macs = macs
 
-    def clean_up(self):
-        for name, layer in self.layers.items():
-            layer.end_time = 0
-            layer.device_id = None
-        for name, device in self.devices.items():
-            device.available_time = 0
-            device.cur_time = 0
-
-    def decide_one_layer(self, cur_layer_name):
-
-        # min(max(max(end_time + transfer_time), device_clock) + execution_time)
-        device_results = []
-
-        sorted_device_names = list(self.devices.keys())
-        sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
-        for device_name in sorted_device_names:
-            device = self.devices[device_name]
-            dependency_arrival_timepool = []
-            for dep_name in self.layers[cur_layer_name].dependencies:
-                dep_layer = self.layers[dep_name]
-                transfer_latency = 0
-                if (not self.ignore_latency) and dep_layer.device_id != device.name:
-                    transfer_latency = dep_layer.size / self.bandwidth
-                end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
-                dependency_arrival_timepool.append(end_time)
-            dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
-            device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
-
-        if self.layers[cur_layer_name].fixed is not None:
-            decision = self.layers[self.layers[cur_layer_name].fixed].device_id
-            min_value = device_results[sorted_device_names.index(decision)]
-            # min_value = device_results[decision]
-            self.layers[cur_layer_name].device_id = decision
-            # self.layers[cur_layer_name].fixed = None
-        else:
-            min_value = min(device_results)
-            decision = sorted_device_names[device_results.index(min_value)]
-            self.layers[cur_layer_name].device_id = decision
-
-        self.layers[cur_layer_name].completed = True
-        self.layers[cur_layer_name].end_time = min_value
-        self.devices[decision].available_time = min_value
-
-        same_source_dep_time = []
-        for dep_layer_name in self.layers[cur_layer_name].dependencies:
-            if self.layers[dep_layer_name].device_id == decision:
-                same_source_dep_time.append(self.layers[dep_layer_name].end_time)
-        if same_source_dep_time:
-            earliest_ready_time = max(same_source_dep_time)
-            possible_opt_pool = {}
-            curr_start_time = self.layers[cur_layer_name].end_time - self.devices[decision].time[cur_layer_name]
-            for dep_layer_name in self.layers[cur_layer_name].dependencies:
-                if self.layers[dep_layer_name].device_id != decision:
-                    possible_opt_pool[dep_layer_name] = (
-                            curr_start_time - (earliest_ready_time + self.devices[decision].time[dep_layer_name]))
-            if possible_opt_pool and max(possible_opt_pool.values()) > 0:
-                can_opt_dep_name = max(possible_opt_pool, key=possible_opt_pool.get)
-                self.layers[can_opt_dep_name].fixed = self.layers[can_opt_dep_name].dependencies[0]
-                self.layers[cur_layer_name].fixed = can_opt_dep_name
-
-        # self.partitions.write(f"{cur_layer_name},{decision}\n")
-        return decision
-
-    def device_exec(self, cur_layer_name):
-        """
-        Update device current time.
-        Returns the next layers.
-        """
-        if cur_layer_name == "output":
-            return
-        else:
-            cur_layer = self.layers[cur_layer_name]
-            # if cur_layer_name == "add__0":
-            #     for dep in cur_layer.dependencies:
-            #         print(f"{dep}, {self.layers[dep].completed}")
-            for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
-                    return
-
-            decision = self.decide_one_layer(cur_layer_name)
-
-            if self.FIRST_RUN:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e],
-                                        reverse=self.reverse0)
-            else:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
-
-            for next_layer_name in cur_layer.next:
-                if self.layers[next_layer_name].completed:
-                    continue
-                if next_layer_name == "output":
-                    self.layers["output"].device_id = decision
-                    self.results.append(cur_layer.end_time)
-                    continue
-                self.device_exec(next_layer_name)
-
-    def optimize(self, write_csv=False):
-
-        self.clean_up()
-
-
-        self.layers["input"].end_time = 0
-        self.layers["input"].device_id = 0
-
-        self.device_exec("input")
-
+    def find_least_unused_output_size(self):
+        res_layer_name = ""
+        least_size_unused = numpy.Inf
         for layer_name, layer in self.layers.items():
-            if write_csv:
-                self.partitions.write(f"{layer_name},{layer.device_id}\n")
+            if not layer.completed and least_size_unused > layer.size and layer.size != 0:
+                least_size_unused = layer.size
+                res_layer_name = layer_name
+        return res_layer_name
 
-    def forward(self):
-
-        self.clean_up()
-
-        self.layers["input"].end_time = 0
-        self.layers["input"].device_id = 0
-
-        queue = ["input"]
+    def assign_successors(self, start_layer_name, device_id):
+        cur_device_id = self.layers[start_layer_name].device_id
+        queue = self.layers[start_layer_name].next
         while queue:
             cur_layer_name = queue.pop(0)
-            cur_layer = self.layers[cur_layer_name]
-
-            for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
-                    return
-
-            decision = self.decide_one_layer(cur_layer_name)
-
-            if self.FIRST_RUN:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
-            else:
-                cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
-
-            for next_layer_name in cur_layer.next:
-                if self.layers[next_layer_name].completed:
+            self.layers[cur_layer_name].device_id = device_id
+            for next_layer_name in self.layers[cur_layer_name].next:
+                if self.layers[next_layer_name].device_id != cur_device_id:
                     continue
                 if next_layer_name == "output":
-                    self.layers["output"].device_id = decision
+                    self.layers["output"].device_id = device_id
                     continue
                 queue.append(next_layer_name)
 
-    def backtrace(self, write_csv=False):
-        self.layers["output"].pr_max = 1000
-        self.layers["output"].pr_min = 0
-        queue = ["output"]
-        while queue:
-            cur_layer_name = queue.pop(0)
-            cur_layer = self.layers[cur_layer_name]
-            cur_layer.completed = False
-            sorted_dep_layer_names = sorted(cur_layer.dependencies, key=lambda e: self.layers[e].end_time + (
-                self.layers[e].size / self.bandwidth if self.layers[e].device_id != cur_layer.device_id else 0))
-            for dep_layer_name in cur_layer.dependencies:
-                if dep_layer_name == "input":
-                    continue
-                i = sorted_dep_layer_names.index(dep_layer_name)
-                pr_max_ = cur_layer.pr_min + (i + 1) / len(cur_layer.dependencies) * (
-                        cur_layer.pr_max - cur_layer.pr_min)
-                pr_min_ = cur_layer.pr_min + i / len(cur_layer.dependencies) * (cur_layer.pr_max - cur_layer.pr_min)
-                if (not self.layers[dep_layer_name].pr_max) or self.layers[dep_layer_name].pr_max < pr_max_:
-                    self.layers[dep_layer_name].pr_max = pr_max_
-                    self.layers[dep_layer_name].pr_min = pr_min_
-                if dep_layer_name not in queue:
-                    queue.append(dep_layer_name)
+    def simulate(self, bandwidthm, num_devices_max):
+        simv2 = Simulator(
+            dep_filename=self.dep,
+            prof_filenames=[self.prof] * num_devices_max,
+            bandwidth=self.bandwidth,
+            priority_filename=self.priority,
+            part_filename=self.part,
+            ignore_latency=False,
+        )
+        return simv2
 
-        self.layers["input"].completed = False
-        self.layers["input"].pr_max = 0
-        # for name, device in self.devices.items():
-        #     device.available_time = 0
+    def optimize(self):
+        # set all layers on one device
+        for layer_name, layer in self.layers.items():
+            layer.device_id = 0
 
-        for name, layer in self.layers.items():
-            if write_csv:
-                self.priorities.write(f"{name},{layer.pr_max}\n")
+        num_used_devices = 1
+        while num_used_devices < self.num_devices:
+            next_layer = self.find_least_unused_output_size()
+            self.assign_successors(next_layer, num_used_devices)
+            # write partitions to file
+            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
+            self.partitions.write(f"layername,device\n")
+            for layer_name, layer in self.layers.items():
+                self.partitions.write(f"{layer_name},{layer.device_id}\n")
+            self.partitions.close()
+
+            simv2 = self.simulate(self.bandwidth, num_used_devices+1)
+            transfer_data_summary = simv2.transfer_data_summary
+            transfer_data_summary_raw = str(transfer_data_summary).replace(',', '|')  # for panda df read
+
+            with open(f'data/{self.config}.csv', 'w') as f:
+                f.write(f"bandwidth,optimizer,energy,device,payload\n")
+                f.write(
+                    f"{self.bandwidth},{0.0},0,{num_used_devices},{transfer_data_summary_raw}\n")
+
+            inferer = EnergyInferer(self.config, True)
+            total_energy = inferer.predict_energy(self.bandwidth, transfer_data_summary)
+            battery_life = (num_used_devices/(total_energy + self.benchmark_energy)) / (1 / self.benchmark_energy)
+            if len(self.results) > 0 and battery_life < max(self.results):
+                # undo change and exit
+                for layer_name, layer in self.layers.items():
+                    if layer.device_id == num_used_devices:
+                        layer.device_id = num_used_devices -1
+                break
+            self.layers[next_layer].completed = True
+            self.results.append(battery_life)
+            num_used_devices += 1
 
     def report(self):
-        best = min(self.results)
+        best = max(self.results)
         best_iter = self.results.index(best)
         # r0 = "T" if self.reverse0 else "F"
         # r1 = "T" if self.reverse1 else "F"

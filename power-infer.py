@@ -1,14 +1,10 @@
-import numpy as np
-import pandas as pd
-import sys
 import os
 import pickle
+
+import numpy as np
+import pandas as pd
+
 from opt_wrapper import OPT_WRAPPER
-import argparse
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, SCORERS
-from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
-from sklearn.tree import DecisionTreeRegressor
-import tqdm
 
 
 class EnergyInferer(object):
