@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 2200.0
+        "content": 2250.0
     },
     {
         "type": "exec",
@@ -92,8 +92,8 @@
     },
     {
         "type": "theoretical",
-        "partition": 0.1792864891052246,
-        "baseline": 0.18674279174804687,
-        "speedup": 0.03992819520917468
+        "partition": 0.1598310562133789,
+        "baseline": 0.16656876525878905,
+        "speedup": 0.04045001495293632
     }
 ]

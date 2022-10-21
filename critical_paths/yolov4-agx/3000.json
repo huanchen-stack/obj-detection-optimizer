@@ -9,40 +9,57 @@
             "input",
             "d1_conv1",
             "d1_conv2",
+            "d1_conv3",
             "d1_conv4",
             "d1_conv5",
             "d1_conv6",
             "d1_conv7",
-            "d1_conv3",
             "d1_conv8",
             "d2_conv1",
+            "d2_conv2",
             "d2_conv3",
             "d2_resblock",
             "d2_conv4",
-            "d2_conv2",
             "d2_conv5",
             "d3_conv1",
+            "d3_conv2",
             "d3_conv3",
             "d3_resblock",
             "d3_conv4",
-            "d3_conv2",
             "d3_conv5",
             "d4_conv1",
+            "d4_conv2",
             "d4_conv3",
             "d4_resblock",
             "d4_conv4",
             "d4_conv5",
-            "d5_conv1",
-            "d5_conv3",
-            "d5_resblock",
-            "d5_conv4",
+            "d5_conv1"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 2.8204
+    },
+    {
+        "type": "exec",
+        "content": [
+            "d5_conv2"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 1.41
+    },
+    {
+        "type": "exec",
+        "content": [
             "d5_conv5",
             "nk_conv1",
             "nk_conv2",
             "nk_conv3",
-            "nk_maxpl3",
-            "nk_maxpl2",
             "nk_maxpl1",
+            "nk_maxpl2",
+            "nk_maxpl3",
             "nk_conv4",
             "nk_conv5",
             "nk_conv6",
@@ -75,11 +92,23 @@
             "hd_conv17",
             "hd_conv18",
             "decode3",
-            "hd_conv1",
-            "hd_conv2",
-            "decode1",
-            "non_max_suppression",
+            "non_max_suppression"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 0.0
+    },
+    {
+        "type": "exec",
+        "content": [
             "wrapping_up"
         ]
+    },
+    {
+        "type": "theoretical",
+        "partition": 0.15973073516947428,
+        "baseline": 0.16683293304443358,
+        "speedup": 0.04257071877449836
     }
 ]

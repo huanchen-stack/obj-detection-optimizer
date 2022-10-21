@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 2200.0
+        "content": 750.0
     },
     {
         "type": "exec",
@@ -28,23 +28,24 @@
             "d3_conv4",
             "d3_conv5",
             "d4_conv1",
-            "d4_conv2",
             "d4_conv3",
             "d4_resblock",
             "d4_conv4",
+            "d4_conv2",
             "d4_conv5",
+            "nk_conv8",
             "d5_conv1",
-            "d5_conv2",
             "d5_conv3",
             "d5_resblock",
             "d5_conv4",
+            "d5_conv2",
             "d5_conv5",
             "nk_conv1",
             "nk_conv2",
             "nk_conv3",
-            "nk_maxpl1",
             "nk_maxpl3",
             "nk_maxpl2",
+            "nk_maxpl1",
             "nk_conv4",
             "nk_conv5",
             "nk_conv6",
@@ -57,11 +58,15 @@
             "nk_conv13",
             "nk_conv14",
             "nk_upspl2",
+            "nk_conv15",
             "nk_conv16",
             "nk_conv17",
             "nk_conv18",
             "nk_conv19",
             "nk_conv20",
+            "hd_conv1",
+            "hd_conv2",
+            "decode1",
             "hd_conv3",
             "hd_conv4",
             "hd_conv5",
@@ -77,6 +82,18 @@
             "hd_conv17",
             "hd_conv18",
             "decode3",
+            "hd_conv9",
+            "hd_conv10",
+            "decode2"
+        ]
+    },
+    {
+        "type": "data",
+        "content": 0.0
+    },
+    {
+        "type": "exec",
+        "content": [
             "non_max_suppression"
         ]
     },
@@ -92,8 +109,8 @@
     },
     {
         "type": "theoretical",
-        "partition": 0.1792864891052246,
-        "baseline": 0.18674279174804687,
-        "speedup": 0.03992819520917468
+        "partition": 0.16656876525878905,
+        "baseline": 0.16656876525878905,
+        "speedup": 0.0
     }
 ]

@@ -1,7 +1,7 @@
 [
     {
         "type": "bandwidth",
-        "content": 2200.0
+        "content": 3500.0
     },
     {
         "type": "exec",
@@ -34,7 +34,6 @@
             "d4_conv4",
             "d4_conv5",
             "d5_conv1",
-            "d5_conv2",
             "d5_conv3",
             "d5_resblock",
             "d5_conv4",
@@ -92,8 +91,8 @@
     },
     {
         "type": "theoretical",
-        "partition": 0.1792864891052246,
-        "baseline": 0.18674279174804687,
-        "speedup": 0.03992819520917468
+        "partition": 0.15901947937011718,
+        "baseline": 0.16656876525878905,
+        "speedup": 0.045322338056255296
     }
 ]
