@@ -31,10 +31,10 @@ reg_preds_1,1
 obj_preds_1,1
 partial_out_1,2
 stems_2,3
-cls_convs_2,3
-reg_convs_2,0
-cls_preds_2,3
-reg_preds_2,0
-obj_preds_2,0
+cls_convs_2,0
+reg_convs_2,3
+cls_preds_2,0
+reg_preds_2,3
+obj_preds_2,3
 partial_out_2,0
 output,0

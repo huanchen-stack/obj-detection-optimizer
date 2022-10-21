@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
-from opt_wrapper import OPT_WRAPPER
+from opt_wrapper import OPT_WRAPPER, POWER_MODE
 
 baseE = {
     "0": {
@@ -63,7 +63,8 @@ def draw(config):
 
     note = ax2.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
 
-    # ax2.set_ylim([0, 15])
+    if min(df_year['optimizer']) > 0:
+        ax2.set_ylim(ymin=0, ymax=(max(df_year['optimizer'] + 2)))
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
     ax1.set_ylabel("Energy (mJ)", fontsize=12)
     ax2.set_ylabel("Optimization (%)", fontsize=12)
@@ -78,9 +79,9 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # 图例设置
-    plt.legend(handles=[p1, b0, b1, note])
+    plt.legend(handles=[p1, b0, b1, note], loc="lower right")
     plt.grid()
-    plt.savefig(f"{config}.png", bbox_inches='tight', dpi=100)
+    plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":

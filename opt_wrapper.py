@@ -6,6 +6,7 @@ from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
 
+POWER_MODE = "1"
 
 class OPT_WRAPPER(object):
     configs = [
@@ -13,19 +14,30 @@ class OPT_WRAPPER(object):
         'faster-nano',
         'yolor-agx',
         'yolor-nano',
-        # 'yolox-agx',
+        'yolox-agx',
         'yolox-nano',
         'yolov4-agx',
         'yolov4-nano'
     ]
     benchmarks = {
+        "0-old": {
+            'faster-agx': 0.509311,
+            'faster-nano': 1.905703,
+            'faster-clarity32': 0.063555,
+            'yolor-agx': 0.1736289,
+            'yolor-nano': 1.458861,
+            'yolox-agx': 0.0916212,
+            'yolox-nano': 1.76330,
+            'yolov4-agx': 0.274311065,
+            'yolov4-nano': 0.91332531,
+        },
         "0": {
             'faster-agx': 0.349021,
             'faster-nano': 1.967904,
             'faster-clarity32': 0.063555,
             'yolor-agx': 0.1736289,
             'yolor-nano': 1.458861,
-            # 'yolox-agx': 2.6009,
+            'yolox-agx': 2.6009,
             'yolox-nano': 1.6617,
             'yolov4-agx': 0.1969,
             'yolov4-nano': 1.1422,
@@ -69,7 +81,7 @@ class OPT_WRAPPER(object):
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
         super().__init__()
         self.config = config
-        self.benchmark = OPT_WRAPPER.benchmarks["0"][self.config]
+        self.benchmark = OPT_WRAPPER.benchmarks[POWER_MODE][self.config]
 
         if bandwidth_list is None:
             self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]][config.split('-')[0]]
@@ -88,7 +100,7 @@ class OPT_WRAPPER(object):
 
     def get_path(self):
         path = os.path.abspath(os.getcwd())
-        path = os.path.join(path, f"testcases/{self.config}")
+        path = os.path.join(path, f"testcases/{self.config}/{POWER_MODE}")
         self.dep = os.path.join(path, "dep.csv")
         self.prof = os.path.join(path, "prof.csv")
         self.priority = os.path.join(path, "priority.csv")
@@ -125,7 +137,7 @@ class OPT_WRAPPER(object):
 
         for bandwidth in self.bandwidth_list:
             across_devices = []
-            for num_devices in range(2, self.num_devices_max + 1):
+            for num_devices in range(1, self.num_devices_max + 1):
                 # try different optimization heuristics
                 opt1 = self.optimize_once(bandwidth, num_devices, True, True)
                 opt2 = self.optimize_once(bandwidth, num_devices, True, False)
@@ -208,7 +220,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.95
+    threshold = 0.99
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold},"
           f" opt_num_devices won't be updated\n")

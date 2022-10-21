@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import seaborn as sns
 from tqdm import tqdm
-from opt_wrapper import OPT_WRAPPER
+from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
 def draw(config):
@@ -25,7 +25,7 @@ def draw(config):
     for i in df_file['bandwidth']:
         x1_list.append(i)
         
-    plot_data = baseBattery[config]*df_file['device']/(baseE[config]+df_file['energy']) / (baseBattery[config]/baseE[config])
+    plot_data = baseBattery[config]*df_file['device']/(baseE[POWER_MODE][config]+df_file['energy']) / (baseBattery[config]/baseE[POWER_MODE][config])
 
     line1 = ax1.plot(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
@@ -43,7 +43,7 @@ def draw(config):
     note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
     # baseline = ax1.hlines(y=baseBattery[config]/baseE[config], color=sns.xkcd_rgb["denim blue"], linestyle='-', xmin=x1_list[0], xmax=x1_list[-1], label="base battery life")
 
-    # ax2.set_ylim([0, 15])
+    # ax1.set_ylim(ymin=0)
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
     ax1.set_ylabel("Battery life", fontsize=12)
     ax1.set_title(f"{config}", fontsize=14)
@@ -58,7 +58,7 @@ def draw(config):
     # 图例设置
     plt.legend(handles=[p1, note], loc=(1.04, 0))
     plt.grid()
-    plt.savefig(f"{config}.png", bbox_inches='tight', dpi=100)
+    plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
