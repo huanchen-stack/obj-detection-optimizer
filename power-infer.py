@@ -13,6 +13,7 @@ class EnergyInferer(object):
         self.config = config
         self.dtr_vz_mn_model = pickle.load(open("power_infer/dtr_vz_mn_model.pickle", "rb"))
         self.multicast = multicast
+        self.latency = {}
 
     def get_path(self, config):
         path = os.path.abspath(os.getcwd())
@@ -41,16 +42,16 @@ class EnergyInferer(object):
                     multicaster[d['count']] = 0
                 multicaster[d['count']] += d['size']
 
-            print(self.config, bandwidth, multicaster)
-
             total_energy = 0
+            self.latency[self.config] = 0
             for mult, size in multicaster.items():
                 bandwidth_pseudo = bandwidth * mult
                 POW_up = self.predict_POW(uplink_mbps=bandwidth_pseudo, downlink_mbps=0)
                 POW_down = self.predict_POW(uplink_mbps=0, downlink_mbps=bandwidth_pseudo)
                 size_pseudo = size * 8 / mult  # convert Byte to bits; apply multicast
                 total_energy += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
-
+                self.latency[self.config] += mult*size/bandwidth
+            print(self.latency)
             df.at[i, 'energy'] = total_energy
 
         df.to_csv(self.get_path(self.config), sep=',', index=False)

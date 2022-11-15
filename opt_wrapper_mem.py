@@ -12,13 +12,13 @@ memory_constrain = 1024*4
 
 class OPT_WRAPPER(object):
     configs = [
-        # 'faster-agx',
-        # 'faster-nano',
-        # 'yolor-agx',
-        # 'yolor-nano',
-        # 'yolox-agx',
-        # 'yolox-nano',
-        # 'yolov4-agx',
+        'faster-agx',
+        'faster-nano',
+        'yolor-agx',
+        'yolor-nano',
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
         'yolov4-nano'
     ]
     benchmarks = {
@@ -57,27 +57,29 @@ class OPT_WRAPPER(object):
         },
     }
     bandwidths = {
-        # 'agx': [
-        #     750, 1000, 1250, 1500, 1750,
-        #     2000, 2250, 2500, 2750, 3000, float('inf'),
-        # ],
-        # 'nano': [
-        #     375, 500, 625, 750, 875,
-        #     1000, 1250, 1500, 1750, 2000, 3000,
-        # ],
-        # 'agx': [*range(900, 3400, 100)],
+        # 'agx':
+        #     {'yolox': [*range(250, 4500, 250)],
+        #      'yolor': [*range(750, 4500, 250)],
+        #      'yolov4': [*range(250, 4500, 250)],
+        #      'faster': [*range(750, 3400, 250)]},
+        # 'nano':
+        #     {'yolox': [*range(250, 4500, 250)],
+        #      'yolor': [*range(250, 4500, 250)],
+        #      'yolov4': [*range(250, 8000, 250)],
+        #      'faster': [*range(750, 3400, 250)]},
+
         'agx':
-            {'yolox': [*range(250, 4500, 250)],
-             'yolor': [*range(250, 4500, 250)],
-             'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(750, 3400, 250)]},
-        # 'nano': [*range(375, 1500, 125)],  # good graph
+            {'yolox': [300],
+             'yolor': [300],
+             'yolov4': [300],
+             'faster': [300],
+             },
         'nano':
-            {'yolox': [*range(250, 4500, 250)],
-             'yolor': [*range(250, 4500, 250)],
-             'yolov4': [*range(250, 8000, 250)],
-             # 'yolov4': [*range(250, 251, 1)],
-             'faster': [*range(750, 3400, 250)]},
+            {'yolox': [300],
+             'yolor': [300],
+             'yolov4': [300],
+             'faster': [300],
+             }
 
     }
 
@@ -231,7 +233,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.99
+    threshold = 0.95
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

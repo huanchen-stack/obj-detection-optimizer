@@ -220,7 +220,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.99
+    threshold = 0.97
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold},"
           f" opt_num_devices won't be updated\n")

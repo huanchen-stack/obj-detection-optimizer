@@ -7,35 +7,27 @@ from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
+
 def draw(config):
-    baseBattery = {
-        'faster-agx':   1,
-        'yolor-agx':    1,
-        'yolox-agx':    1,
-        'yolov4-agx':   1,
-        'faster-nano':  1,
-        'yolor-nano':   1,
-        'yolox-nano':   1,
-        'yolov4-nano':  1,
-    }
 
     fig, ax1 = plt.subplots()
+    fig.set_size_inches(6, 3)
     df_file = pd.read_csv(f"../data/{config}.csv")
     x1_list = []
     for i in df_file['bandwidth']:
         x1_list.append(i)
         
-    plot_data = baseBattery[config]*df_file['device']/(baseE[POWER_MODE][config]+df_file['energy']) / (baseBattery[config]/baseE[POWER_MODE][config])
+    plot_data = df_file['optimizer']
 
     line1 = ax1.plot(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      linestyle='-',
-                     label='battery life')
+                     label='Optimization speed up')
     p1 = ax1.scatter(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      marker='o',
                      s=30,
-                     label='battery life')
+                     label='Optimization speed up')
 
     for i, j, d in zip(df_file['bandwidth'], plot_data, df_file["device"]):
         ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
@@ -45,9 +37,10 @@ def draw(config):
 
     # ax1.set_ylim(ymin=0)
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
-    ax1.set_ylabel("Battery life", fontsize=12)
-    ax1.set_title(f"{config}", fontsize=14)
-    plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f x'))
+    ax1.set_ylabel("Optimization speed up (%)", fontsize=12)
+    # ax1.set_title(f"{config}", fontsize=14)
+    if min(plot_data) > 0:
+        ax1.set_ylim(ymin=0, ymax=(max(plot_data + 2)))
 
     # 双Y轴标签颜色设置
     ax1.yaxis.label.set_color('black')
@@ -56,7 +49,7 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # 图例设置
-    plt.legend(handles=[p1, note], loc=(1.04, 0))
+    plt.legend(handles=[p1, note], loc='lower right')
     plt.grid()
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 

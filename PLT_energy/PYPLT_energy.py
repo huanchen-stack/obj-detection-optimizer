@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
+import matplotlib.ticker as mticker
 
 baseE = {
     "0": {
@@ -29,46 +30,66 @@ baseE = {
 
 }
 
+baseBattery = {
+    'faster-agx': 1,
+    'yolor-agx': 1,
+    'yolox-agx': 1,
+    'yolov4-agx': 1,
+    'faster-nano': 1,
+    'yolor-nano': 1,
+    'yolox-nano': 1,
+    'yolov4-nano': 1,
+}
+
+avg_battery = []
+
 def draw(config):
     power = "0"
     fig, ax1 = plt.subplots()
-    df_year = pd.read_csv(f"../data/{config}.csv")
-    if len(df_year['bandwidth']) == 0:
+    fig.set_size_inches(6, 3)
+    df = pd.read_csv(f"../data/{config}.csv")
+    if len(df['bandwidth']) == 0:
         print("No results printed")
         return
 
     x1_list = []
-    for i in df_year['bandwidth']:
+    for i in df['bandwidth']:
         x1_list.append(i)
 
     base = 0
     if baseE[power][config] != 0:
         base = baseE[power][config]
+    battery_plot_data = baseBattery[config] * df['device'] / (baseE[POWER_MODE][config] + df['energy']) / (
+            baseBattery[config] / baseE[POWER_MODE][config])
 
-    w = (df_year['bandwidth'][len(df_year['bandwidth'])-1] - df_year['bandwidth'][0]) / len(df_year) * 0.5
+    # avg_battery.append(battery_plot_data[len(battery_plot_data)-1])
+    avg_battery.append(battery_plot_data[0])
+
+    w = (df['bandwidth'][len(df['bandwidth']) - 1] - df['bandwidth'][0]) / len(df) * 0.5
     b0 = ax1.bar(x1_list, base, width=w, label='Energy: Computation',
                  color=sns.xkcd_rgb["denim blue"])
-    b1 = ax1.bar(x1_list, df_year['energy'], width=w, label='Energy: Communication',
+    b1 = ax1.bar(x1_list, df['energy'], width=w, label='Energy: Communication',
                  bottom=base, color=sns.xkcd_rgb["maize"])
 
     ax2 = ax1.twinx()
 
-    line1, = ax2.plot(df_year['bandwidth'], df_year['optimizer'], color=sns.xkcd_rgb["pale red"], linestyle='-',
-                    label='optimizer performance')
-    p1 = ax2.scatter(df_year['bandwidth'], df_year['optimizer'], color=sns.xkcd_rgb["pale red"], marker='o', s=30,
-                    label='optimizer performance')
-
-    for i, j, d in zip(df_year['bandwidth'], df_year["optimizer"], df_year["device"]):
-        ax2.annotate('%s' % d, xy=(i, j), xytext=(-13, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
+    line1, = ax2.plot(df['bandwidth'], battery_plot_data, color=sns.xkcd_rgb["pale red"], linestyle='-',
+                      label='Battery life')
+    p1 = ax2.scatter(df['bandwidth'], battery_plot_data, color=sns.xkcd_rgb["pale red"], marker='o', s=30,
+                     label='Battery life')
 
     note = ax2.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
 
-    if min(df_year['optimizer']) > 0:
-        ax2.set_ylim(ymin=0, ymax=(max(df_year['optimizer'] + 2)))
+    for i, j, d in zip(df['bandwidth'], battery_plot_data, df["device"]):
+        ax2.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
+
+    if min(battery_plot_data) > 0:
+        ax2.set_ylim(ymin=0, ymax=(max(battery_plot_data + 2)))
+    ax2.set_ylabel("Battery life", fontsize=12)
+    plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f x'))
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
     ax1.set_ylabel("Energy (mJ)", fontsize=12)
-    ax2.set_ylabel("Optimization (%)", fontsize=12)
-    ax1.set_title(f"{config}", fontsize=14)
+    # ax1.set_title(f"{config}", fontsize=14)
 
     # 双Y轴标签颜色设置
     ax2.yaxis.label.set_color(line1.get_color())
@@ -79,7 +100,7 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # 图例设置
-    plt.legend(handles=[p1, b0, b1, note], loc="lower right")
+    plt.legend(handles=[p1, b0, b1, note], loc="lower right", prop={'size': 6})
     plt.grid()
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
@@ -89,3 +110,5 @@ if __name__ == "__main__":
 
     for config in tqdm(configs):
         draw(config)
+
+    print(sum(avg_battery)/len(avg_battery))
