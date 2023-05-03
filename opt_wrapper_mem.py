@@ -7,19 +7,20 @@ import os
 from tqdm import tqdm
 from opt_wrapper import POWER_MODE
 
-memory_constrain = 1024*4
+memory_constrain = 1024*2
 
 
 class OPT_WRAPPER(object):
     configs = [
-        'faster-agx',
-        'faster-nano',
-        'yolor-agx',
-        'yolor-nano',
-        'yolox-agx',
-        'yolox-nano',
-        'yolov4-agx',
-        'yolov4-nano'
+        # 'faster-agx',
+        # 'faster-nano',
+        # 'yolor-agx',
+        # 'yolor-nano',
+        # 'yolox-agx',
+        # 'yolox-nano',
+        # 'yolov4-agx',
+        # 'yolov4-nano',
+        'yolos-agx'
     ]
     benchmarks = {
         "0-old": {
@@ -32,6 +33,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 1.76330,
             'yolov4-agx': 0.170569897,
             'yolov4-nano': 0.91332531,
+            'yolos-agx': 2432.05,
         },
         "0": {
             'faster-agx': 0.349021,
@@ -43,6 +45,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 1.6617,
             'yolov4-agx': 0.1969,
             'yolov4-nano': 1.1422,
+            'yolos-agx': 2432.05,
         },
         "1": {
             'faster-agx': 1.157999,
@@ -54,6 +57,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 2.3129,
             'yolov4-agx': 0.6596,
             'yolov4-nano': 1.5723,
+            'yolos-agx': 2432.05,
         },
     }
     bandwidths = {
@@ -73,12 +77,14 @@ class OPT_WRAPPER(object):
              'yolor': [300],
              'yolov4': [300],
              'faster': [300],
+             'yolos': [300],
              },
         'nano':
             {'yolox': [300],
              'yolor': [300],
              'yolov4': [300],
              'faster': [300],
+             'yolos': [300],
              }
 
     }
