@@ -4,14 +4,16 @@ from layer import Layer
 from device import Device
 
 VERBOSE = False
+
+
 class Optimizer(object):
 
     def __init__(self,
                  dep_filename,
                  prof_filenames,
-                 bandwidth=2000,  # MB/s
+                 bandwidth=2000,  # mbps
                  parallel=True,
-                 ignore_latency=False,
+                 ignore_latency=False,  # * Whether to ignore transfer latency. Mainly for testing purpose.
                  iterations=1,
                  dir="",
                  benchmark=None,
@@ -85,12 +87,6 @@ class Optimizer(object):
                 # self.forward()
 
     def load_dependencies(self, dep_filename):
-        """
-        Dependencies file has the following format for each line:
-            source, destination, size (temporarily remove shape)
-        Use source layer name as the name of the data
-        Update Layer's dependencies and next lists
-        """
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
             src = entry[0]
@@ -103,12 +99,14 @@ class Optimizer(object):
             self.layers[dst].dependencies.append(src)
 
     def load_macs_size(self, prof_filename):
+        # Removed Mac computation from optimizers
         df_list = pd.read_csv(prof_filename).values.tolist()
         for layername, time, cpu, cuda, size, macs in df_list:
             self.layers[layername].size = size
             self.layers[layername].macs = macs
 
     def clean_up(self):
+        # Clear the device assignment and prepare for the next iteration
         for name, layer in self.layers.items():
             layer.end_time = 0
             layer.device_id = None
@@ -121,13 +119,16 @@ class Optimizer(object):
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
 
+        # Sort the devices by the earliest available time.
         sorted_device_names = list(self.devices.keys())
         sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
+
         for device_name in sorted_device_names:
             device = self.devices[device_name]
             dependency_arrival_timepool = []
             for dep_name in self.layers[cur_layer_name].dependencies:
                 dep_layer = self.layers[dep_name]
+                # Compute data transfer latency and record end time for the current layer
                 transfer_latency = 0
                 if (not self.ignore_latency) and dep_layer.device_id != device.name:
                     transfer_latency = dep_layer.size / self.bandwidth
@@ -172,17 +173,10 @@ class Optimizer(object):
         return decision
 
     def device_exec(self, cur_layer_name):
-        """
-        Update device current time.
-        Returns the next layers.
-        """
         if cur_layer_name == "output":
             return
         else:
             cur_layer = self.layers[cur_layer_name]
-            # if cur_layer_name == "add__0":
-            #     for dep in cur_layer.dependencies:
-            #         print(f"{dep}, {self.layers[dep].completed}")
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
                     return
@@ -190,6 +184,7 @@ class Optimizer(object):
             decision = self.decide_one_layer(cur_layer_name)
 
             if self.FIRST_RUN:
+                # For the first iteration, layers have the same priorities.
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e],
                                         reverse=self.reverse0)
             else:
@@ -197,6 +192,7 @@ class Optimizer(object):
 
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
+                    # Completed in other iterations.
                     continue
                 if next_layer_name == "output":
                     self.layers["output"].device_id = decision
@@ -208,7 +204,6 @@ class Optimizer(object):
 
         self.clean_up()
 
-
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
 
@@ -218,8 +213,8 @@ class Optimizer(object):
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
 
+    # Legacy function
     def forward(self):
-
         self.clean_up()
 
         self.layers["input"].end_time = 0
@@ -230,6 +225,7 @@ class Optimizer(object):
             cur_layer_name = queue.pop(0)
             cur_layer = self.layers[cur_layer_name]
 
+            # Check if all dependencies are finished.
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:
                     return
@@ -237,12 +233,14 @@ class Optimizer(object):
             decision = self.decide_one_layer(cur_layer_name)
 
             if self.FIRST_RUN:
+                # For the first iteration, layers have the same priorities.
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
             else:
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
 
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
+                    # Completed in other iterations.
                     continue
                 if next_layer_name == "output":
                     self.layers["output"].device_id = decision
@@ -250,8 +248,11 @@ class Optimizer(object):
                 queue.append(next_layer_name)
 
     def backtrace(self, write_csv=False):
+
+        # Set priority bounds
         self.layers["output"].pr_max = 1000
         self.layers["output"].pr_min = 0
+
         queue = ["output"]
         while queue:
             cur_layer_name = queue.pop(0)

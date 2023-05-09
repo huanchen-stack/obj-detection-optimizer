@@ -1,46 +1,81 @@
-# Obj-Detection-Optimizer
+# NS Optimizer
 
-### How to use
+1. To find the "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`.
+   - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
+   - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
 
-1. To find our "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`
+2. To analyze energy consumptions for each partition solution, run `power-infer.py`.
 
-2. To get energy consumptions for each partition, run `power-infer.py`
+3. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+---
 
-3. To complete plots xxx ~ xxx, go to the `PLT_energy` folder and run `PYPLT_energy.py`
+# NS Optimizer Wrappers
 
-#### To understand how our Optimizer works, read the following instructions before running the code.
+The following guidelines illustrates how to use this code base on a neuro-network. 
 
-### 1. test.py
-
-```python
-from optimizer import Optimizer
-Optimizer(
-    dep_filename="dep.csv",
-    prof_filenames=[
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-        "prof.csv",
-    ],
-    bandwidth=2000,
-    parallel=True,
-    ignore_latency=True,
-    iterations=1,
-    dir="testcase/explore"
-)
+### Inputs
+Create a folder under [testcases](testcases) by the following format:
+```shell
+testcases/modelName-deviceCode/devicePowerMode/
 ```
 
-### 2. Attribute Explanation
-#### 1. dep_filename
-* This csv file contains the dependency relation between layers of a network. 
-* It has two columns: source, destination. Every entry represents an edge in the network.
-#### 2. prof_filenames
-* This csv file contains the profiling result of every layer on a particular device.
-* It has five columns: layer_name, time,cpu_mem, cuda_mem, size, MACs
-#### 3. bandwidth
-* The bandwidth of communication network between drones.
-#### 4. parallel
-* data-computation parallel. 
-#### 5. ignore_latency
-* Whether to ignore transfer latency. Mainly for testing. 
+To use an optimizer wrapper, the following files / attribute are needed in the corresponding this folder:
+
+#### 1. dep.csv:
+This csv file contains the dependency relation between layers of a network. It has two columns: 
+- Source 
+- Destination
+Each entry represents an edge in the network.
+#### 2. prof.csv: 
+This csv file contains the profiling result of every layer on a particular device. It has five columns:
+- Layer name
+- Average time consumption (in second)
+- Output size (in mb)
+- Average memory consumption (in mb)
+- MACs (legacy column, set to zero)
+
+### Default optimization 
+While optimizers find one partitioning result for one model under one setting (a part.csv), wrappers generate multiple optimization results (opt.csv) in this folder. For default optimization:
+- No device memory constrains. 
+- Optimize by time.
+
+please set the following attributes and variables.  
+
+#### 1. configs
+The code block at the beginning of a wrapper specifies the configurations to be run. For example,
+```python
+configs = [
+     'faster-nano',
+     'faster-agx',
+ ]
+```
+will run through these two configs and update in opt.csv.
+#### 2. benchmark 
+
+#### 2. bandwidth
+The bandwidth of communication network between drones. Unit: mbps
+* This can be set in bandwidth variable:
+```python
+bandwidths = {
+     'agx':
+         {'yolox': [*range(250, 4500, 150)],
+          'yolor': [*range(250, 4500, 150)],
+          'yolov4': [*range(250, 8000, 250)],
+          'faster': [*range(900, 3400, 100)]},
+     'nano':
+         {'yolox': [*range(250, 4500, 150)],
+          'yolor': [*range(250, 4500, 150)],
+          'yolov4': [*range(250, 8000, 250)],
+          'faster': [*range(900, 3400, 100)]},
+ }
+```
+
+### Memory constrained scenario
+
+#### 5. memory_constrain
+
+### 2. Optimization with memory constrains
+---
+
+
+

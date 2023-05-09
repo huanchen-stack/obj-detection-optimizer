@@ -69,12 +69,6 @@ class Optimizer(object):
         best_iter = self.results.index(best)
 
     def load_dependencies(self, dep_filename):
-        """
-        Dependencies file has the following format for each line:
-            source, destination, size (temporarily remove shape)
-        Use source layer name as the name of the data
-        Update Layer's dependencies and next lists
-        """
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
             src = entry[0]

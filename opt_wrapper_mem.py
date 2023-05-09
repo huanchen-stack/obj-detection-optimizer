@@ -7,19 +7,21 @@ import os
 from tqdm import tqdm
 from opt_wrapper import POWER_MODE
 
+# This is a variation of opt_wrapper that has a memory constrain for each device.
+# The memory constrain on each device. Unit: MB
 memory_constrain = 1024*2
 
 
 class OPT_WRAPPER(object):
     configs = [
-        # 'faster-agx',
-        # 'faster-nano',
-        # 'yolor-agx',
-        # 'yolor-nano',
-        # 'yolox-agx',
-        # 'yolox-nano',
-        # 'yolov4-agx',
-        # 'yolov4-nano',
+        'faster-agx',
+        'faster-nano',
+        'yolor-agx',
+        'yolor-nano',
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
+        'yolov4-nano',
         'yolos-agx'
     ]
     benchmarks = {

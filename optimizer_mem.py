@@ -6,6 +6,8 @@ from layer import Layer
 from device import Device
 
 VERBOSE = False
+
+
 class Optimizer(object):
 
     def __init__(self,
@@ -100,12 +102,6 @@ class Optimizer(object):
                 # self.forward()
 
     def load_dependencies(self, dep_filename):
-        """
-        Dependencies file has the following format for each line:
-            source, destination, size (temporarily remove shape)
-        Use source layer name as the name of the data
-        Update Layer's dependencies and next lists
-        """
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
             src = entry[0]
@@ -141,12 +137,14 @@ class Optimizer(object):
         sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
 
         def determine(x):
+            # Check if memory constrain is exceeded.
             device = self.devices[x]
             if device.cuda_mem[cur_layer_name] > self.memory_constrain:
                 print("!!!!!!!!!!!!!!!!!!! WARNING INSUFFICIENT MEMORY FOR SINGLE LAYER !!!!!!!!!!!!!!!!!!!")
                 print("ABORTING")
                 sys.exit(-1)
             return device.current_cuda_mem() + device.cuda_mem[cur_layer_name] < self.memory_constrain
+
         filtered_list = [x for x in sorted_device_names if determine(x)]
         if len(filtered_list) == 0:
             return -1

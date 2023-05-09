@@ -6,9 +6,13 @@ from simulatorv2 import Simulator
 import os
 from tqdm import tqdm
 
+# Device power mode while profiling, specifying the benchmarks
 POWER_MODE = "1"
 
+
 class OPT_WRAPPER(object):
+
+    # Input configs for the current execution
     configs = [
         'faster-agx',
         'faster-nano',
@@ -19,6 +23,8 @@ class OPT_WRAPPER(object):
         'yolov4-agx',
         'yolov4-nano'
     ]
+
+    # benchmarks for optimization performance. Categorized by power mode. Unit: second
     benchmarks = {
         "0-old": {
             'faster-agx': 0.509311,
@@ -55,6 +61,8 @@ class OPT_WRAPPER(object):
         },
 
     }
+
+    # Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
     bandwidths = {
         # 'agx': [
         #     750, 1000, 1250, 1500, 1750,
@@ -123,7 +131,7 @@ class OPT_WRAPPER(object):
             dep_filename=self.dep,
             prof_filenames=[self.prof] * num_devices,
             bandwidth=bandwidth,
-            ignore_latency=False,  # always False
+            ignore_latency=False,
             iterations=iterations,
             benchmark=self.benchmark,
             reverse0=reverse0,
@@ -222,7 +230,7 @@ if __name__ == '__main__':
 
     threshold = 0.97
     print(f"Note: current threshold is {threshold}, "
-          f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1-threshold},"
+          f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")
 
     for config in tqdm(OPT_WRAPPER.configs):
