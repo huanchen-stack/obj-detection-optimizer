@@ -39,9 +39,9 @@ While optimizers find one partitioning result for one model under one setting (a
 - No device memory constrains. 
 - Optimize by time.
 
-please set the following attributes and variables.  
+please check the following attributes and variables.  
 
-#### 1. configs
+#### 1. Configs
 The code block at the beginning of a wrapper specifies the configurations to be run. For example,
 ```python
 configs = [
@@ -49,32 +49,35 @@ configs = [
      'faster-agx',
  ]
 ```
-will run through these two configs and update in opt.csv.
-#### 2. benchmark 
-
-#### 2. bandwidth
+will run through these two configs and update the corresponding opt.csv.
+#### 2. Benchmarks
+Benchmarks are stored in 
+```python
+# benchmarks for optimization performance. Categorized by power mode. Unit: second
+benchmarks = {
+     "1": {
+         'faster-agx': 1.157999,
+         'faster-nano': 2.686923,
+     },
+ }
+```
+#### 3. Bandwidth
 The bandwidth of communication network between drones. Unit: mbps
 * This can be set in bandwidth variable:
 ```python
 bandwidths = {
      'agx':
-         {'yolox': [*range(250, 4500, 150)],
-          'yolor': [*range(250, 4500, 150)],
-          'yolov4': [*range(250, 8000, 250)],
-          'faster': [*range(900, 3400, 100)]},
+         {'faster': [*range(900, 3400, 100)]},
      'nano':
-         {'yolox': [*range(250, 4500, 150)],
-          'yolor': [*range(250, 4500, 150)],
-          'yolov4': [*range(250, 8000, 250)],
-          'faster': [*range(900, 3400, 100)]},
+         {'faster': [*range(900, 3400, 100)]},
  }
 ```
-
 ### Memory constrained scenario
-
-#### 5. memory_constrain
-
-### 2. Optimization with memory constrains
+#### 4. memory_constrain
+Config the device memory constrain (Unit: mb) in 
+```python
+memory_constrain = 1024*2
+```
 ---
 
 
