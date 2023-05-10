@@ -1,3 +1,17 @@
+"""
+ This Python script estimates the energy for drone communication with a pretrained ML model.
+ This scipt needs to be executed after the optimization process,
+     since the scipt needs to know which of the intermediate tensors
+     need to be transfered.
+ This scipt automatically reads the data in the PLT_energy folder.
+ We take care of multi-casting and make it an option.
+     The default is to use multi-casting.
+     There are barely any differences if # drones in use are small.
+     
+ We assume no compression methods are adopted.
+ We also assume that we can always use the full bandwidth.
+ """
+
 import os
 import pickle
 
@@ -22,11 +36,20 @@ class EnergyInferer(object):
     def predict_POW(self, uplink_mbps, downlink_mbps):
         X = np.array([uplink_mbps, downlink_mbps]).reshape(1, 2)
         POW_mn = self.dtr_vz_mn_model.predict(X)
+        
+        # uplink and downlink energy are estimated separately
         assert uplink_mbps == 0 or downlink_mbps == 0, "Either uplink_mbps or downlink_mbps must be zero."
         assert uplink_mbps != 0 or downlink_mbps != 0, "Only one of uplink_mbps or downlink_mbps can be zero."
+        
         return POW_mn
 
     def predict_energy(self):
+        """
+        This function handles the energy prediction.
+        Energy for each transfer is infered separately using ML mode then aggregated.
+        We take care of multi-casting as an option.
+        """
+        
         df = pd.read_csv(self.get_path(self.config))
         df.columns = ["bandwidth", "optimizer", "energy", "device", "payload"]
 

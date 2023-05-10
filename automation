@@ -1,9 +1,0 @@
-echo "START RUNNING..."
-echo "Optimizing models inference..."
-python3 opt_wrapper.py
-echo "Estimating inference energy..."
-python3 power-infer.py
-echo "Plotting graphs..."
-python3 PLT_energy/PYPLT_energy.py
-python3 PLT_battery/PYPLT_battery.py
-echo "DONE!"
