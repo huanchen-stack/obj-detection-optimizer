@@ -1,12 +1,15 @@
 # NS Optimizer
+0. Per layer/block inference profile can be found in the *testcases* folder
 
 1. To find the "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`.
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
 
-2. To analyze energy consumptions for each partition solution, run `power-infer.py`.
+2. To analyze communication energy consumptions for each partition solution, run `power-infer.py`.
+   - see this [repo](https://github.com/huanchen-stack/tegraWATTS.git) for computation energy measurement 
 
 3. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+
 ---
 
 # NS Optimizer Wrappers
