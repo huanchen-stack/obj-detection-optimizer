@@ -207,8 +207,10 @@ class Optimizer(object):
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
 
+        # Find a partition
         self.device_exec("input")
 
+        # Save the result
         for layer_name, layer in self.layers.items():
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
@@ -232,12 +234,13 @@ class Optimizer(object):
 
             decision = self.decide_one_layer(cur_layer_name)
 
+            # For the first iteration, layers have the same priorities.
             if self.FIRST_RUN:
-                # For the first iteration, layers have the same priorities.
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e], reverse=True)
             else:
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=True)
 
+            # Move to the next layer
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
                     # Completed in other iterations.
@@ -283,6 +286,7 @@ class Optimizer(object):
                 self.priorities.write(f"{name},{layer.pr_max}\n")
 
     def report(self):
+        # Find best result and the corresponding config
         best = min(self.results)
         best_iter = self.results.index(best)
         # r0 = "T" if self.reverse0 else "F"

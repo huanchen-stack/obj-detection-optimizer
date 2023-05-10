@@ -15,10 +15,8 @@ class Layer(object):
 
         # Updated after partitions
         self.device_id = None
-
         self.arrival_time_pool = []
         self.end_time = 0
         self.pr_max = None
         self.pr_min = None
-
         self.fixed = None

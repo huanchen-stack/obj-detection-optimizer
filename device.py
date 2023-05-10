@@ -16,23 +16,16 @@ class Device(object):
         self.cache = set()  # Set of cached data
         self.available_time = 0
         self.cur_time = 0
-
         self.assigned_layer = []
-
         self.load_profile(prof_filename)
 
     def load_profile(self, prof_filename):
-        """
-        Profiling file has the following format for each line:
-            or layername, time, cpu_mem, cuda_mem\n
-        """
         prof_df_list = pd.read_csv(prof_filename).values.tolist()
         for layername, time, cpu_mem, cuda_mem, size, macs in prof_df_list:
             self.time[layername] = time
             self.cpu_mem[layername] = cpu_mem
             self.cuda_mem[layername] = cuda_mem
             self.macs[layername] = macs
-
 
     def current_cuda_mem(self):
         cuda_sum = 0

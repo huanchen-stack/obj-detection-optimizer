@@ -41,9 +41,7 @@ class Simulator(object):
 
         # load and initialize devices
         parallel = True
-        # print(f"Device parallel = {parallel}")
         if device_names is None:
-            # TODO: should #device determined by prof?
             self.device_names = [str(i) for i in range(len(prof_filenames))]
         for name, prof_filename in zip(self.device_names, prof_filenames):
             self.devices[name] = Device(name, prof_filename, parallel=parallel)
@@ -60,26 +58,10 @@ class Simulator(object):
                 self.priorities[name] = 1
 
         self.load_partitions(part_filename)  # Intermediate result of partition, now load from handcoded csv
-        # self.partition(part_filename)
-
-        # print(self.device_names)
-        # for device in list(self.devices.values()):
-        #     TODO: Now exec has not much to do with assigned layers
-            # print(f"Device name: {device.name}, with layers: {device.assigned_layer}")
-        # print("{:<15} {:<15}".format("layer", "device"))
-        # for layer in list(self.layers.values()):
-        #     print("{:<15} {:<15}".format(layer.name, layer.device_id))
-        # print(f"Layer priority: {self.priorities}")
 
         self.simulate()
 
     def load_dependencies(self, dep_filename):
-        """
-        Dependencies file has the following format for each line:
-            source, destination, size (temporarily remove shape)
-        Use source layer name as the name of the data
-        Update Layer's dependencies and next lists
-        """
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
             src = entry[0]
@@ -92,7 +74,6 @@ class Simulator(object):
             self.layers[dst].dependencies.append(src)
 
     def load_macs_size(self, prof_filename):
-        # TODO: Here size is with layers. If necessary, can be with dependencies.
         df_list = pd.read_csv(prof_filename).values.tolist()
         for layername, time, cpu, cuda, size, macs in df_list:
             self.layers[layername].size = size
@@ -120,10 +101,6 @@ class Simulator(object):
             device.cur_time = 0
 
     def device_exec(self, cur_layer_name):
-        """
-        Update device current time.
-        Returns the next layers.
-        """
         if cur_layer_name == "output":
             return
         else:
@@ -180,7 +157,7 @@ class Simulator(object):
     def simulate(self):
         self.clean_up()
 
-        # print(f"\n\033[30;44m=========Simulatinginging=========\033[0m")
+        # print(f"\n\033[30;44m=========Simulating=========\033[0m")
 
         self.layers["input"].end_time = 0
         self.layers["input"].device_id = 0
