@@ -1,7 +1,7 @@
 # NS Optimizer
 0. Per layer/block inference profile can be found in the *data/testcases* folder
 
-1. To find the "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`.
+1. To find the "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py` (a description of the optimization algorithm can be found in the section X of the paper).
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
 
