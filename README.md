@@ -2,6 +2,8 @@
 
 ### How to use
 
+0. Per layer/block inference profile can be found in the ***testcase*** folder
+
 1. To find our "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`
 
 2. To get energy consumptions for each partition, run `power-infer.py`
