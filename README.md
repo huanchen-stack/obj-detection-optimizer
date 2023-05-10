@@ -2,7 +2,7 @@
 
 ### How to use
 
-0. Per layer/block inference profile can be found in the ***testcase*** folder
+0. Per layer/block inference profile can be found in the ****testcases**** folder
 
 1. To find our "optimal" partition solutions and corresponding speed up rates, run `opt_wrapper.py`
 
