@@ -1,5 +1,7 @@
 # NS Optimizer
 
+0. Per layer/block inference profile can be found in the [testcases](testcases) folder.
+
 1. To find the optimized partition solutions and corresponding speed up rates, run `opt_wrapper.py`.
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
@@ -8,10 +10,13 @@
 
 3. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
 
-4. See [automation](automation)
 ---
 
 # NS Optimizer Wrappers
+
+[opt_wrapper.py](opt_wrapper.py) is an automation script that iterates throught all *configurations* (<*model*, *device*> pair, e.g. <yolo-v4, agx>), and brute force the optimal *number of drones* under different *bandwidth*. To run the optimization algrithm described in section V of the paper, [opt_wrapper.py](opt_wrapper.py) calls [optimizer.py](optimizer.py) for each configuration, number of drones, and bandwidth. 
+   - [opt_wrapper_mem.py](opt_wrapper_mem.py) calls [optimizer_mem.py](optimizer_mem.py).
+   - [opt_wrapper_battery.py](opt_wrapper_battery.py) calls [optimizer_battery.py](optimizer_battery.py).
 
 The following guidelines illustrates how to use the wrappers on a neuro-network. 
 
