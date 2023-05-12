@@ -92,7 +92,6 @@ Config the device memory constrain (Unit: MB) in
 ```python
 memory_constrain = 1024*2 # MB
 ```
----
 
 ### Example
 
@@ -105,3 +104,4 @@ To run the memeory optimization for *yolo-v4* on *jetson-agx*:
   - Run `python3 optimizer_wrapper_mem.py`
   - Results can be found in the [data](data) directory
 
+---
