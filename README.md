@@ -13,6 +13,8 @@
 
 4. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
 
+5. For other plots in the paper, see [this](https://github.com/Yanmeeei/NS-DOT-visualizers) repo
+
 ---
 
 # NS Optimizer Wrappers
