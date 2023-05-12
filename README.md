@@ -2,13 +2,16 @@
 
 0. Per layer/block inference profile can be found in the [testcases](testcases) folder.
 
-1. To find the optimized partition solutions and corresponding speed up rates, run `opt_wrapper.py`.
+1. To find the optimized partition solutions and corresponding speed up rates, simply run `opt_wrapper.py` in the folder's root directory.
+   - (Optional) Modify attributes and variables described in the following content.
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
 
-2. To analyze energy consumptions for each *partition solution*, run `power-infer.py`.
+2. To analyze energy consumptions for drone communication under each *partition solution*, run `power-infer.py` in the folder's root directory.
 
-3. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+3. To analyze energy consumption for computation (model inference), go to [this](https://github.com/huanchen-stack/tegraWATTS) repo
+
+4. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
 
 ---
 
@@ -89,5 +92,14 @@ memory_constrain = 1024*2 # MB
 ```
 ---
 
+### Example
 
+To run the memeory optimization for *yolo-v4* on *jetson-agx*:
+  - Go to [optimizer_wrapper_mem.py](optimizer_wrapper_mem.py)
+  - Locate *configurations* and comment out all other configurations except for `yolov4-agx`
+  - Locate *benchmarks* and comment out all other configurations except for `yolov4-agx`
+  - Change *memory_constraint* (in MegaBytes)
+  - (Optional) Change Power Mode, Bandwidth range up to your purposes
+  - Run `python3 optimizer_wrapper_mem.py`
+  - Results can be found in the [data](data) directory
 
