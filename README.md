@@ -1,26 +1,35 @@
 # NS Optimizer
 
-A **NS optimizer** is a unit program that finds a partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategy across a range of data-transfer bandwidth for a model, an **optimizer wrapper** is needed to iterate through all scenarios.
+There are two types of NS optimization tools in this repo. A **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategy across a range of data-transfer bandwidth for a model, an **optimizer wrapper** is needed to iterate through all scenarios.
 
-1. To find the optimized partition solution and corresponding speed up rate under specified bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
+1. Per layer/block inference profile can be found in the [testcases](testcases) folder.
+2. To find the optimized partition solution and corresponding speed up rate under specified bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
    - For example, `'yolov4': [*range(250, 260, 250)],` specifies the bandwidth to 250 mbps.
+   - (Optional) Modify attributes and variables described in the following content.
    - Results are stored in `testcases/model-device/part.csv` and `testcases/model-device/priority.csv`
    - An NS Colorer can be used to visualize the results.  
-2. To find the optimized partition solutions and corresponding speed up rates across a range of bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred range.
+3. To find the optimized partition solutions and corresponding speed up rates across a range of bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred range.
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
    - For example, `'yolov4': [*range(250, 1100, 250)],` specifies the bandwidth to 250, 500, 750, 1000 mbps.
+   - (Optional) Modify attributes and variables described in the following content.
    - The results will be stored in [data](data). Note that the .csv files in `testcases/model-device/` directories records only the results under the largest bandwidth. 
-3. To analyze energy consumptions for each *partition solution* (recorded in [data](data)), run [power-infer.py](power-infer.py).
-4. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+4. To analyze energy consumptions for drone communication under each *partition solution* (recorded in [data](data)), run [power-infer.py](power-infer.py).
+5. To analyze energy consumption for computation (model inference), go to [this](https://github.com/huanchen-stack/tegraWATTS) repo 
+6. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+7. For other plots in the paper, see [this](https://github.com/Yanmeeei/NS-DOT-visualizers) repo
 
 ---
 
 # NS Optimizer Wrappers
 
-The following guidelines illustrates how to use the wrappers on a neuro-network model. 
+[opt_wrapper.py](opt_wrapper.py) is an automation script that iterates throught all *configurations* (<*model*, *device*> pair, e.g. <yolo-v4, agx>), and brute force the optimal *number of drones* under different *bandwidth*. To run the optimization algrithm described in section V of the paper, [opt_wrapper.py](opt_wrapper.py) calls [optimizer.py](optimizer.py) for each configuration, number of drones, and bandwidth. 
+   - [opt_wrapper_mem.py](opt_wrapper_mem.py) calls [optimizer_mem.py](optimizer_mem.py).
+   - [opt_wrapper_battery.py](opt_wrapper_battery.py) calls [optimizer_battery.py](optimizer_battery.py).
+
+The following guidelines illustrates how to use the wrappers on a neuro-network. 
 
 ### Inputs
 Create a folder under [testcases](testcases) by the following format:
