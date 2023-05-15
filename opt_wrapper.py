@@ -14,14 +14,14 @@ class OPT_WRAPPER(object):
 
     # Input configs for the current execution
     configs = [
-        'faster-agx',
-        'faster-nano',
-        'yolor-agx',
-        'yolor-nano',
-        'yolox-agx',
-        'yolox-nano',
+        # 'faster-agx',
+        # 'faster-nano',
+        # 'yolor-agx',
+        # 'yolor-nano',
+        # 'yolox-agx',
+        # 'yolox-nano',
         'yolov4-agx',
-        'yolov4-nano'
+        # 'yolov4-nano'
     ]
 
     # benchmarks for optimization performance. Categorized by power mode. Unit: second
