@@ -25,18 +25,6 @@ class OPT_WRAPPER(object):
         'yolos-agx'
     ]
     benchmarks = {
-        "0-old": {
-            'faster-agx': 0.509311,
-            'faster-nano': 1.905703,
-            'faster-clarity32': 0.063555,
-            'yolor-agx': 0.1736289,
-            'yolor-nano': 1.458861,
-            'yolox-agx': 0.0916212,
-            'yolox-nano': 1.76330,
-            'yolov4-agx': 0.170569897,
-            'yolov4-nano': 0.91332531,
-            'yolos-agx': 2432.05,
-        },
         "0": {
             'faster-agx': 0.349021,
             'faster-nano': 1.967904,
