@@ -1,6 +1,6 @@
 # NS Optimizer
 
-There are two types of NS optimization tools in this repo. A **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategy across a range of data-transfer bandwidth for a model, an **optimizer wrapper** is needed to iterate through all scenarios.
+There are two types of NS optimization tools in this repo. An **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategy across a range of data-transfer bandwidth for a model, an **NS optimizer wrapper** is needed to iterate through all scenarios.
 
 1. Per layer/block inference profile can be found in the [testcases](testcases) folder.
 2. To find the optimized partition solution and corresponding speed up rate under specified bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
