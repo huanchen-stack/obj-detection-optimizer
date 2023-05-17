@@ -1,6 +1,6 @@
 # Neurosurgeon Swarm (NS) Codebases
 
-This document is an introduction to the three repos shipped from Neurosurgeon Swarm team: [NS Optimizer](https://github.com/huanchen-stack/obj-detection-optimizer/tree/yanmei), [NS Visualizers](https://github.com/Yanmeeei/NS-DOT-visualizers), and [tegra WATTS](https://github.com/huanchen-stack/tegraWATTS).
+This document is a brief introduction to the three repos shipped from Neurosurgeon Swarm team: [NS Optimizer](https://github.com/huanchen-stack/obj-detection-optimizer/tree/yanmei), [NS Visualizers](https://github.com/Yanmeeei/NS-DOT-visualizers), and [tegra WATTS](https://github.com/huanchen-stack/tegraWATTS).
 
 ---
 
