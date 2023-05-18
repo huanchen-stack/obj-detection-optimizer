@@ -7,12 +7,16 @@ import os
 from tqdm import tqdm
 
 # Device power mode while profiling, specifying the benchmarks
+# POWER_MODE = "1" is the default, where CLOCK_RATE and POW_IN are fixed
+#   Devices may have various power mode, check specification for details
 POWER_MODE = "1"
 
 
 class OPT_WRAPPER(object):
 
     # Input configs for the current execution
+    #     the opt_wrapper will iterate through all configurations one by one
+    # For the purpose of automation, you may uncomment all configurations
     configs = [
         # 'faster-agx',
         # 'faster-nano',
@@ -53,21 +57,11 @@ class OPT_WRAPPER(object):
 
     # Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
     bandwidths = {
-        # 'agx': [
-        #     750, 1000, 1250, 1500, 1750,
-        #     2000, 2250, 2500, 2750, 3000, float('inf'),
-        # ],
-        # 'nano': [
-        #     375, 500, 625, 750, 875,
-        #     1000, 1250, 1500, 1750, 2000, 3000,
-        # ],
-        # 'agx': [*range(900, 3400, 100)],
         'agx':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 8000, 250)],
              'faster': [*range(900, 3400, 100)]},
-        # 'nano': [*range(375, 1500, 125)],  # good graph
         'nano':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
@@ -82,12 +76,12 @@ class OPT_WRAPPER(object):
 
         if bandwidth_list is None:
             self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]][config.split('-')[0]]
-        else:
+        else:  # users may specify a bandwidth list instead of using existing ranges in the class
             self.bandwidth_list = bandwidth_list
         self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]  # turn to MBps
 
         self.iterations_default = 5
-        self.num_devices_max = 7
+        self.num_devices_max = 7  # opt_wrapper iterate all possible num_device values from (1, num_devices_max]
         self.threshold = threshold
 
         self.opt_num_devices = []
@@ -104,6 +98,11 @@ class OPT_WRAPPER(object):
         self.part = os.path.join(path, "part.csv")
 
     def simulate(self, bandwidth):
+        """
+        simulate calls the simulator class, defined in simulator_v2.py,
+        which performs a forward pass of the inference by finding the longest path
+        from the input to the output.
+        """
         simv2 = Simulator(
             dep_filename=self.dep,
             prof_filenames=[self.prof] * self.num_devices_max,
@@ -115,6 +114,11 @@ class OPT_WRAPPER(object):
         return simv2
 
     def optimize_once(self, bandwidth, num_devices, reverse0, reverse1, iterations=None):
+        """
+        optimize_once calls the optimizer class, defined in optimizer.py,
+        which performs a backward optimization with the algorithm described in the paper.
+        parameter: [iterations] is used in the optimizer class, see optimizer.py for details.
+        """
         iterations = iterations if iterations is not None else self.iterations_default
         opt = Optimizer(
             dep_filename=self.dep,
@@ -130,12 +134,28 @@ class OPT_WRAPPER(object):
         return opt
 
     def optimize(self):
+        """
+        opt_wrapper iterates through all possible bandwidth in the list for analysis:
+            opt_wrapper iterates through all possible number of devices and pick
+            the most optimal one (usually the more devices you use, the more speedup
+            you can get, but the more extra energy consumption would be incurred):
+                for each of those iterations, four different heuristics are tried
+                we pick the best of all heuristics
+            if increasing the number of devices won't introduce a significant speedup
+            the device increment would be discarded
+        """
         self.get_path()
 
         for bandwidth in self.bandwidth_list:
+            # opt_wrapper iterates through all possible bandwidth in the list for analysis:
+  
             across_devices = []
             for num_devices in range(1, self.num_devices_max + 1):
-                # try different optimization heuristics
+                # opt_wrapper iterates through all possible number of devices and pick
+                #   the most optimal one (usually the more devices you use, the more speedup
+                #   you can get, but the more extra energy consumption would be incurred):
+            
+                # four different heuristics are tried, we pick the best of all heuristics
                 opt1 = self.optimize_once(bandwidth, num_devices, True, True)
                 opt2 = self.optimize_once(bandwidth, num_devices, True, False)
                 opt3 = self.optimize_once(bandwidth, num_devices, False, True)
@@ -147,8 +167,8 @@ class OPT_WRAPPER(object):
                 t = results[0]
                 t.insert(1, 100 - 100 * t[0] / self.benchmark)
                 across_devices.append(t)
-
-            # find optimal num_devices
+                
+            # we only the the best result from the four heuristics of our choice
             best = min(across_devices, key=lambda e: e[0])
             for i in range(len(across_devices)):
                 num_devices = i + 2
@@ -159,34 +179,43 @@ class OPT_WRAPPER(object):
                     best = across_devices[i]
                     break
 
-            # get partitions for simulation
+            # We need partition details and payload details for energy analysis:
+            #   1. get partitions for simulation
             args = [bandwidth, self.opt_num_devices[-1], best[3], best[4], best[2]]
             self.args.append(args)
             self.optimize_once(*args)
-            # simulate to get payload info
+            #   2. simulate to get payload info
             simv2 = self.simulate(bandwidth)
             transfer_data_summary = simv2.transfer_data_summary
             transfer_data_summary_raw = str(transfer_data_summary).replace(',', '|')  # for panda df read
             self.payload.append(transfer_data_summary_raw)
-            # print(self.config, bandwidth, simv2.total_data_sent)
 
+        # sanitize: find optimal num_devices
+        #   if increasing the number of devices won't introduce a significant speedup
+        #   the device increment would be discarded
         self.sanitize()
 
     def sanitize(self):
+        """
+        the more devices you use, the more speedup you can get, 
+            but the more extra energy consumption would be incurred
+        if increasing the number of devices won't introduce a significant speedup (by threshold%)
+            the device increment would be discarded
+        """
         for i in range(len(self.bandwidth_list)):
             if i == 0:
                 continue
             if self.opt_speedup_rate[i] < self.opt_speedup_rate[i - 1]:  # Optimizer made a bad decision
-                # get partitions from prev results
-                self.optimize_once(*self.args[i - 1])
+                self.optimize_once(*self.args[i - 1]) # get partitions from prev results
+                
                 # use prev partition results and cur bandwidth to calculate new_opt latency & rate
                 simv2 = self.simulate(self.bandwidth_list[i])
                 new_opt_latency = simv2.total_time
                 new_opt_rate = 100 - 100 * new_opt_latency / self.benchmark
+                
                 # update to output list
                 self.opt_num_devices[i] = self.opt_num_devices[i - 1]
-                self.opt_speedup_rate[i] = max(new_opt_rate,
-                                               self.opt_speedup_rate[i - 1])  # FIXME: debug and remove max
+                self.opt_speedup_rate[i] = max(new_opt_rate, self.opt_speedup_rate[i - 1])
                 self.payload[i] = self.payload[i - 1]
                 self.args[i] = self.args[i - 1]
 
