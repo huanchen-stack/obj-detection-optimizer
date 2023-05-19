@@ -116,7 +116,7 @@ class OPT_WRAPPER(object):
     def optimize_once(self, bandwidth, num_devices, reverse0, reverse1, iterations=None):
         """
         optimize_once calls the optimizer class, defined in optimizer.py,
-        which performs a backward optimization with the algorithm described in the paper.
+        which performs a forward+backward optimization with the algorithm described in the paper.
         parameter: [iterations] is used in the optimizer class, see optimizer.py for details.
         """
         iterations = iterations if iterations is not None else self.iterations_default
