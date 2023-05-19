@@ -39,7 +39,7 @@ class Optimizer(object):
         self.has_fixed = False
 
         # load and initialize devices
-        parallel = True  # 忘了 whether a device can execute layers and send data to other devices at the same time
+        parallel = True  # whether a device can execute layers and send data to other devices at the same time
         
         self.num_devices = len(prof_filenames)
         self.device_names = [i for i in range(len(prof_filenames))]
@@ -50,8 +50,8 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
-        # 忘了 # Mark the first iteration where layers have the same priorities.
-        self.FIRST_RUN = True  #
+        # Mark the first iteration where layers have the same priorities.
+        self.FIRST_RUN = True 
 
         if self.iterations == 0:
             # throughout the optimization, we give different blocks different weights/priorities
@@ -59,9 +59,9 @@ class Optimizer(object):
             
             self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
             self.priorities.write(f"layername,priority\n")
-            self.backtrace(write_csv=True)  # 忘了
+            self.backtrace(write_csv=True)
             self.priorities.close()
-            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")  # 忘了 record the partitioning decisions
+            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")  # record the partitioning decisions
             self.partitions.write(f"layername,device\n")
             self.optimize(write_csv=True)
             self.partitions.close()
@@ -73,7 +73,7 @@ class Optimizer(object):
             
             self.optimize()
 
-        self.FIRST_RUN = False  # 忘了。。。 完整的忘了 # Mark the first iteration where layers have the same priorities.
+        self.FIRST_RUN = False  # Mark the first iteration where layers have the same priorities.
 
         for i in range(self.iterations):
             if i == self.iterations - 1:
@@ -184,7 +184,6 @@ class Optimizer(object):
         self.layers[cur_layer_name].end_time = min_value
         self.devices[decision].available_time = min_value
 
-        # 忘了 （记不清了 帮我瞅一下）
         # A single block (layer) may have multiple parents, we must wait all parents to be completed
         #   before we can proceed to this block
         # Now that a decision is made,
