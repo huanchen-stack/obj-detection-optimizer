@@ -31,6 +31,7 @@ class Optimizer(object):
         self.iterations = iterations
         self.dir = dir
 
+        # those are different heuristics, when doing optimizaton, we try all possible values
         self.reverse0 = reverse0
         self.reverse1 = reverse1
 
@@ -38,9 +39,8 @@ class Optimizer(object):
         self.has_fixed = False
 
         # load and initialize devices
-        parallel = True
-        # print(f"Device data-compute-parallel = {parallel}")
-
+        parallel = True # 忘了
+        
         self.num_devices = len(prof_filenames)
         self.device_names = [i for i in range(len(prof_filenames))]
         for name, prof_filename in zip(self.device_names, prof_filenames):
@@ -50,26 +50,36 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
+        # 忘了
         self.FIRST_RUN = True
 
         if self.iterations == 0:
+            # through out the optimization, we give different blocks different weights/priorities
+            #   weights are initialized before the first run, but are assigned dynamically afterwards
+            
             self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
             self.priorities.write(f"layername,priority\n")
-            self.backtrace(write_csv=True)
+            self.backtrace(write_csv=True)  # 忘了
             self.priorities.close()
-            self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
+            self.partitions = open(os.path.join(self.dir, "part.csv"), "w") # 忘了
             self.partitions.write(f"layername,device\n")
             self.optimize(write_csv=True)
             self.partitions.close()
             best = min(self.results)
             best_iter = self.results.index(best)
         else:
+            # through out the optimization, we give different blocks different weights/priorities
+            #   weights are initialized before the first run, but are assigned dynamically afterwards
+            
             self.optimize()
-            # self.forward()
-        self.FIRST_RUN = False
+
+        self.FIRST_RUN = False  # 忘了。。。 完整的忘了
 
         for i in range(self.iterations):
             if i == self.iterations - 1:
+                # through out the optimization, we give different blocks different weights/priorities
+                #   weights are initialized before the first run, but are assigned dynamically afterwards
+                
                 self.priorities = open(os.path.join(self.dir, "priority.csv"), "w")
                 self.priorities.write(f"layername,priority\n")
                 self.backtrace(write_csv=True)
@@ -82,11 +92,19 @@ class Optimizer(object):
                 best = min(self.results)
                 best_iter = self.results.index(best)
             else:
+                # through out the optimization, we give different blocks different weights/priorities
+                #   weights are initialized before the first run, but are assigned dynamically afterwards
+                
                 self.backtrace()
                 self.optimize()
-                # self.forward()
 
     def load_dependencies(self, dep_filename):
+        """
+        We load model inference dependencies into class objects, refer to:
+            layer.py
+            device.py
+        for details.
+        """
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
             src = entry[0]
@@ -99,14 +117,19 @@ class Optimizer(object):
             self.layers[dst].dependencies.append(src)
 
     def load_macs_size(self, prof_filename):
-        # Removed Mac computation from optimizers
+        """
+        We load model inference dependencies into class objects, refer to:
+            layer.py
+            device.py
+        for details.
+        """
         df_list = pd.read_csv(prof_filename).values.tolist()
         for layername, time, cpu, cuda, size, macs in df_list:
             self.layers[layername].size = size
             self.layers[layername].macs = macs
 
     def clean_up(self):
-        # Clear the device assignment and prepare for the next iteration
+        """This function initializes block weights for each iteration."""
         for name, layer in self.layers.items():
             layer.end_time = 0
             layer.device_id = None
@@ -115,14 +138,23 @@ class Optimizer(object):
             device.cur_time = 0
 
     def decide_one_layer(self, cur_layer_name):
+        """
+        We perform the device assignment in the forward module, or referred to as the forward pass.
+        We greedily aim to make the finish time of the current layer as early as possible.
+        """
 
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
 
-        # Sort the devices by the earliest available time.
+        # When picking devices, we need them to be available (not already working on other tasks)
+        #   we sort the devices by the earliest available time.
         sorted_device_names = list(self.devices.keys())
         sorted_device_names = sorted(sorted_device_names, key=lambda e: self.devices[e].available_time)
 
+        # [< Greedily pick the most suited device! >] (details covered in the paper)
+        #   computation latencies must be included
+        #   communication latencies must be considerred: if the flow of execution meets a device change,
+        #       we must include communication latency
         for device_name in sorted_device_names:
             device = self.devices[device_name]
             dependency_arrival_timepool = []
@@ -137,12 +169,12 @@ class Optimizer(object):
             dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
             device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
 
+        # In a single forward module, we don't want to update the device assignement of a block for multiple times
+        #   We update the device assignment multiple times by calling forward modules multiple times
         if self.layers[cur_layer_name].fixed is not None:
             decision = self.layers[self.layers[cur_layer_name].fixed].device_id
             min_value = device_results[sorted_device_names.index(decision)]
-            # min_value = device_results[decision]
             self.layers[cur_layer_name].device_id = decision
-            # self.layers[cur_layer_name].fixed = None
         else:
             min_value = min(device_results)
             decision = sorted_device_names[device_results.index(min_value)]
@@ -152,6 +184,9 @@ class Optimizer(object):
         self.layers[cur_layer_name].end_time = min_value
         self.devices[decision].available_time = min_value
 
+        # 忘了 （记不清了 帮我瞅一下）
+        # A single block may have multiple parents, we must wait all parents to be completed 
+        #   before we can proceed to this block
         same_source_dep_time = []
         for dep_layer_name in self.layers[cur_layer_name].dependencies:
             if self.layers[dep_layer_name].device_id == decision:
@@ -169,18 +204,23 @@ class Optimizer(object):
                 self.layers[can_opt_dep_name].fixed = self.layers[can_opt_dep_name].dependencies[0]
                 self.layers[cur_layer_name].fixed = can_opt_dep_name
 
-        # self.partitions.write(f"{cur_layer_name},{decision}\n")
         return decision
 
     def device_exec(self, cur_layer_name):
-        if cur_layer_name == "output":
+        """
+        A recursive forward pass on the model.
+            You can only proceed to a block/layer when all its dependencies are fulfilled,
+            i.e., all its parent layers are already assigned to an available device.
+        """
+        
+        if cur_layer_name == "output":  # the last block/layer of the model
             return
         else:
             cur_layer = self.layers[cur_layer_name]
             for dep in cur_layer.dependencies:
-                if not self.layers[dep].completed:
+                if not self.layers[dep].completed:  # dependencies are not fulfilled
                     return
-
+            
             decision = self.decide_one_layer(cur_layer_name)
 
             if self.FIRST_RUN:
@@ -188,19 +228,27 @@ class Optimizer(object):
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.devices[decision].time[e],
                                         reverse=self.reverse0)
             else:
+                # Otherwise, dynamically assigned priorities are used.
                 cur_layer.next = sorted(cur_layer.next, key=lambda e: self.layers[e].pr_max, reverse=self.reverse1)
 
             for next_layer_name in cur_layer.next:
                 if self.layers[next_layer_name].completed:
                     # Completed in other iterations.
                     continue
-                if next_layer_name == "output":
+                if next_layer_name == "output":  # the last block/layer of the model
                     self.layers["output"].device_id = decision
                     self.results.append(cur_layer.end_time)
                     continue
+        
                 self.device_exec(next_layer_name)
 
     def optimize(self, write_csv=False):
+        """
+        The optimization includes two modules, optimize and backtrace, this is the first module.
+        In this module, based on current priority/weight of the blocks, we assign different devices to them.
+            the [core] part of optimize is done in the device_exec function
+        Device assignment results, or, referred to as partition results, are stored in a csv file.
+        """
 
         self.clean_up()
 
@@ -215,8 +263,8 @@ class Optimizer(object):
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
 
-    # Legacy function
     def forward(self):
+        """This is a legacy function and you may ignore it."""
         self.clean_up()
 
         self.layers["input"].end_time = 0
@@ -251,7 +299,16 @@ class Optimizer(object):
                 queue.append(next_layer_name)
 
     def backtrace(self, write_csv=False):
-
+        """
+        The optimization includes two modules, optimize and backtrace, this is the second module.
+        In this module, based on the prior device assignments of blocks/layers, we try to reassign priority,
+            the priority is reassigned in a manner to facilitate the following optimize module,
+            after that, backtrace module will be called again to facilitate the next next optmize module
+            the [core] algorithm of this backtrace function is described in the paper, based on the following principle:
+               [< blocks/layers on/closer to the critical path of the inference execution should be more prioritized >]
+        The reassigned priorities after each call of backtrace, are stored in a csv file.
+        """
+        
         # Set priority bounds
         self.layers["output"].pr_max = 1000
         self.layers["output"].pr_min = 0
@@ -278,9 +335,6 @@ class Optimizer(object):
 
         self.layers["input"].completed = False
         self.layers["input"].pr_max = 0
-        # for name, device in self.devices.items():
-        #     device.available_time = 0
-
         for name, layer in self.layers.items():
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
