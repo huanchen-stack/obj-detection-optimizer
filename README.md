@@ -92,12 +92,19 @@ bandwidths = {
          {'faster': [*range(900, 3400, 100)]},
  }
 ```
-### Memory constrained scenario
+### Optimize under memory constrain
 #### 4. memory_constrain
-Config the device memory constrain (Unit: MB) in 
+Config the device memory constrain (Unit: MB) in [opt_wrapper_mem.py](opt_wrapper_mem.py)
 ```python
+# Change memory config here
 memory_constrain = 1024*2 # MB
 ```
+And use [opt_wrapper_mem.py](opt_wrapper_mem.py) instead of the default wrapper.
+
+### Optimize for battery life
+#### 5. battery life
+Use [opt_wrapper_battery.py](opt_wrapper_battery.py) instead of the default wrapper.
+
 ---
 
 ## Example: Yolov4
