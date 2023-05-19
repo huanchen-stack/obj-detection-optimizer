@@ -200,11 +200,14 @@ class Optimizer(object):
             possible_opt_pool = {}
             curr_start_time = self.layers[cur_layer_name].end_time - self.devices[decision].time[cur_layer_name]
             for dep_layer_name in self.layers[cur_layer_name].dependencies:
+                # Find the possible partitioning decision that can improve the end time of current layer
+                #   by recording and fixing that dependency that is not on the current decision with the current layer
+                #   i.e. they will be assigned to the same device during the next iteration
                 if self.layers[dep_layer_name].device_id != decision:
                     possible_opt_pool[dep_layer_name] = (
                             curr_start_time - (earliest_ready_time + self.devices[decision].time[dep_layer_name]))
             if possible_opt_pool and max(possible_opt_pool.values()) > 0:
-                # Record the improved partitioning suggestion for next iteration
+                # Record the fixed layer suggestion for next iteration
                 can_opt_dep_name = max(possible_opt_pool, key=possible_opt_pool.get)
                 self.layers[can_opt_dep_name].fixed = self.layers[can_opt_dep_name].dependencies[0]
                 self.layers[cur_layer_name].fixed = can_opt_dep_name
