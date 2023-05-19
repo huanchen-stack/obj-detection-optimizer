@@ -1,3 +1,5 @@
+"""THIS FILE IS DEPRECATED! YOU MAY IGNORE THIS FILE!"""
+
 from queue import Empty
 from optimizer import Optimizer
 from simulatorv2 import Simulator
