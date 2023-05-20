@@ -42,13 +42,13 @@ def draw(config):
     if min(plot_data) > 0:
         ax1.set_ylim(ymin=0, ymax=(max(plot_data + 2)))
 
-    # 双Y轴标签颜色设置
+    # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
 
-    # 双Y轴刻度颜色设置
+    # Set colors for y-axis marks
     ax1.tick_params(axis='y', colors='black')
 
-    # 图例设置
+    # Set legends
     plt.legend(handles=[p1, note], loc='lower right')
     plt.grid()
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)

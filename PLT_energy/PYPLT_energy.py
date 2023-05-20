@@ -91,15 +91,15 @@ def draw(config):
     ax1.set_ylabel("Energy (mJ)", fontsize=12)
     # ax1.set_title(f"{config}", fontsize=14)
 
-    # 双Y轴标签颜色设置
+    # Set colors for y-axis tags
     ax2.yaxis.label.set_color(line1.get_color())
     ax1.yaxis.label.set_color('black')
 
-    # 双Y轴刻度颜色设置
+    # Set colors for y-axis marks
     ax2.tick_params(axis='y', colors=line1.get_color())
     ax1.tick_params(axis='y', colors='black')
 
-    # 图例设置
+    # Set legends
     plt.legend(handles=[p1, b0, b1, note], loc="lower right", prop={'size': 6})
     plt.grid()
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
