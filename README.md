@@ -1,6 +1,6 @@
 # NS Optimizer
 
-There are two types of NS optimization tools in this repo. An **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategy across a range of data-transfer bandwidth for a model, an **NS optimizer wrapper** is needed to iterate through all scenarios.
+There are two types of NS optimization tools in this repo. An **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategies across a range of data-transfer bandwidth for a model, an **NS optimizer wrapper** is needed to iterate through all scenarios.
 
 1. Per layer/block inference profile can be found in the [testcases](testcases) folder.
 2. To find the optimized partition solution and corresponding speed up rate under specified bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
@@ -104,6 +104,9 @@ And use [opt_wrapper_mem.py](opt_wrapper_mem.py) instead of the default wrapper.
 ### Optimize for battery life
 #### 5. battery life
 Use [opt_wrapper_battery.py](opt_wrapper_battery.py) instead of the default wrapper.
+
+## Outputs
+While an optimizer outputs (1) a part.csv that specifies layers and their assigned devices, and (2) a priority.csv that specifies the execution order, a wrapper has different outputs. Since a wrapper finds several partitioning strategies across a range of network bandwidth, we have the results recorded in the [data](data) directory. While using wrappers, the part.csv and priority.csv are merely intermediate files. 
 
 ---
 
