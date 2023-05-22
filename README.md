@@ -8,7 +8,7 @@ There are two types of NS optimization tools in this repo. An **NS optimizer** i
 4. To find the optimized partition solution and corresponding speed up rate under **specified bandwidth**, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
-   - For example, `'yolov4': [*range(250, 260, 250)],` specifies the bandwidth to 250 mbps.
+   - For example, `'yolov4': [1000],` specifies the bandwidth to 1000 mbps.
    - (Optional) Modify attributes and variables described in the following content.
    - Results are stored in `testcases/model-device/part.csv` and `testcases/model-device/priority.csv`
    - Optionally, the dep.csv, prof.csv, and part.csv files can be taken to the NS-DOT-Visualizer to visualize the results.  
