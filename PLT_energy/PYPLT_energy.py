@@ -1,10 +1,13 @@
-import numpy as np
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
 import matplotlib.ticker as mticker
+
 
 baseE = {
     "0": {
