@@ -3,23 +3,25 @@
 There are two types of NS optimization tools in this repo. An **NS optimizer** is a unit program that finds an optimized partitioning strategy for a neuro-network model under some specified configurations. To find the best partitioning strategies across a range of data-transfer bandwidth for a model, an **NS optimizer wrapper** is needed to iterate through all scenarios.
 
 1. Per layer/block inference profile can be found in the [testcases](testcases) folder.
-2. To find the optimized partition solution and corresponding speed up rate under specified bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
+2. At the top of the wrappers, you can configure settings like models, bandwidth, devices, etc. for the experiment. 
+3. We have data for different power modes for Jetson AGX and Jetson Nano boards. Under power mode 0, the devices are running at the full power; under power mode 1, Jetson AGX is running under 20W limit, and Jetson Nano is running under 5W limit. (See Jetson board handbook for mode info)
+4. To find the optimized partition solution and corresponding speed up rate under **specified bandwidth**, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred value. 
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
    - For example, `'yolov4': [*range(250, 260, 250)],` specifies the bandwidth to 250 mbps.
    - (Optional) Modify attributes and variables described in the following content.
    - Results are stored in `testcases/model-device/part.csv` and `testcases/model-device/priority.csv`
-   - An NS Colorer can be used to visualize the results.  
-3. To find the optimized partition solutions and corresponding speed up rates across a range of bandwidth, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred range.
+   - Optionally, the dep.csv, prof.csv, and part.csv files can be taken to the NS-DOT-Visualizer to visualize the results.  
+5. To find the optimized partition solutions and corresponding speed up rates across **a range of bandwidth**, run [opt_wrapper.py](opt_wrapper.py) with bandwidth modified to preferred range.
    - For devices with memory constrains, use [opt_wrapper_mem.py](opt_wrapper_mem.py).
    - To optimize by battery life instead of execution time, use [opt_wrapper_battery.py](opt_wrapper_battery.py).
    - For example, `'yolov4': [*range(250, 1100, 250)],` specifies the bandwidth to 250, 500, 750, 1000 mbps.
    - (Optional) Modify attributes and variables described in the following content.
    - The results will be stored in [data](data). Note that the .csv files in `testcases/model-device/` directories records only the results under the largest bandwidth. 
-4. To analyze energy consumptions for drone communication under each *partition solution* (recorded in [data](data)), run [power-infer.py](power-infer.py).
-5. To analyze energy consumption for computation (model inference), go to [this](https://github.com/huanchen-stack/tegraWATTS) repo 
-6. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
-7. For other plots in the paper, see [this](https://github.com/Yanmeeei/NS-DOT-visualizers) repo
+6. To analyze energy consumptions for drone communication under each *partition solution* (recorded in [data](data)), run [power-infer.py](power-infer.py).
+7. To analyze energy consumption for computation (model inference), go to [this](https://github.com/huanchen-stack/tegraWATTS) repo 
+8. To generate plots, go to the `PLT_*` directories and run `PYPLT_*.py`.
+9. For other plots in the paper, see [this](https://github.com/Yanmeeei/NS-DOT-visualizers) repo
 
 ---
 
@@ -31,7 +33,7 @@ There are two types of NS optimization tools in this repo. An **NS optimizer** i
 
 The following guidelines illustrates how to use the wrappers on a neuro-network. 
 
-### Inputs
+## Inputs
 Create a folder under [testcases](testcases) by the following format:
 ```shell
 testcases/modelName-deviceCode/devicePowerMode/
@@ -53,7 +55,7 @@ This csv file contains the profiling result of every layer on a particular devic
 - Average memory consumption (in MB)
 - MACs (legacy column, set to zero)
 
-### Default optimization 
+## Default optimization 
 While *optimizers* find one partitioning result for one model under one setting (a part.csv), *wrappers* generate multiple optimization results (opt.csv) in this folder. For default optimization:
 - No device memory constrains. 
 - Optimize by time.
@@ -145,7 +147,19 @@ bandwidths = {
       }
 }
 ```
-3. run `python3 opt_wrapper.py`. Check [data/yolov4-agx.csv](data%2Fyolov4-agx.csv) for results. 
+3. run `python3 opt_wrapper.py`. Check [data/yolov4-agx.csv](data%2Fyolov4-agx.csv) for performance results across the range of bandwidth. 
+4. If you want to run the experiment under a particular bandwidth, please set the bandwidth as such:
+```python
+# Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
+bandwidths = {
+  'agx':
+      {
+       'yolov4': [2000],
+      }
+}
+```
+Then please check part.csv and priority.csv in [testcases/yolov4-agx](testcases%2Fyolov4-agx) for partitioning results. You may also use the dep.csv, part.csv and priority.csv files in a NS-DOT-Visualizer to visualize the results.  
 
-4. run `python3 power-infer.py`. 
-5. run `python3 PLT_energy/PYPLT_energy.py`. Check [yolov4-agx.png](PLT_energy%2F1%2Fyolov4-agx.png) for battery life optimization plots. 
+5. run `python3 power-infer.py` to calculate the energy consumption of data transfer. 
+6. run `python3 PLT_energy/PYPLT_energy.py` to visualize the battery life optimization. Check [PLT_energy/<power mode>/yolov4-agx.png](PLT_energy%2F1%2Fyolov4-agx.png) for battery life optimization plots. 
+

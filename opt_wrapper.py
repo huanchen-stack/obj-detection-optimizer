@@ -60,7 +60,7 @@ class OPT_WRAPPER(object):
         'agx':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
-             'yolov4': [*range(250, 8000, 250)],
+             'yolov4': [*range(2000, 2100, 250)],
              'faster': [*range(900, 3400, 100)]},
         'nano':
             {'yolox': [*range(250, 4500, 150)],

@@ -169,7 +169,7 @@ class Optimizer(object):
             dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
             device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
 
-        # In a single forward module, we don't want to update the device assignement of a block for multiple times
+        # In a single forward module, we don't want to update the device assignment of a block for multiple times
         #   We update the device assignment multiple times by calling forward modules multiple times
         if self.layers[cur_layer_name].fixed is not None:
             decision = self.layers[self.layers[cur_layer_name].fixed].device_id
