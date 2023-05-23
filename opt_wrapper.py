@@ -24,8 +24,9 @@ class OPT_WRAPPER(object):
         # 'yolor-nano',
         # 'yolox-agx',
         # 'yolox-nano',
-        'yolov4-agx',
+        # 'yolov4-agx',
         # 'yolov4-nano'
+        'yolos-agx'
     ]
 
     # benchmarks for optimization performance. Categorized by power mode. Unit: second
@@ -51,6 +52,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 2.3129,
             'yolov4-agx': 0.6596,
             'yolov4-nano': 1.5723,
+            'yolos-agx': 6.086,
         },
 
     }
@@ -60,8 +62,9 @@ class OPT_WRAPPER(object):
         'agx':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
-             'yolov4': [*range(2000, 2100, 250)],
-             'faster': [*range(900, 3400, 100)]},
+             'yolov4': [*range(250, 4500, 150)],
+             'faster': [*range(900, 3400, 100)],
+             'yolos': [*range(900, 3400, 100)]},
         'nano':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
@@ -168,10 +171,10 @@ class OPT_WRAPPER(object):
                 t.insert(1, 100 - 100 * t[0] / self.benchmark)
                 across_devices.append(t)
                 
-            # we only the the best result from the four heuristics of our choice
+            # we only the best result from the four heuristics of our choice
             best = min(across_devices, key=lambda e: e[0])
             for i in range(len(across_devices)):
-                num_devices = i + 2
+                num_devices = across_devices[i][5]
                 # if (across_devices[i][0] - best[0]) / best[0] <= 1 - self.threshold:
                 if across_devices[i][0] * self.threshold <= best[0]:
                     self.opt_num_devices.append(num_devices)

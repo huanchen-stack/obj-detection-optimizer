@@ -3,10 +3,10 @@ input,0
 d1_conv1,1000.0
 d1_conv2,1000.0
 d1_conv3,1000.0
-d1_conv4,1000.0
-d1_conv5,1000.0
-d1_conv6,1000.0
-d1_conv7,1000.0
+d1_conv4,999.8372395833333
+d1_conv5,999.8372395833333
+d1_conv6,999.8372395833333
+d1_conv7,999.8372395833333
 d1_conv8,1000.0
 d2_conv1,1000.0
 d2_conv2,1000.0
@@ -21,7 +21,7 @@ d3_resblock,1000.0
 d3_conv4,1000.0
 d3_conv5,1000.0
 d4_conv1,1000.0
-d4_conv2,998.6979166666666
+d4_conv2,1000.0
 d4_conv3,1000.0
 d4_resblock,1000.0
 d4_conv4,1000.0
@@ -57,9 +57,9 @@ nk_conv17,1000.0
 nk_conv18,1000.0
 nk_conv19,1000.0
 nk_conv20,1000.0
-hd_conv1,1000.0
+hd_conv1,666.6666666666666
 hd_conv3,1000.0
-hd_conv2,1000.0
+hd_conv2,666.6666666666666
 hd_conv4,1000.0
 hd_conv5,1000.0
 hd_conv6,1000.0
@@ -75,7 +75,7 @@ hd_conv15,1000.0
 hd_conv16,1000.0
 hd_conv17,1000.0
 hd_conv18,1000.0
-decode1,1000.0
+decode1,666.6666666666666
 decode2,666.6666666666666
 decode3,1000.0
 non_max_suppression,1000.0

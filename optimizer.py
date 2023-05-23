@@ -36,6 +36,7 @@ class Optimizer(object):
         self.reverse1 = reverse1
 
         self.results = []
+        self.num_devices_list = []
         self.has_fixed = False
 
         # load and initialize devices
@@ -245,9 +246,17 @@ class Optimizer(object):
                 if next_layer_name == "output":  # the last block/layer of the model
                     self.layers["output"].device_id = decision
                     self.results.append(cur_layer.end_time)
+                    self.num_devices_list.append(self.find_num_device())
                     continue
         
                 self.device_exec(next_layer_name)
+
+    def find_num_device(self):
+        num_device = 0
+        for key, value in self.layers.items():
+            if value.device_id is not None and value.device_id > num_device:
+                num_device = value.device_id
+        return num_device + 1
 
     def optimize(self, write_csv=False):
         """
@@ -350,6 +359,7 @@ class Optimizer(object):
         # Find best result and the corresponding config
         best = min(self.results)
         best_iter = self.results.index(best)
+        best_num_device = self.num_devices_list[best_iter]
         # r0 = "T" if self.reverse0 else "F"
         # r1 = "T" if self.reverse1 else "F"
-        return [best, best_iter, self.reverse0, self.reverse1]
+        return [best, best_iter, self.reverse0, self.reverse1, best_num_device]
