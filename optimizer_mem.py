@@ -325,6 +325,8 @@ class Optimizer(object):
                 self.priorities.write(f"{name},{layer.pr_max}\n")
 
     def report(self):
+        if len(self.results) == 0:
+            return None
         best = min(self.results)
         best_iter = self.results.index(best)
         best_num_device = self.num_devices_list[best_iter]

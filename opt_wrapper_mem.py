@@ -9,19 +9,19 @@ from opt_wrapper import POWER_MODE
 
 # This is a variation of opt_wrapper that has a memory constrain for each device.
 # The memory constrain on each device. Unit: MB
-memory_constrain = 1024*2
+memory_constrain = 1024*4
 
 
 class OPT_WRAPPER(object):
     configs = [
-        'faster-agx',
-        'faster-nano',
-        'yolor-agx',
-        'yolor-nano',
-        'yolox-agx',
-        'yolox-nano',
-        'yolov4-agx',
-        'yolov4-nano',
+        # 'faster-agx',
+        # 'faster-nano',
+        # 'yolor-agx',
+        # 'yolor-nano',
+        # 'yolox-agx',
+        # 'yolox-nano',
+        # 'yolov4-agx',
+        # 'yolov4-nano',
         'yolos-agx'
     ]
     benchmarks = {
@@ -51,31 +51,32 @@ class OPT_WRAPPER(object):
         },
     }
     bandwidths = {
-        # 'agx':
-        #     {'yolox': [*range(250, 4500, 250)],
-        #      'yolor': [*range(750, 4500, 250)],
-        #      'yolov4': [*range(250, 4500, 250)],
-        #      'faster': [*range(750, 3400, 250)]},
-        # 'nano':
-        #     {'yolox': [*range(250, 4500, 250)],
-        #      'yolor': [*range(250, 4500, 250)],
-        #      'yolov4': [*range(250, 8000, 250)],
-        #      'faster': [*range(750, 3400, 250)]},
-
         'agx':
-            {'yolox': [300],
-             'yolor': [300],
-             'yolov4': [300],
-             'faster': [300],
-             'yolos': [300],
-             },
+            {'yolox': [*range(250, 4500, 250)],
+             'yolor': [*range(750, 4500, 250)],
+             'yolov4': [*range(250, 4500, 250)],
+             'faster': [*range(750, 3400, 250)],
+             'yolos': [300]},
         'nano':
-            {'yolox': [300],
-             'yolor': [300],
-             'yolov4': [300],
-             'faster': [300],
-             'yolos': [300],
-             }
+            {'yolox': [*range(250, 4500, 250)],
+             'yolor': [*range(250, 4500, 250)],
+             'yolov4': [*range(250, 8000, 250)],
+             'faster': [*range(750, 3400, 250)]},
+
+        # 'agx':
+        #     {'yolox': [300],
+        #      'yolor': [300],
+        #      'yolov4': [300],
+        #      'faster': [300],
+        #      'yolos': [300],
+        #      },
+        # 'nano':
+        #     {'yolox': [300],
+        #      'yolor': [300],
+        #      'yolov4': [300],
+        #      'faster': [300],
+        #      'yolos': [300],
+        #      }
 
     }
 
@@ -148,8 +149,12 @@ class OPT_WRAPPER(object):
                 if not (opt1.success or opt2.success or opt3.success or opt4.success):
                     continue
 
-                results = [opt1, opt2, opt3, opt4]
-                results = [opt.report() for opt in results]
+                opt_results = [opt1, opt2, opt3, opt4]
+                results = []
+                for opt in opt_results:
+                    report = opt.report()
+                    if report is not None:
+                        results.append(report)
                 results = sorted(results, key=lambda e: e[0])
                 t = results[0]
                 t.insert(1, 100 - 100 * t[0] / self.benchmark)

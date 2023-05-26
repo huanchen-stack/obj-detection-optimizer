@@ -18,7 +18,7 @@ class OPT_WRAPPER(object):
     #     the opt_wrapper will iterate through all configurations one by one
     # For the purpose of automation, you may uncomment all configurations
     configs = [
-        # 'faster-agx',
+        'faster-agx',
         # 'faster-nano',
         # 'yolor-agx',
         # 'yolor-nano',
@@ -26,7 +26,7 @@ class OPT_WRAPPER(object):
         # 'yolox-nano',
         # 'yolov4-agx',
         # 'yolov4-nano'
-        'yolos-agx'
+         # 'yolos-agx'
     ]
 
     # benchmarks for optimization performance. Categorized by power mode. Unit: second
@@ -63,7 +63,8 @@ class OPT_WRAPPER(object):
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 4500, 150)],
-             'faster': [*range(900, 3400, 100)],
+             # 'yolov4': [5000],
+             'faster': [*range(100, 3400, 200)],
              'yolos': [*range(900, 3400, 100)]},
         'nano':
             {'yolox': [*range(250, 4500, 150)],
@@ -164,8 +165,12 @@ class OPT_WRAPPER(object):
                 opt3 = self.optimize_once(bandwidth, num_devices, False, True)
                 opt4 = self.optimize_once(bandwidth, num_devices, False, False)
 
-                results = [opt1, opt2, opt3, opt4]
-                results = [opt.report() for opt in results]
+                opt_results = [opt1, opt2, opt3, opt4]
+                results = []
+                for opt in opt_results:
+                    report = opt.report()
+                    if report is not None:
+                        results.append(report)
                 results = sorted(results, key=lambda e: e[0])
                 t = results[0]
                 t.insert(1, 100 - 100 * t[0] / self.benchmark)

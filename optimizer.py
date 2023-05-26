@@ -357,6 +357,8 @@ class Optimizer(object):
 
     def report(self):
         # Find best result and the corresponding config
+        if len(self.results) == 0:
+            return None
         best = min(self.results)
         best_iter = self.results.index(best)
         best_num_device = self.num_devices_list[best_iter]
