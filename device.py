@@ -20,7 +20,7 @@ class Device(object):
         self.load_profile(prof_filename)
 
     def load_profile(self, prof_filename):
-        prof_df_list = pd.read_csv(prof_filename).values.tolist()
+        prof_df_list = pd.read_csv(prof_filename, engine='python').values.tolist()
         for layername, time, cpu_mem, cuda_mem, size, macs in prof_df_list:
             self.time[layername] = time
             self.cpu_mem[layername] = cpu_mem

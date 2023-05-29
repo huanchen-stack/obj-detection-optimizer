@@ -9,6 +9,7 @@ from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
+COMPARE_NS_Original = True
 
 def draw(config):
 
@@ -30,6 +31,28 @@ def draw(config):
                      marker='o',
                      s=30,
                      label='Optimization speed up')
+
+    if COMPARE_NS_Original:
+        df_file_origin = pd.read_csv(f"../OriginalNS/data/{config}.csv")
+        x2_list = []
+        for i in df_file_origin['bandwidth']:
+            x2_list.append(i)
+
+        plot_data_origin = df_file_origin['optimizer']
+
+        line2 = ax1.plot(df_file_origin['bandwidth'], plot_data_origin,
+                         color=sns.xkcd_rgb["denim blue"],
+                         linestyle='-',
+                         label='Original NS speed up (%)')
+        p2 = ax1.scatter(df_file_origin['bandwidth'], plot_data_origin,
+                         color=sns.xkcd_rgb["denim blue"],
+                         marker='o',
+                         s=30,
+                         label='Original NS speed up (%)')
+        for i, j, d in zip(df_file['bandwidth'], plot_data_origin, df_file_origin["device"]):
+            ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
+        note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
+
 
     for i, j, d in zip(df_file['bandwidth'], plot_data, df_file["device"]):
         ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
@@ -53,6 +76,7 @@ def draw(config):
     # Set legends
     plt.legend(handles=[p1, note], loc='lower right')
     plt.grid()
+
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
 

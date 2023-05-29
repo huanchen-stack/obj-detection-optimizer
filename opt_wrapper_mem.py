@@ -35,7 +35,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 1.6617,
             'yolov4-agx': 0.1969,
             'yolov4-nano': 1.1422,
-            'yolos-agx': 2432.05,
+            'yolos-agx': 6.086,
         },
         "1": {
             'faster-agx': 1.157999,
@@ -47,7 +47,7 @@ class OPT_WRAPPER(object):
             'yolox-nano': 2.3129,
             'yolov4-agx': 0.6596,
             'yolov4-nano': 1.5723,
-            'yolos-agx': 2432.05,
+            'yolos-agx': 6.086,
         },
     }
     bandwidths = {

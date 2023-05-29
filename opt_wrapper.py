@@ -18,10 +18,10 @@ class OPT_WRAPPER(object):
     #     the opt_wrapper will iterate through all configurations one by one
     # For the purpose of automation, you may uncomment all configurations
     configs = [
-        'faster-agx',
+        # 'faster-agx',
         # 'faster-nano',
-        # 'yolor-agx',
-        # 'yolor-nano',
+        'yolor-agx',
+        'yolor-nano',
         # 'yolox-agx',
         # 'yolox-nano',
         # 'yolov4-agx',
