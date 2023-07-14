@@ -6,6 +6,7 @@ from layer import Layer
 from device import Device
 
 VERBOSE = False
+# USE_LINKED_LAYERS = True
 
 
 class Optimizer(object):
@@ -13,7 +14,7 @@ class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
-                 bandwidth=2000,  # MB/s
+                 bandwidth=0,  # MB/s
                  parallel=True,
                  ignore_latency=False,
                  iterations=1,
@@ -55,6 +56,20 @@ class Optimizer(object):
         self.load_dependencies(dep_filename)
         self.load_macs_size(prof_filenames[0])
 
+        # if USE_LINKED_LAYERS:
+        #     self.pre_process_mem_dict = {}
+        #     self.pre_processing('input', 'marking')
+        #     for _, layer in self.layers.items():
+        #         layer.completed = False
+        #     self.pre_processing('input', 'grouping')
+        #     for _, layer in self.layers.items():
+        #         layer.completed = False
+        #     self.pre_processing('input', 'checking')
+        #     for _, layer in self.layers.items():
+        #         layer.completed = False
+        #     # self.pre_processing('input', 'printing')
+        #     # for _, layer in self.layers.items():
+        #     #     layer.completed = False
         self.FIRST_RUN = True
 
         if self.iterations == 0:
@@ -102,6 +117,60 @@ class Optimizer(object):
                 #     return success
                 # self.forward()
 
+    # def pre_processing(self, cur_layer_name, function):
+    #     if cur_layer_name == "output":
+    #         return
+    #     else:
+    #         cur_layer = self.layers[cur_layer_name]
+    #         for dep in cur_layer.dependencies:
+    #             if not self.layers[dep].completed:
+    #                 return
+    #
+    #         if function == 'marking':
+    #             if len(cur_layer.dependencies) == 1 and len(cur_layer.next) == 1:
+    #                 cur_layer.linked = True
+    #         elif function == 'grouping':
+    #             if cur_layer.linked and cur_layer.link_with is None:
+    #                 dep_layer = self.layers[cur_layer.dependencies[0]]
+    #                 if dep_layer.linked or len(dep_layer.next) == 1:
+    #                     if dep_layer.link_with is not None:
+    #                         cur_layer.link_with = dep_layer.link_with
+    #                         self.pre_process_mem_dict[dep_layer.link_with] += self.devices[0].cuda_mem[cur_layer_name]
+    #                     else:
+    #                         self.pre_process_mem_dict[cur_layer.dependencies[0]] = self.devices[0].cuda_mem[cur_layer.dependencies[0]]
+    #                         self.pre_process_mem_dict[cur_layer.dependencies[0]] += self.devices[0].cuda_mem[cur_layer_name]
+    #                         cur_layer.link_with = cur_layer.dependencies[0]
+    #                 else:
+    #                     cur_layer.linked = False
+    #             elif len(cur_layer.dependencies) == 1 and self.layers[cur_layer.dependencies[0]].linked:
+    #                 cur_layer.linked = True
+    #                 cur_layer.link_with = cur_layer.dependencies[0]
+    #         elif function == 'checking':
+    #             if cur_layer.linked and self.pre_process_mem_dict[cur_layer.link_with] > self.memory_constrain:
+    #                     cur_layer.linked = False
+    #                     cur_layer.link_with = None
+    #             else:
+    #                 def update_device(new_mem):
+    #                     for device in self.devices.values():
+    #                         device.cuda_mem[cur_layer_name] = new_mem
+    #                 if cur_layer_name in self.pre_process_mem_dict.keys():
+    #                     update_device(self.pre_process_mem_dict[cur_layer_name])
+    #                 elif cur_layer.linked:
+    #                     update_device(0)
+    #
+    #         elif function == 'printing':
+    #             if cur_layer.linked:
+    #                 print(f"{cur_layer_name} -- {cur_layer.link_with}")
+    #
+    #         cur_layer.completed = True
+    #         for next_layer_name in cur_layer.next:
+    #             if self.layers[next_layer_name].completed:
+    #                 continue
+    #             if next_layer_name == "output":
+    #                 continue
+    #             self.pre_processing(next_layer_name, function)
+    #         return
+
     def load_dependencies(self, dep_filename):
         df_list = pd.read_csv(dep_filename).values.tolist()
         for entry in df_list:
@@ -130,6 +199,17 @@ class Optimizer(object):
             device.assigned_layer.clear()
 
     def decide_one_layer(self, cur_layer_name):
+        #
+        # if USE_LINKED_LAYERS and self.layers[cur_layer_name].linked and cur_layer_name not in self.pre_process_mem_dict.keys():
+        #     decision = self.layers[self.layers[cur_layer_name].link_with].device_id
+        #     device = self.devices[decision]
+        #     self.layers[cur_layer_name].device_id = decision
+        #     min_value = self.layers[self.layers[cur_layer_name].dependencies[0]].end_time + device.time[cur_layer_name]
+        #
+        #     self.layers[cur_layer_name].completed = True
+        #     self.layers[cur_layer_name].end_time = min_value
+        #     self.devices[decision].available_time = min_value
+        #     return decision
 
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
@@ -150,28 +230,48 @@ class Optimizer(object):
         if len(filtered_list) == 0:
             return -1
 
-        for device_name in filtered_list:
-            device = self.devices[device_name]
-            dependency_arrival_timepool = []
-            for dep_name in self.layers[cur_layer_name].dependencies:
-                dep_layer = self.layers[dep_name]
-                transfer_latency = 0
-                if (not self.ignore_latency) and dep_layer.device_id != device.name:
-                    transfer_latency = dep_layer.size / self.bandwidth
-                end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
-                dependency_arrival_timepool.append(end_time)
-            dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
-            device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
+        smart_divide = True
+        while smart_divide:
+            for device_name in filtered_list:
+                device = self.devices[device_name]
+                dependency_arrival_timepool = []
+                for dep_name in self.layers[cur_layer_name].dependencies:
+                    dep_layer = self.layers[dep_name]
+                    transfer_latency = 0
+                    if (not self.ignore_latency) and dep_layer.device_id != device.name:
+                        transfer_latency = dep_layer.size / self.bandwidth
+                    end_time = dep_layer.end_time + transfer_latency  # + device.time[cur_layer_name]
+                    dependency_arrival_timepool.append(end_time)
+                dependency_arrival_timepool.append(device.available_time)  # + device.time[cur_layer_name])
+                device_results.append(max(dependency_arrival_timepool) + device.time[cur_layer_name])
 
-        if self.layers[cur_layer_name].fixed is not None \
-                and self.layers[self.layers[cur_layer_name].fixed].device_id in filtered_list:
-            decision = self.layers[self.layers[cur_layer_name].fixed].device_id
-            min_value = device_results[filtered_list.index(decision)]
-            self.layers[cur_layer_name].device_id = decision
-        else:
-            min_value = min(device_results)
-            decision = filtered_list[device_results.index(min_value)]
-            self.layers[cur_layer_name].device_id = decision
+            if self.layers[cur_layer_name].fixed is not None \
+                    and self.layers[self.layers[cur_layer_name].fixed].device_id in filtered_list:
+                decision = self.layers[self.layers[cur_layer_name].fixed].device_id
+                min_value = device_results[filtered_list.index(decision)]
+                self.layers[cur_layer_name].device_id = decision
+            else:
+                min_value = min(device_results)
+                decision = filtered_list[device_results.index(min_value)]
+                self.layers[cur_layer_name].device_id = decision
+
+            smart_divide = False
+            for potential_next in self.layers[cur_layer_name].next:
+                mem_requirement = self.devices[decision].cuda_mem[cur_layer_name]\
+                                  + self.devices[decision].cuda_mem[potential_next]
+                if self.devices[decision].current_cuda_mem() + mem_requirement > self.memory_constrain:
+                    # divide this layer by the less output size edge
+                    sum = 0
+                    for dep_name in self.layers[cur_layer_name].dependencies:
+                        sum += self.layers[dep_name].size
+                    if self.layers[potential_next].size > sum:
+                        filtered_list = \
+                            [x for x in sorted_device_names
+                             if self.devices[x].current_cuda_mem() + mem_requirement < self.memory_constrain]
+                        if filtered_list:
+                            device_results = []
+                            smart_divide = True
+                            break
 
         self.layers[cur_layer_name].completed = True
         self.layers[cur_layer_name].end_time = min_value
