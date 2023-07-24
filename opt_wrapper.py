@@ -18,14 +18,14 @@ class OPT_WRAPPER(object):
     #     the opt_wrapper will iterate through all configurations one by one
     # For the purpose of automation, you may uncomment all configurations
     configs = [
-        # 'faster-agx',
-        # 'faster-nano',
+        'faster-agx',
+        'faster-nano',
         'yolor-agx',
         'yolor-nano',
-        # 'yolox-agx',
-        # 'yolox-nano',
-        # 'yolov4-agx',
-        # 'yolov4-nano'
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
+        'yolov4-nano'
          # 'yolos-agx'
     ]
 
@@ -60,16 +60,89 @@ class OPT_WRAPPER(object):
     # Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
     bandwidths = {
         'agx':
-            {'yolox': [*range(250, 4500, 150)],
+            {
+              'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 4500, 150)],
-             # 'yolov4': [5000],
-             'faster': [*range(100, 3400, 200)],
-             'yolos': [*range(900, 3400, 100)]},
+             # 'yolov4': [250],
+                 'faster': [*range(100, 3400, 200)],
+             # 'yolox': [
+             #     100,
+             #     100,
+             #     100,
+             #     105,
+             #     110,
+             #     115,
+             #     120,
+             #     125,
+             #     130,
+             #     160,
+             #     190,
+             #     220,
+             #     250,
+             #     280,
+             #     310,
+             #     320,
+             #     330,
+             #     340,
+             #     350,
+             #     360,
+             #     370,
+             #     380,
+             #     390,
+             #     400,
+             #     500,
+             #     600,
+             #     700,
+             #     800,
+             #     900,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     1000,
+             #     750,
+             #     360,
+             #     340,
+             #     320,
+             #     300,
+             #     280,
+             #     260,
+             #     240,
+             #     220,
+             #     200,
+             #     180,
+             #     160,
+             #     155,
+             #     150,
+             #     145,
+             #     140,
+             #     135,
+             #     130,
+             #     125,
+             #     120,
+             #     115,
+             #     110,
+             #     105,
+             #     100,
+             #     95,
+             #     90,
+             #     85,
+             #     80,
+             # ],
+             'yolos': [*range(250, 2500, 250)]},
         'nano':
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 8000, 250)],
+             # 'yolov4': [500],
              'faster': [*range(900, 3400, 100)]},
     }
 
@@ -85,7 +158,7 @@ class OPT_WRAPPER(object):
         self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]  # turn to MBps
 
         self.iterations_default = 5
-        self.num_devices_max = 7  # opt_wrapper iterate all possible num_device values from (1, num_devices_max]
+        self.num_devices_max = 20  # opt_wrapper iterate all possible num_device values from (1, num_devices_max]
         self.threshold = threshold
 
         self.opt_num_devices = []
@@ -166,6 +239,7 @@ class OPT_WRAPPER(object):
                 opt4 = self.optimize_once(bandwidth, num_devices, False, False)
 
                 opt_results = [opt1, opt2, opt3, opt4]
+                # opt_results = [opt4]
                 results = []
                 for opt in opt_results:
                     report = opt.report()
@@ -213,7 +287,7 @@ class OPT_WRAPPER(object):
         for i in range(len(self.bandwidth_list)):
             if i == 0:
                 continue
-            if self.opt_speedup_rate[i] < self.opt_speedup_rate[i - 1]:  # Optimizer made a bad decision
+            if self.bandwidth_list[i] > self.bandwidth_list[i-1] and self.opt_speedup_rate[i] < self.opt_speedup_rate[i - 1]:  # Optimizer made a bad decision
                 self.optimize_once(*self.args[i - 1]) # get partitions from prev results
                 
                 # use prev partition results and cur bandwidth to calculate new_opt latency & rate
@@ -254,7 +328,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.97
+    threshold = 0.99
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

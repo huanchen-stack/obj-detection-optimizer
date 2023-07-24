@@ -52,16 +52,17 @@ class OPT_WRAPPER(object):
     }
     bandwidths = {
         'agx':
-            {'yolox': [*range(250, 4500, 250)],
-             'yolor': [*range(750, 4500, 250)],
-             'yolov4': [*range(250, 4500, 250)],
-             'faster': [*range(750, 3400, 250)],
-             'yolos': [300]},
+            {'yolox': [*range(250, 2500, 250)],
+             'yolor': [*range(250, 2500, 250)],
+             'yolov4': [*range(250, 2500, 250)],
+             'faster': [*range(250, 2500, 250)],
+             # 'yolos': [*range(250, 2500, 250)]},
+             'yolos': [2000]},
         'nano':
-            {'yolox': [*range(250, 4500, 250)],
-             'yolor': [*range(250, 4500, 250)],
-             'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(750, 3400, 250)]},
+            {'yolox': [*range(250, 2500, 250)],
+             'yolor': [*range(250, 2500, 250)],
+             'yolov4': [*range(250, 2500, 250)],
+             'faster': [*range(250, 2500, 250)]},
 
         # 'agx':
         #     {'yolox': [300],
@@ -91,8 +92,8 @@ class OPT_WRAPPER(object):
             self.bandwidth_list = bandwidth_list
         self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]  # turn to MBps
 
-        self.iterations_default = 5
-        self.num_devices_max = 7
+        self.iterations_default = 10
+        self.num_devices_max = 20
         self.threshold = threshold
 
         self.opt_num_devices = []
@@ -234,7 +235,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.95
+    threshold = 0.99
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

@@ -20,3 +20,5 @@ class Layer(object):
         self.pr_max = None
         self.pr_min = None
         self.fixed = None
+        self.linked = False
+        self.link_with = None

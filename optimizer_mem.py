@@ -231,6 +231,10 @@ class Optimizer(object):
             return -1
 
         smart_divide = True
+        # first_run_result = {}
+        # first_run = True
+        # decision = 0
+        # min_value = 0
         while smart_divide:
             for device_name in filtered_list:
                 device = self.devices[device_name]
@@ -254,6 +258,10 @@ class Optimizer(object):
                 min_value = min(device_results)
                 decision = filtered_list[device_results.index(min_value)]
                 self.layers[cur_layer_name].device_id = decision
+            # if first_run:
+            #     first_run = False
+            #     first_run_result['min_value'] = min_value
+            #     first_run_result['decision'] = decision
 
             smart_divide = False
             for potential_next in self.layers[cur_layer_name].next:
@@ -272,6 +280,11 @@ class Optimizer(object):
                             device_results = []
                             smart_divide = True
                             break
+
+        # if min_value > first_run_result['min_value']:
+        #     min_value = first_run_result['min_value']
+        #     decision = first_run_result['decision']
+        #     self.layers[cur_layer_name].device_id = decision
 
         self.layers[cur_layer_name].completed = True
         self.layers[cur_layer_name].end_time = min_value

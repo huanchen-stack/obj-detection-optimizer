@@ -16,7 +16,7 @@ class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
-                 bandwidth=2000,  # MB/s
+                 bandwidth=0,  # MB/s
                  parallel=True,
                  ignore_latency=False,
                  iterations=1,

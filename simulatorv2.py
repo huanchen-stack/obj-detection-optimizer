@@ -101,6 +101,12 @@ class Simulator(object):
             device.cur_time = 0
 
     def device_exec(self, cur_layer_name):
+        # if cur_layer_name == 'hd_conv13' and len(self.device_names) == 2:
+        #     for n, l in self.layers.items():
+        #         print(f"{n}:\t{self.layers[n].device_id} \t{self.layers[n].end_time}")
+        #     print("------")
+        # if cur_layer_name == 'd4_conv1' and len(self.device_names) == 2:
+        #     a = 1
         if cur_layer_name == "output":
             return
         else:
@@ -112,8 +118,6 @@ class Simulator(object):
                     return
 
             # print(f"Device {cur_layer.device_id} is running: {cur_layer.name}")
-            if cur_layer.device_id is None:
-                a = 1
             device = self.devices[str(cur_layer.device_id)]
             dependency_arrival_timepool = []
             for dep in cur_layer.dependencies:
@@ -163,6 +167,9 @@ class Simulator(object):
         self.layers["input"].device_id = 0
 
         self.device_exec("input")
+        # for n, l in self.layers.items():
+        #     print(f"{n}:\t{self.layers[n].device_id} \t{self.layers[n].end_time}")
+        # print("------")
 
         # print(f"\n\033[30;42m=========Time Result=========\033[0m")
         # print("{:<15} {:<15}".format("output_layer", "time (s)"))

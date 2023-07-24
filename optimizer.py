@@ -11,7 +11,7 @@ class Optimizer(object):
     def __init__(self,
                  dep_filename,
                  prof_filenames,
-                 bandwidth=2000,  # mbps
+                 bandwidth=0,  # mBps
                  parallel=True,
                  ignore_latency=False,  # * Whether to ignore transfer latency. Mainly for testing purpose.
                  iterations=1,
@@ -144,6 +144,13 @@ class Optimizer(object):
         We greedily aim to make the finish time of the current layer as early as possible.
         """
 
+        # if cur_layer_name == 'hd_conv13' and len(self.device_names) == 2:
+        #     for n, l in self.layers.items():
+        #         print(f"{n}:\t{self.layers[n].device_id} \t{self.layers[n].end_time}")
+        #     print("------")
+        # if cur_layer_name == 'hd_conv17' and len(self.device_names) == 2:
+        #     a=1
+
         # min(max(max(end_time + transfer_time), device_clock) + execution_time)
         device_results = []
 
@@ -228,7 +235,8 @@ class Optimizer(object):
             for dep in cur_layer.dependencies:
                 if not self.layers[dep].completed:  # dependencies are not fulfilled
                     return
-            
+            if len(self.devices) > 3 and cur_layer_name == 'layer_1_mid_position_embedding':
+                a=1
             decision = self.decide_one_layer(cur_layer_name)
 
             if self.FIRST_RUN:
@@ -253,10 +261,12 @@ class Optimizer(object):
 
     def find_num_device(self):
         num_device = 0
+        used_devices = []
         for key, value in self.layers.items():
-            if value.device_id is not None and value.device_id > num_device:
-                num_device = value.device_id
-        return num_device + 1
+            if value.device_id is not None and value.device_id not in used_devices:
+                used_devices.append(value.device_id)
+                num_device += 1
+        return num_device
 
     def optimize(self, write_csv=False):
         """
