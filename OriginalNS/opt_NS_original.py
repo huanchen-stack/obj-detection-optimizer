@@ -16,15 +16,15 @@ VERBOSE = False
 POWER_MODE = 1
 
 configs = [
-    # 'faster-agx',
-    # 'faster-nano',
-    # 'yolor-agx',
+    'faster-agx',
+    'faster-nano',
+    'yolor-agx',
     'yolor-nano',
-    # 'yolox-agx',
-    # 'yolox-nano',
+    'yolox-agx',
+    'yolox-nano',
     # 'yolov4-agx',
-    # 'yolov4-nano'
-    # 'yolos-agx'
+    'yolov4-nano',
+    # 'yolo s-agx'
 ]
 
 # benchmarks for optimization performance. Categorized by power mode. Unit: second
@@ -57,16 +57,18 @@ benchmarks = {
 # Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
 bandwidths = {
     'agx':
-        {'yolox': [*range(250, 4500, 150)],
-         'yolor': [*range(250, 4500, 150)],
-         'yolov4': [*range(250, 4500, 150)],
-         'faster': [*range(100, 3400, 200)],
-         'yolos': [*range(900, 3400, 100)]},
+        {'yolox': [*range(250, 4500, 200)],
+         'yolor': [*range(250, 4500, 200)],
+         # 'yolor': [250],
+         'yolov4': [*range(250, 4500, 200)],
+         # 'yolov4': [250],
+         'faster': [*range(250, 4500, 200)],
+         'yolos': [*range(250, 4500, 100)]},
     'nano':
-        {'yolox': [*range(250, 4500, 150)],
-         'yolor': [*range(250, 4500, 150)],
-         'yolov4': [*range(250, 8000, 250)],
-         'faster': [*range(900, 3400, 100)]},
+        {'yolox': [*range(250, 4500, 200)],
+         'yolor': [*range(250, 4500, 200)],
+         'yolov4': [*range(250, 4500, 200)],
+         'faster': [*range(250, 4500, 200)]},
 }
 
 class Optimizer(object):
@@ -210,29 +212,40 @@ class Optimizer(object):
 
             # simulation
             sim = self.simulate(self.bandwidth)
-            self.results.append((layer, sim.time_result))
+            self.results.append({'layer': layer, 'time_result': sim.total_time, 'transfer_data_summary': sim.transfer_data_summary})
 
         # Find the best result
-        self.results = sorted(self.results, key=lambda e: next(iter(e[1].values())))
-        best_time = next(iter(self.results[0][1].values()))
+        self.results = sorted(self.results, key=lambda e: e['time_result'])
+        best_time = self.results[0]['time_result']
         self.opt_rate = (benchmarks[str(POWER_MODE)][config] - best_time) / benchmarks[str(POWER_MODE)][config] * 100
         # print(f"Best result from NS-original: {best_time}")
         # print(f"Optimization: {self.opt_rate}%")
         # print("See part.csv for corresponding partition. ")
         self.clean_up()
-        for next_layer_name in self.layers[self.results[0][0]].next:
+        for next_layer_name in self.layers[self.results[0]['layer']].next:
             # Assign device
+            # if next_layer_name == 'hd_conv13':
+            #     a = 1
             self.device_exec(next_layer_name)
+            # if next_layer_name == 'hd_conv13':
+            #     for n, l in self.layers.items():
+            #         print(f"{n}:\t{self.layers[n].device_id} \t{self.layers[n].end_time}")
+            #     print("------")
         # recreate part file
         self.partitions = open(os.path.join("part.csv"), "w")
         self.partitions.write(f"layername,device\n")
         for layer_for_csv in self.layers:
             self.partitions.write(f"{layer_for_csv},{self.layers[layer_for_csv].device_id}\n")
         self.partitions.close()
+        sim = self.simulate(self.bandwidth)
+        # for n, l in sim.layers.items():
+        #     print(f"{n}:\t{sim.layers[n].device_id} \t{sim.layers[n].end_time}")
+        # print("------")
+
 
     def report(self):
         # Find best result and the corresponding config
-        best = next(iter(self.results[0][1].values()))
+        # best = next(iter(self.results[0][1].values()))
         # r0 = "T" if self.reverse0 else "F"
         # r1 = "T" if self.reverse1 else "F"
         return [self.bandwidth, self.opt_rate]
@@ -255,12 +268,14 @@ class Optimizer(object):
 
 if __name__ == '__main__':
     for config in configs:
+        print(f"Working on {config}...")
         path = os.path.abspath(os.getcwd())
         path = os.path.join(path, f"../testcases/{config}/{POWER_MODE}")
         dep = os.path.join(path, "dep.csv")
         prof = os.path.join(path, "prof.csv")
         shutil.copyfile(prof, 'prof.csv')
         bandwidth_list = bandwidths[config.split('-')[1]][config.split('-')[0]]
+        bandwidth_list = [bw * 0.125 for bw in bandwidth_list]
         res = {'bandwidths': [], 'opt_speedup_rate': [], 'payload': {}}
         for bandwidth in bandwidth_list:
             iterations = 1
@@ -280,4 +295,7 @@ if __name__ == '__main__':
             f.write(f"bandwidth,optimizer,energy,device,payload\n")
             for i in range(len(res['bandwidths'])):
                 f.write(
-                    f"{res['bandwidths'][i]},{res['opt_speedup_rate'][i]},0,2,{res['payload']}\n")
+                    f"{res['bandwidths'][i] * 8},{res['opt_speedup_rate'][i]},0,2,{res['payload']}\n")
+
+        print(f"{config} results stored.")
+        print(f"==========")

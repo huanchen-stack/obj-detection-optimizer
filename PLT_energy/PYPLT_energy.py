@@ -19,6 +19,7 @@ baseE = {
         'yolor-nano': 10447.9559,
         'yolox-nano': 13460.1792,
         'yolov4-nano': 9055.3908,
+        'yolos-agx': 95233.7091,
     },
     "1": {
         'faster-agx': 8724.0558,
@@ -29,6 +30,7 @@ baseE = {
         'yolor-nano': 9158.5191,
         'yolox-nano': 38119.5639,
         'yolov4-nano': 10734.7091,
+        'yolos-agx': 95233.7091,
     }
 
 }
@@ -42,6 +44,7 @@ baseBattery = {
     'yolor-nano': 1,
     'yolox-nano': 1,
     'yolov4-nano': 1,
+    'yolos-agx': 1,
 }
 
 avg_battery = []

@@ -14,7 +14,7 @@ COMPARE_NS_Original = True
 def draw(config):
 
     fig, ax1 = plt.subplots()
-    fig.set_size_inches(6, 3)
+    fig.set_size_inches(4, 3)
     df_file = pd.read_csv(f"../data/{config}.csv")
     x1_list = []
     for i in df_file['bandwidth']:
@@ -25,12 +25,12 @@ def draw(config):
     line1 = ax1.plot(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      linestyle='-',
-                     label='Optimization speed up')
+                     label='Optimization speed up' if not COMPARE_NS_Original else 'Swarm Optimization speed up')
     p1 = ax1.scatter(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      marker='o',
                      s=30,
-                     label='Optimization speed up')
+                     label='Optimization speed up' if not COMPARE_NS_Original else 'Swarm Optimization speed up')
 
     if COMPARE_NS_Original:
         df_file_origin = pd.read_csv(f"../OriginalNS/data/{config}.csv")
@@ -48,7 +48,7 @@ def draw(config):
                          color=sns.xkcd_rgb["denim blue"],
                          marker='o',
                          s=30,
-                         label='Original NS speed up (%)')
+                         label='Original NS speed up')
         for i, j, d in zip(df_file['bandwidth'], plot_data_origin, df_file_origin["device"]):
             ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
         note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
@@ -74,14 +74,30 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # Set legends
-    plt.legend(handles=[p1, note], loc='lower right')
+    if COMPARE_NS_Original:
+        # plt.legend(handles=[p1, p2, note], loc='lower right')
+        # plt.legend(handles=[p1, p2, note], bbox_to_anchor=(0.5, 1.5), loc='upper center', ncol=3)
+        pass
+    else:
+        plt.legend(handles=[p1, note], loc='lower right')
     plt.grid()
+    # plt.title('4GB')
 
     plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
-    configs = OPT_WRAPPER.configs
+    configs = [
+        'faster-agx',
+        'faster-nano',
+        'yolor-agx',
+        # 'yolor-nano',
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
+        'yolov4-nano'
+        #  'yolos-agx'
+    ]
 
     for config in tqdm(configs):
         draw(config)
