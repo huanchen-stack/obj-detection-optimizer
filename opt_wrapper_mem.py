@@ -14,15 +14,15 @@ memory_constrain = 1024*4
 
 class OPT_WRAPPER(object):
     configs = [
-        # 'faster-agx',
-        # 'faster-nano',
-        # 'yolor-agx',
-        # 'yolor-nano',
-        # 'yolox-agx',
-        # 'yolox-nano',
-        # 'yolov4-agx',
-        # 'yolov4-nano',
-        'yolos-agx'
+        'faster-agx',
+        'faster-nano',
+        'yolor-agx',
+        'yolor-nano',
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
+        'yolov4-nano',
+        # 'yolos-agx'
     ]
     benchmarks = {
         "0": {
@@ -57,7 +57,7 @@ class OPT_WRAPPER(object):
              'yolov4': [*range(250, 2500, 250)],
              'faster': [*range(250, 2500, 250)],
              # 'yolos': [*range(250, 2500, 250)]},
-             'yolos': [2000]},
+             'yolos': [250]},
         'nano':
             {'yolox': [*range(250, 2500, 250)],
              'yolor': [*range(250, 2500, 250)],
@@ -235,7 +235,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.99
+    threshold = 0.95
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

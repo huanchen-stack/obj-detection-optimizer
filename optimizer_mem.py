@@ -264,22 +264,24 @@ class Optimizer(object):
             #     first_run_result['decision'] = decision
 
             smart_divide = False
-            for potential_next in self.layers[cur_layer_name].next:
-                mem_requirement = self.devices[decision].cuda_mem[cur_layer_name]\
-                                  + self.devices[decision].cuda_mem[potential_next]
-                if self.devices[decision].current_cuda_mem() + mem_requirement > self.memory_constrain:
-                    # divide this layer by the less output size edge
-                    sum = 0
-                    for dep_name in self.layers[cur_layer_name].dependencies:
-                        sum += self.layers[dep_name].size
-                    if self.layers[potential_next].size > sum:
-                        filtered_list = \
-                            [x for x in sorted_device_names
-                             if self.devices[x].current_cuda_mem() + mem_requirement < self.memory_constrain]
-                        if filtered_list:
-                            device_results = []
-                            smart_divide = True
-                            break
+            ########## SMART DIVIDE
+            # for potential_next in self.layers[cur_layer_name].next:
+            #     mem_requirement = self.devices[decision].cuda_mem[cur_layer_name]\
+            #                       + self.devices[decision].cuda_mem[potential_next]
+            #     if self.devices[decision].current_cuda_mem() + mem_requirement > self.memory_constrain:
+            #         # divide this layer by the less output size edge
+            #         sum = 0
+            #         for dep_name in self.layers[cur_layer_name].dependencies:
+            #             sum += self.layers[dep_name].size
+            #         if self.layers[potential_next].size > sum:
+            #             filtered_list = \
+            #                 [x for x in sorted_device_names
+            #                  if self.devices[x].current_cuda_mem() + mem_requirement < self.memory_constrain]
+            #             if filtered_list:
+            #                 device_results = []
+            #                 smart_divide = True
+            #                 break
+            ########## END SMART DIVIDE
 
         # if min_value > first_run_result['min_value']:
         #     min_value = first_run_result['min_value']
