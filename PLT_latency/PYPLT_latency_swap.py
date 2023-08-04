@@ -10,14 +10,31 @@ from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
 # BANDWIDTH = "4GB"
-READ_SPEED = 1280
+# READ_SPEED = 1280
+READ_SPEED = 190
 
 baseline = {
     "2GB": {
         "yolos-agx": 12321 / READ_SPEED,
+        "yolox-agx": 5091.6 / READ_SPEED,
+        "yolor-agx": 3250 / READ_SPEED,
+        "yolov4-agx": 3547 / READ_SPEED,
+        "faster-agx": 3055.5 / READ_SPEED,
+        "yolox-nano": 5091.6 / READ_SPEED,
+        "yolor-nano": 3250 / READ_SPEED,
+        "yolov4-nano": 3547 / READ_SPEED,
+        "faster-nano": 3055.5 / READ_SPEED,
     },
     "4GB": {
         "yolos-agx": 10504 / READ_SPEED,
+        "yolox-agx": 2800 / READ_SPEED,
+        "yolor-agx": 1206 / READ_SPEED,
+        "yolov4-agx": 1607 / READ_SPEED,
+        "faster-agx": 715 / READ_SPEED,
+        "yolox-nano": 2800 / READ_SPEED,
+        "yolor-nano": 1206 / READ_SPEED,
+        "yolov4-nano": 1607 / READ_SPEED,
+        "faster-nano": 715 / READ_SPEED,
     }
 }
 
@@ -38,8 +55,8 @@ def draw(config):
 
     fig, ax1 = plt.subplots()
     fig.set_size_inches(4, 3)
-    df_file_2GB = pd.read_csv(f"../data/{config}-2GB.csv")
-    df_file_4GB = pd.read_csv(f"../data/{config}-4GB.csv")
+    df_file_2GB = pd.read_csv(f"../data/2GB/{config}.csv")
+    df_file_4GB = pd.read_csv(f"../data/4GB/{config}.csv")
     x1_list = []
     x2_list = []
     for i in df_file_2GB['bandwidth']:
@@ -49,8 +66,8 @@ def draw(config):
     plot_data_2GB = df_file_2GB['optimizer']
     plot_data_4GB = df_file_4GB['optimizer']
     for i in range(len(plot_data_2GB)):
-        plot_data_2GB[i] = baseline['2GB'][config] / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
-        plot_data_4GB[i] = baseline['4GB'][config] / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
+        plot_data_2GB[i] = (baseline['2GB'][config] + benchmarks[config]) / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
+        plot_data_4GB[i] = (baseline['4GB'][config] + benchmarks[config]) / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
 
     line1 = ax1.plot(df_file_2GB['bandwidth'], plot_data_2GB,
                      color=sns.xkcd_rgb["denim blue"],
@@ -87,7 +104,7 @@ def draw(config):
     ax1.yaxis.set_major_formatter('{x:1.1f}x')
     # ax1.set_title(f"{config}", fontsize=14)
     # if min(plot_data) > 0:
-    #     ax1.set_ylim(ymin=0, ymax=(max(plot_data + 2)))
+    ax1.set_ylim(ymin=0, ymax=(max(plot_data_2GB + 2)))
 
     # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
@@ -107,12 +124,20 @@ def draw(config):
     plt.grid()
     # plt.title('4GB')
 
-    plt.savefig(f"swap/{config}.png", bbox_inches='tight', dpi=100)
+    plt.savefig(f"swap/{READ_SPEED}/{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
     configs = [
-        'yolos-agx',
+        # 'faster-agx',
+        'faster-nano',
+        # 'yolor-agx',
+        'yolor-nano',
+        # 'yolox-agx',
+        'yolox-nano',
+        # 'yolov4-agx',
+        'yolov4-nano'
+        #  'yolos-agx'
     ]
 
     for config in tqdm(configs):
