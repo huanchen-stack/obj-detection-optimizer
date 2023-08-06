@@ -10,8 +10,8 @@ from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
 # BANDWIDTH = "4GB"
-# READ_SPEED = 1280
-READ_SPEED = 190
+READ_SPEED = 1280
+# READ_SPEED = 190
 
 baseline = {
     "2GB": {
@@ -52,6 +52,8 @@ benchmarks = {
 }
 
 def draw(config):
+    print(f"2GB: {config} {baseline['2GB'][config] + benchmarks[config]}-{READ_SPEED}")
+    print(f"4GB: {config} {baseline['4GB'][config] + benchmarks[config]}-{READ_SPEED}")
 
     fig, ax1 = plt.subplots()
     fig.set_size_inches(4, 3)
@@ -67,7 +69,7 @@ def draw(config):
     plot_data_4GB = df_file_4GB['optimizer']
     for i in range(len(plot_data_2GB)):
         plot_data_2GB[i] = (baseline['2GB'][config] + benchmarks[config]) / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
-        plot_data_4GB[i] = (baseline['4GB'][config] + benchmarks[config]) / (benchmarks[config] - plot_data_2GB[i] * 0.01 * benchmarks[config])
+        plot_data_4GB[i] = (baseline['4GB'][config] + benchmarks[config]) / (benchmarks[config] - plot_data_4GB[i] * 0.01 * benchmarks[config])
 
     line1 = ax1.plot(df_file_2GB['bandwidth'], plot_data_2GB,
                      color=sns.xkcd_rgb["denim blue"],
@@ -104,7 +106,7 @@ def draw(config):
     ax1.yaxis.set_major_formatter('{x:1.1f}x')
     # ax1.set_title(f"{config}", fontsize=14)
     # if min(plot_data) > 0:
-    ax1.set_ylim(ymin=0, ymax=(max(plot_data_2GB + 2)))
+    # ax1.set_ylim(ymin=0, ymax=(max(plot_data_2GB + 2)))
 
     # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
@@ -129,15 +131,11 @@ def draw(config):
 
 if __name__ == "__main__":
     configs = [
-        # 'faster-agx',
-        'faster-nano',
-        # 'yolor-agx',
-        'yolor-nano',
-        # 'yolox-agx',
-        'yolox-nano',
-        # 'yolov4-agx',
-        'yolov4-nano'
-        #  'yolos-agx'
+        # 'faster-nano',
+        # 'yolor-nano',
+        # 'yolox-nano',
+        # 'yolov4-nano',
+         'yolos-agx'
     ]
 
     for config in tqdm(configs):
