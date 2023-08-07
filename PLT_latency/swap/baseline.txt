@@ -1,0 +1,25 @@
+1280
+2GB: faster-nano | swap time: 2.387109375 | swap power: 10.741992187500001 | read speed: 1280
+2GB: yolor-nano | swap time: 2.5390625 | swap power: 11.42578125 | read speed: 1280
+2GB: yolox-nano | swap time: 3.9778125 | swap power: 17.900156250000002 | read speed: 1280
+2GB: yolov4-nano | swap time: 2.77109375 | swap power: 12.469921874999999 | read speed: 1280
+2GB: yolos-agx | swap time: 9.62578125 | swap power: 43.316015625 | read speed: 1280
+
+4GB: faster-nano | swap time: 0.55859375 | swap power: 2.513671875 | read speed: 1280
+4GB: yolor-nano | swap time: 0.9421875 | swap power: 4.2398437499999995 | read speed: 1280
+4GB: yolox-nano | swap time: 2.1875 | swap power: 9.84375 | read speed: 1280
+4GB: yolov4-nano | swap time: 1.25546875 | swap power: 5.649609375 | read speed: 1280
+4GB: yolos-agx | swap time: 8.20625 | swap power: 36.928125 | read speed: 1280
+
+190
+2GB: faster-nano | swap time: 16.08157894736842 | swap power: 80.40789473684211 | read speed: 190
+2GB: yolor-nano | swap time: 17.105263157894736 | swap power: 85.52631578947368 | read speed: 190
+2GB: yolox-nano | swap time: 26.797894736842107 | swap power: 133.98947368421054 | read speed: 190
+2GB: yolov4-nano | swap time: 18.66842105263158 | swap power: 93.34210526315789 | read speed: 190
+2GB: yolos-agx | swap time: 64.84736842105264 | swap power: 324.2368421052632 | read speed: 190
+
+4GB: faster-nano | swap time: 3.763157894736842 | swap power: 18.81578947368421 | read speed: 190
+4GB: yolor-nano | swap time: 6.347368421052631 | swap power: 31.736842105263158 | read speed: 190
+4GB: yolox-nano | swap time: 14.736842105263158 | swap power: 73.68421052631578 | read speed: 190
+4GB: yolov4-nano | swap time: 8.457894736842105 | swap power: 42.28947368421053 | read speed: 190
+4GB: yolos-agx | swap time: 55.28421052631579 | swap power: 276.42105263157896 | read speed: 190

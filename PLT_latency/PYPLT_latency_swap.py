@@ -10,8 +10,8 @@ from opt_wrapper import OPT_WRAPPER, POWER_MODE
 from PLT_energy.PYPLT_energy import baseE
 
 # BANDWIDTH = "4GB"
-READ_SPEED = 1280
-# READ_SPEED = 190
+# READ_SPEED = 1280
+READ_SPEED = 190
 
 baseline = {
     "2GB": {
@@ -51,14 +51,16 @@ benchmarks = {
     'yolos-agx': 6.086,
 }
 
-def draw(config):
-    print(f"2GB: {config} {baseline['2GB'][config] + benchmarks[config]}-{READ_SPEED}")
-    print(f"4GB: {config} {baseline['4GB'][config] + benchmarks[config]}-{READ_SPEED}")
+power = {
+    1280: 4.5,
+    190: 5,
+}
 
+def draw(config):
     fig, ax1 = plt.subplots()
     fig.set_size_inches(4, 3)
-    df_file_2GB = pd.read_csv(f"../data/2GB/{config}.csv")
-    df_file_4GB = pd.read_csv(f"../data/4GB/{config}.csv")
+    df_file_2GB = pd.read_csv(f"../data/figure_11/2GB/{config}.csv")
+    df_file_4GB = pd.read_csv(f"../data/figure_11/4GB/{config}.csv")
     x1_list = []
     x2_list = []
     for i in df_file_2GB['bandwidth']:
@@ -106,7 +108,7 @@ def draw(config):
     ax1.yaxis.set_major_formatter('{x:1.1f}x')
     # ax1.set_title(f"{config}", fontsize=14)
     # if min(plot_data) > 0:
-    # ax1.set_ylim(ymin=0, ymax=(max(plot_data_2GB + 2)))
+    ax1.set_ylim(ymin=0, ymax=(max(plot_data_2GB + 2)))
 
     # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
@@ -131,12 +133,20 @@ def draw(config):
 
 if __name__ == "__main__":
     configs = [
-        # 'faster-nano',
-        # 'yolor-nano',
-        # 'yolox-nano',
-        # 'yolov4-nano',
+        'faster-nano',
+        'yolor-nano',
+        'yolox-nano',
+        'yolov4-nano',
          'yolos-agx'
     ]
+
+    for config in tqdm(configs):
+        print(
+            f"2GB: {config} | swap time: {baseline['2GB'][config]} | swap power: {(baseline['2GB'][config]) * power[READ_SPEED]} | read speed: {READ_SPEED}")
+
+    for config in tqdm(configs):
+        print(
+            f"4GB: {config} | swap time: {baseline['4GB'][config]} | swap power: {(baseline['4GB'][config]) * power[READ_SPEED]} | read speed: {READ_SPEED}")
 
     for config in tqdm(configs):
         draw(config)

@@ -36,5 +36,4 @@ fc7,6
 cls_score,6
 bbox_pred,6
 postprocess_detections,6
-resize,5
 output,5

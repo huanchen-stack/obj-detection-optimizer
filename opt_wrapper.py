@@ -26,7 +26,7 @@ class OPT_WRAPPER(object):
         'yolox-nano',
         'yolov4-agx',
         'yolov4-nano'
-         # 'yolos-agx'
+        #  'yolos-agx'
     ]
 
     # benchmarks for optimization performance. Categorized by power mode. Unit: second
@@ -61,11 +61,11 @@ class OPT_WRAPPER(object):
     bandwidths = {
         'agx':
             {
-              'yolox': [*range(250, 4500, 150)],
-             'yolor': [*range(250, 4500, 150)],
-             'yolov4': [*range(250, 4500, 150)],
-             # 'yolov4': [250],
-                 'faster': [*range(100, 3400, 200)],
+              'yolox': [*range(250, 2500, 250)],
+              'yolor': [*range(250, 2500, 250)],
+              'yolov4': [*range(250, 2500, 250)],
+              # 'yolov4': [250],
+                'faster': [*range(250, 2500, 250)],
              # 'yolox': [
              #     100,
              #     100,
@@ -139,11 +139,84 @@ class OPT_WRAPPER(object):
              # ],
              'yolos': [*range(250, 2500, 250)]},
         'nano':
-            {'yolox': [*range(250, 4500, 150)],
-             'yolor': [*range(250, 4500, 150)],
-             'yolov4': [*range(250, 8000, 250)],
-             # 'yolov4': [500],
-             'faster': [*range(900, 3400, 100)]},
+            {
+                'yolox': [*range(250, 4500, 200)],
+                # 'yolox': [
+                #     100,
+                #     100,
+                #     100,
+                #     105,
+                #     110,
+                #     115,
+                #     120,
+                #     125,
+                #     130,
+                #     160,
+                #     190,
+                #     220,
+                #     250,
+                #     280,
+                #     310,
+                #     320,
+                #     330,
+                #     340,
+                #     350,
+                #     360,
+                #     370,
+                #     380,
+                #     390,
+                #     400,
+                #     500,
+                #     600,
+                #     700,
+                #     800,
+                #     900,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     1000,
+                #     750,
+                #     360,
+                #     340,
+                #     320,
+                #     300,
+                #     280,
+                #     260,
+                #     240,
+                #     220,
+                #     200,
+                #     180,
+                #     160,
+                #     155,
+                #     150,
+                #     145,
+                #     140,
+                #     135,
+                #     130,
+                #     125,
+                #     120,
+                #     115,
+                #     110,
+                #     105,
+                #     100,
+                #     95,
+                #     90,
+                #     85,
+                #     80,
+                # ],
+                'yolor': [*range(250, 2500, 250)],
+                'yolov4': [*range(250, 2500, 250)],
+                # 'yolov4': [500],
+                'faster': [*range(250, 2500, 250)]
+            },
     }
 
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
@@ -328,7 +401,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.99
+    threshold = 0.98
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

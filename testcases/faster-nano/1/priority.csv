@@ -36,5 +36,4 @@ fc7,666.6666666666666
 cls_score,333.3333333333333
 bbox_pred,666.6666666666666
 postprocess_detections,1000.0
-resize,1000.0
 output,1000

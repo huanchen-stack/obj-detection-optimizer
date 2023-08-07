@@ -22,7 +22,7 @@ configs = [
     'yolor-nano',
     'yolox-agx',
     'yolox-nano',
-    # 'yolov4-agx',
+    'yolov4-agx',
     'yolov4-nano',
     # 'yolo s-agx'
 ]
@@ -57,18 +57,18 @@ benchmarks = {
 # Bandwidths that the optimizer will run through. Categorized by device model. Unit: mbps
 bandwidths = {
     'agx':
-        {'yolox': [*range(250, 4500, 200)],
-         'yolor': [*range(250, 4500, 200)],
+        {'yolox': [*range(250, 2500, 250)],
+         'yolor': [*range(250, 2500, 250)],
          # 'yolor': [250],
-         'yolov4': [*range(250, 4500, 200)],
+         'yolov4': [*range(250, 2500, 250)],
          # 'yolov4': [250],
-         'faster': [*range(250, 4500, 200)],
-         'yolos': [*range(250, 4500, 100)]},
+         'faster': [*range(250, 2500, 250)],
+         'yolos': [*range(250, 2500, 250)]},
     'nano':
-        {'yolox': [*range(250, 4500, 200)],
-         'yolor': [*range(250, 4500, 200)],
-         'yolov4': [*range(250, 4500, 200)],
-         'faster': [*range(250, 4500, 200)]},
+        {'yolox': [*range(250, 2500, 250)],
+         'yolor': [*range(250, 2500, 250)],
+         'yolov4': [*range(250, 2500, 250)],
+         'faster': [*range(250, 2500, 250)]},
 }
 
 class Optimizer(object):

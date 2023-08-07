@@ -78,6 +78,6 @@ hd_conv18,0
 decode1,1
 decode2,1
 decode3,0
-non_max_suppression,1
-wrapping_up,0
-output,0
+non_max_suppression,0
+wrapping_up,1
+output,1

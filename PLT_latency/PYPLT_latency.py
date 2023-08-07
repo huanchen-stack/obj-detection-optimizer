@@ -79,7 +79,8 @@ def draw(config):
         # plt.legend(handles=[p1, p2, note], bbox_to_anchor=(0.5, 1.5), loc='upper center', ncol=3)
         pass
     else:
-        plt.legend(handles=[p1, note], loc='lower right')
+        # plt.legend(handles=[p1, note], loc='lower right')
+        pass
     plt.grid()
     # plt.title('4GB')
 
@@ -91,7 +92,7 @@ if __name__ == "__main__":
         'faster-agx',
         'faster-nano',
         'yolor-agx',
-        # 'yolor-nano',
+        'yolor-nano',
         'yolox-agx',
         'yolox-nano',
         'yolov4-agx',

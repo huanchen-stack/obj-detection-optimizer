@@ -36,5 +36,4 @@ fc7,1000.0
 cls_score,1000.0
 bbox_pred,1000.0
 postprocess_detections,1000.0
-resize,1000.0
 output,1000

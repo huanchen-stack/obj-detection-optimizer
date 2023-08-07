@@ -92,13 +92,14 @@ def draw(config):
     ax1.get_xaxis().set_visible(False)
 
 
-    plt.savefig(f"plots/{config}-performance.png", bbox_inches='tight', dpi=100)
+    plt.savefig(f"plots/{config}-performance.pdf", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
     configs = [
         # 'faster-agx',
-        'yolox-agx',
+        # 'yolox-agx',
+        'yolox-nano',
     ]
 
     for config in tqdm(configs):

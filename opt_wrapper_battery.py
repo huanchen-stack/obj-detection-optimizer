@@ -18,6 +18,7 @@ class OPT_WRAPPER(object):
             'yolor-nano': 10447.9559,
             'yolox-nano': 13460.1792,
             'yolov4-nano': 9055.3908,
+            'yolos-agx': 10734.7091,
         },
         "1": {
             'faster-agx': 8724.0558,
@@ -28,6 +29,7 @@ class OPT_WRAPPER(object):
             'yolor-nano': 9158.5191,
             'yolox-nano': 38119.5639,
             'yolov4-nano': 10734.7091,
+            'yolos-agx': 10734.7091,
         }
 
     }
@@ -39,8 +41,9 @@ class OPT_WRAPPER(object):
         # 'yolor-nano',
         # 'yolox-agx',
         # 'yolox-nano',
-        'yolov4-agx',
-        'yolov4-nano'
+        # 'yolov4-agx',
+        # 'yolov4-nano'
+        'yolos-agx',
     ]
     benchmarks = {
         "0": {
@@ -64,6 +67,8 @@ class OPT_WRAPPER(object):
             'yolox-nano': 2.3129,
             'yolov4-agx': 0.6596,
             'yolov4-nano': 1.5723,
+            'yolos-agx': 6.086,
+
         },
 
     }
@@ -81,7 +86,9 @@ class OPT_WRAPPER(object):
             {'yolox': [*range(250, 4500, 150)],
              'yolor': [*range(250, 4500, 150)],
              'yolov4': [*range(250, 8000, 250)],
-             'faster': [*range(900, 3400, 100)]},
+             'faster': [*range(900, 3400, 100)],
+             'yolos': [*range(250, 4500, 250)],
+             },
         # 'nano': [*range(375, 1500, 125)],  # good graph
         'nano':
             {'yolox': [*range(250, 4500, 150)],
@@ -93,7 +100,7 @@ class OPT_WRAPPER(object):
     def __init__(self, config, bandwidth_list=None, threshold=0.99):
         super().__init__()
         self.config = config
-        self.benchmark = OPT_WRAPPER.benchmarks["0"][self.config]
+        self.benchmark = OPT_WRAPPER.benchmarks["1"][self.config]
 
         if bandwidth_list is None:
             self.bandwidth_list = OPT_WRAPPER.bandwidths[config.split('-')[1]][config.split('-')[0]]
@@ -101,8 +108,8 @@ class OPT_WRAPPER(object):
             self.bandwidth_list = bandwidth_list
         self.bandwidth_list = [bw * 0.125 for bw in self.bandwidth_list]  # turn to MBps
 
-        self.iterations_default = 5
-        self.num_devices_max = 7
+        self.iterations_default = 10
+        self.num_devices_max = 10
         self.threshold = threshold
 
         self.opt_num_devices = []
@@ -141,7 +148,7 @@ class OPT_WRAPPER(object):
         for bandwidth in self.bandwidth_list:
             for num_devices in range(2, self.num_devices_max + 1):
                 opt1 = self.optimize_once(bandwidth, num_devices, True, True)
-                print(opt1.results)
+                # print(opt1.results)
 
 def driver(config, threshold):
     opt_wrapper = OPT_WRAPPER(

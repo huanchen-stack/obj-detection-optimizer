@@ -9,7 +9,7 @@ from opt_wrapper import POWER_MODE
 
 # This is a variation of opt_wrapper that has a memory constrain for each device.
 # The memory constrain on each device. Unit: MB
-memory_constrain = 1024*4
+memory_constrain = 1024*2
 
 
 class OPT_WRAPPER(object):
@@ -235,7 +235,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.95
+    threshold = 0.96
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")
