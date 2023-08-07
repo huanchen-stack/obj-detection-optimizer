@@ -1,0 +1,11 @@
+model,baseline
+faster-agx,1.157999
+faster-nano,2.686923
+faster-clarity32,0.063555
+yolor-agx,0.369261
+yolor-nano,2.011526
+yolox-agx,1.0978
+yolox-nano,2.3129
+yolov4-agx,0.6596
+yolov4-nano,1.5723
+yolos-agx,6.086
