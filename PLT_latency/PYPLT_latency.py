@@ -83,8 +83,10 @@ def draw(config):
         pass
     plt.grid()
     # plt.title('4GB')
-
-    plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
+    if COMPARE_NS_Original:
+        plt.savefig(f"compare/{config}.png", bbox_inches='tight', dpi=100)
+    else:
+        plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":

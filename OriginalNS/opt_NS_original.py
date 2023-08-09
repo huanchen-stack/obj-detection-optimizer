@@ -17,14 +17,14 @@ POWER_MODE = 1
 
 configs = [
     'faster-agx',
-    'faster-nano',
-    'yolor-agx',
-    'yolor-nano',
-    'yolox-agx',
-    'yolox-nano',
-    'yolov4-agx',
-    'yolov4-nano',
-    # 'yolo s-agx'
+    # 'faster-nano',
+    # 'yolor-agx',
+    # 'yolor-nano',
+    # 'yolox-agx',
+    # 'yolox-nano',
+    # 'yolov4-agx',
+    # 'yolov4-nano',
+    # 'yolos-agx'
 ]
 
 # benchmarks for optimization performance. Categorized by power mode. Unit: second
@@ -233,6 +233,12 @@ class Optimizer(object):
             #     print("------")
         # recreate part file
         self.partitions = open(os.path.join("part.csv"), "w")
+        self.partitions.write(f"layername,device\n")
+        for layer_for_csv in self.layers:
+            self.partitions.write(f"{layer_for_csv},{self.layers[layer_for_csv].device_id}\n")
+        self.partitions.close()
+
+        self.partitions = open(os.path.join(f"partitions/{config}/part-{int(bandwidth*8)}.csv"), "w")
         self.partitions.write(f"layername,device\n")
         for layer_for_csv in self.layers:
             self.partitions.write(f"{layer_for_csv},{self.layers[layer_for_csv].device_id}\n")

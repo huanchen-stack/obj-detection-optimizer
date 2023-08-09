@@ -16,6 +16,7 @@ COMPARE_NS_Original = True
 def draw(config):
     fig, ax1 = plt.subplots()
     fig.set_size_inches(8, 2)
+    fig.set_dpi(100)
     df_file = pd.read_csv(f"{config}.csv")
     x1_list = []
     for i in range(len(df_file['bandwidth'])):
@@ -34,7 +35,7 @@ def draw(config):
     #                  s=30,
     #                  label='bandwidth')
     # ax1.set_ylim(ymin=0)
-    ax1.set_ylabel("Mbps", fontsize=12)
+    ax1.set_ylabel("Bandwidth (Mbps)", fontsize=12)
 
     # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
@@ -43,10 +44,11 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # Set legends
-    plt.legend(handles=[line1], bbox_to_anchor=(0.5, 1.25), loc='upper center')
+    # plt.legend(handles=[line1], bbox_to_anchor=(0.5, 1.25), loc='upper center')
     plt.grid()
     ax1.get_xaxis().set_visible(False)
 
+    plt.savefig(f"plots/bandwidth.pdf", bbox_inches='tight', dpi=100)
     plt.savefig(f"plots/bandwidth.png", bbox_inches='tight', dpi=100)
 
 

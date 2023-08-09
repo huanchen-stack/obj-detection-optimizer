@@ -74,7 +74,7 @@ class EnergyInferer(object):
                 size_pseudo = size * 8 / mult  # convert Byte to bits; apply multicast
                 total_energy += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
                 self.latency[self.config] += mult*size/bandwidth
-            print(self.latency)
+            # print(self.latency)
             df.at[i, 'energy'] = total_energy
 
         df.to_csv(self.get_path(self.config), sep=',', index=False)
@@ -86,6 +86,16 @@ def driver(config, multicast):
 
 
 if __name__ == '__main__':
-
-    for config in OPT_WRAPPER.configs:
+    configs = [
+        'faster-agx',
+        'faster-nano',
+        'yolor-agx',
+        'yolor-nano',
+        'yolox-agx',
+        'yolox-nano',
+        'yolov4-agx',
+        'yolov4-nano',
+         'yolos-agx'
+    ]
+    for config in configs:
         driver(config, True)

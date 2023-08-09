@@ -1,4 +1,6 @@
 import os
+import shutil
+
 import pandas as pd
 from layer import Layer
 from device import Device
@@ -66,6 +68,8 @@ class Optimizer(object):
             self.partitions.write(f"layername,device\n")
             self.optimize(write_csv=True)
             self.partitions.close()
+            shutil.copyfile(os.path.join(self.dir, "part.csv"), os.path.join(self.dir, "1/part.csv"))
+            shutil.copyfile(os.path.join(self.dir, "priority.csv"), os.path.join(self.dir, "1/priority.csv"))
             best = min(self.results)
             best_iter = self.results.index(best)
         else:
@@ -89,7 +93,8 @@ class Optimizer(object):
                 self.partitions.write(f"layername,device\n")
                 self.optimize(write_csv=True)
                 self.partitions.close()
-
+                shutil.copyfile(os.path.join(self.dir, "part.csv"), os.path.join(self.dir, "1/part.csv"))
+                shutil.copyfile(os.path.join(self.dir, "priority.csv"), os.path.join(self.dir, "1/priority.csv"))
                 best = min(self.results)
                 best_iter = self.results.index(best)
             else:

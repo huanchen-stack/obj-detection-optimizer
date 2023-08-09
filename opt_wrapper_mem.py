@@ -14,14 +14,14 @@ memory_constrain = 1024*2
 
 class OPT_WRAPPER(object):
     configs = [
-        'faster-agx',
-        'faster-nano',
-        'yolor-agx',
+        # 'faster-agx',
+        # 'faster-nano',
+        # 'yolor-agx',
         'yolor-nano',
-        'yolox-agx',
-        'yolox-nano',
-        'yolov4-agx',
-        'yolov4-nano',
+        # 'yolox-agx',
+        # 'yolox-nano',
+        # 'yolov4-agx',
+        # 'yolov4-nano',
         # 'yolos-agx'
     ]
     benchmarks = {
@@ -56,11 +56,12 @@ class OPT_WRAPPER(object):
              'yolor': [*range(250, 2500, 250)],
              'yolov4': [*range(250, 2500, 250)],
              'faster': [*range(250, 2500, 250)],
-             # 'yolos': [*range(250, 2500, 250)]},
-             'yolos': [250]},
+             'yolos': [*range(250, 2500, 250)]},
+             # 'yolos': [250]},
         'nano':
             {'yolox': [*range(250, 2500, 250)],
-             'yolor': [*range(250, 2500, 250)],
+             # 'yolor': [*range(250, 2500, 250)],
+             'yolor': [750],
              'yolov4': [*range(250, 2500, 250)],
              'faster': [*range(250, 2500, 250)]},
 
@@ -107,7 +108,7 @@ class OPT_WRAPPER(object):
         self.dep = os.path.join(path, "dep.csv")
         self.prof = os.path.join(path, "prof.csv")
         self.priority = os.path.join(path, "priority.csv")
-        self.part = os.path.join(path, "part.csv")
+        self.part = os.path.join(path, "../part.csv")
 
     def simulate(self, bandwidth):
         simv2 = Simulator(
@@ -235,7 +236,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.96
+    threshold = 0.95
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

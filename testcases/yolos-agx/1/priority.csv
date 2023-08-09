@@ -2,10 +2,10 @@ layername,priority
 input,0
 Embedding,1000.0
 layer_0_mid_position_embedding,1000.0
-layer_1_mid_position_embedding,999.9999999999991
-layer_2_mid_position_embedding,999.9999999999716
-layer_3_mid_position_embedding,999.9999999990905
-layer_4_mid_position_embedding,999.9999999708962
+layer_1_mid_position_embedding,999.9999999999995
+layer_2_mid_position_embedding,999.9999999999858
+layer_3_mid_position_embedding,999.9999999995453
+layer_4_mid_position_embedding,999.9999999854481
 layer_5_mid_position_embedding,999.9999995343387
 layer_6_mid_position_embedding,999.9999850988388
 layer_7_mid_position_embedding,999.9995231628418
@@ -30,7 +30,7 @@ layer_0_add_mid_position_embedding,1000.0
 layer_1_Layer_Norm_Before,1000.0
 layer_1_Query,1000.0
 layer_1_Key,1000.0
-layer_1_Value,999.9999999999999
+layer_1_Value,1000.0
 layer_1_mul,1000.0
 layer_1_div,1000.0
 layer_1_softmax,1000.0
@@ -45,7 +45,7 @@ layer_1_add_mid_position_embedding,1000.0
 layer_2_Layer_Norm_Before,1000.0
 layer_2_Query,1000.0
 layer_2_Key,1000.0
-layer_2_Value,1000.0
+layer_2_Value,999.9999999999982
 layer_2_mul,1000.0
 layer_2_div,1000.0
 layer_2_softmax,1000.0
@@ -58,9 +58,9 @@ layer_2_Intermediate_Forward,1000.0
 layer_2_Output,1000.0
 layer_2_add_mid_position_embedding,1000.0
 layer_3_Layer_Norm_Before,1000.0
-layer_3_Query,1000.0
+layer_3_Query,999.9999999999716
 layer_3_Key,1000.0
-layer_3_Value,999.9999999998863
+layer_3_Value,999.9999999999432
 layer_3_mul,1000.0
 layer_3_div,1000.0
 layer_3_softmax,1000.0
@@ -75,7 +75,7 @@ layer_3_add_mid_position_embedding,1000.0
 layer_4_Layer_Norm_Before,1000.0
 layer_4_Query,1000.0
 layer_4_Key,1000.0
-layer_4_Value,999.999999996362
+layer_4_Value,999.999999998181
 layer_4_mul,1000.0
 layer_4_div,1000.0
 layer_4_softmax,1000.0
@@ -88,9 +88,9 @@ layer_4_Intermediate_Forward,1000.0
 layer_4_Output,1000.0
 layer_4_add_mid_position_embedding,1000.0
 layer_5_Layer_Norm_Before,1000.0
-layer_5_Query,999.9999999708962
+layer_5_Query,1000.0
 layer_5_Key,1000.0
-layer_5_Value,1000.0
+layer_5_Value,999.9999999417923
 layer_5_mul,1000.0
 layer_5_div,1000.0
 layer_5_softmax,1000.0
@@ -135,7 +135,7 @@ layer_7_add_mid_position_embedding,1000.0
 layer_8_Layer_Norm_Before,1000.0
 layer_8_Query,1000.0
 layer_8_Key,1000.0
-layer_8_Value,1000.0
+layer_8_Value,999.9980926513672
 layer_8_mul,1000.0
 layer_8_div,1000.0
 layer_8_softmax,1000.0
@@ -180,7 +180,7 @@ layer_10_add_mid_position_embedding,1000.0
 layer_11_Layer_Norm_Before,1000.0
 layer_11_Query,1000.0
 layer_11_Key,1000.0
-layer_11_Value,1000.0
+layer_11_Value,937.5
 layer_11_mul,1000.0
 layer_11_div,1000.0
 layer_11_softmax,1000.0

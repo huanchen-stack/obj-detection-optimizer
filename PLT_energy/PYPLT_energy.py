@@ -50,7 +50,7 @@ baseBattery = {
 avg_battery = []
 
 def draw(config):
-    power = "0"
+    power = "1"
     fig, ax1 = plt.subplots()
     fig.set_size_inches(6, 3)
     df = pd.read_csv(f"../data/{config}.csv")
@@ -112,7 +112,17 @@ def draw(config):
 
 
 if __name__ == "__main__":
-    configs = OPT_WRAPPER.configs
+    configs = [
+        # 'faster-agx',
+        'faster-nano',
+        # 'yolor-agx',
+        'yolor-nano',
+        # 'yolox-agx',
+        'yolox-nano',
+        # 'yolov4-agx',
+        'yolov4-nano',
+         # 'yolos-agx'
+    ]
 
     for config in tqdm(configs):
         draw(config)

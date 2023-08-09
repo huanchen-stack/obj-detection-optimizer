@@ -18,14 +18,14 @@ class OPT_WRAPPER(object):
     #     the opt_wrapper will iterate through all configurations one by one
     # For the purpose of automation, you may uncomment all configurations
     configs = [
-        'faster-agx',
-        'faster-nano',
+        # 'faster-agx',
+        # 'faster-nano',
         'yolor-agx',
-        'yolor-nano',
-        'yolox-agx',
-        'yolox-nano',
-        'yolov4-agx',
-        'yolov4-nano'
+        # 'yolor-nano',
+        # 'yolox-agx',
+        # 'yolox-nano',
+        # 'yolov4-agx',
+        # 'yolov4-nano',
         #  'yolos-agx'
     ]
 
@@ -140,7 +140,7 @@ class OPT_WRAPPER(object):
              'yolos': [*range(250, 2500, 250)]},
         'nano':
             {
-                'yolox': [*range(250, 4500, 200)],
+                'yolox': [*range(250, 2500, 250)],
                 # 'yolox': [
                 #     100,
                 #     100,
@@ -401,7 +401,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.98
+    threshold = 0.985
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

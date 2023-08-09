@@ -58,7 +58,7 @@ layer_2_Intermediate_Forward,1000.0
 layer_2_Output,1000.0
 layer_2_add_mid_position_embedding,1000.0
 layer_3_Layer_Norm_Before,1000.0
-layer_3_Query,1000.0
+layer_3_Query,999.9999999999716
 layer_3_Key,1000.0
 layer_3_Value,999.9999999999432
 layer_3_mul,1000.0

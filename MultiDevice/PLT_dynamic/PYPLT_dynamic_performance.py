@@ -14,8 +14,33 @@ COMPARE_NS_Original = True
 
 
 def draw(config):
-    fig, ax1 = plt.subplots()
-    fig.set_size_inches(8, 2)
+    fig, (ax2, ax1)= plt.subplots(2,1)
+    fig.set_size_inches(8, 3.5)
+    fig.set_dpi(100)
+######################
+    df_file = pd.read_csv(f"{config}.csv")
+    x1_list = []
+    for i in range(len(df_file['bandwidth'])):
+        x1_list.append(i)
+
+    plot_data = df_file['bandwidth']
+    line1, = ax2.plot(x1_list, plot_data,
+                     color=sns.xkcd_rgb["denim blue"],
+                     linestyle='-',
+                     label='bandwidth',
+                      linewidth=1.5)
+    ax2.set_ylabel("Bandwidth (Mbps)", fontsize=12)
+    # Set colors for y-axis tags
+    ax2.yaxis.label.set_color('black')
+    # Set colors for y-axis marks
+    ax2.tick_params(axis='y', colors='black')
+    # Set legends
+    # plt.legend(handles=[line1], bbox_to_anchor=(0.5, 1.25), loc='upper center')
+    plt.grid()
+    ax2.get_xaxis().set_visible(False)
+######################
+
+
     df_file = pd.read_csv(f"{config}.csv")
     x1_list = []
     for i in range(len(df_file['bandwidth'])):
@@ -29,7 +54,7 @@ def draw(config):
                      linestyle='-',
                      label='optimization result',
                       linewidth=1.5)
-    ax1.set_ylabel("Performance (%)", fontsize=12)
+    ax1.set_ylabel("Perf. Improv. (%)", fontsize=12)
     ax1.set_ylim(ymax=(max(plot_data + 4)))
     # method 1: plot every #devices
     # loc = [0]
@@ -65,19 +90,19 @@ def draw(config):
     plt.axvline(x=loc_min_1[-1] + 0.5, linestyle='--')
     plt.axvline(x=loc_min_2[0] - 0.5, linestyle='--')
     plt.text(x=(loc_max[0] + loc_max[-1])/2, y=max(plot_data + 2),
-             s=f'{max_num} devices',
+             s=f'{max_num} partitions',
              horizontalalignment='center')
-    plt.text(x=(loc_min_1[-1])/2, y=max(plot_data + 2),
-             s=f'{min_num} devices' if min_num > 1 else 'local',
+    plt.text(x=(loc_min_1[-1])/2 - 1.2, y=max(plot_data + 2),
+             s=f'{min_num} partitions' if min_num > 1 else '1 partition',
              horizontalalignment='center')
-    plt.text(x=(len(device_nums) + loc_min_2[0])/2, y=max(plot_data + 2),
-             s=f'{min_num} devices' if min_num > 1 else 'local',
+    plt.text(x=(len(device_nums) + loc_min_2[0])/2 + 1.2, y=max(plot_data + 2),
+             s=f'{min_num} partitions' if min_num > 1 else '1 partition',
              horizontalalignment='center')
     plt.text(x=(loc_max[-1] + loc_min_2[0]) / 2, y=max(plot_data + 2),
-             s=f'{min_num + 1} - {max_num - 1} devices',
+             s=f'{min_num + 1} - {max_num - 1} partitions',
              horizontalalignment='center')
     plt.text(x=(loc_max[0] + loc_min_1[-1]) / 2, y=max(plot_data + 2),
-             s=f'{min_num + 1} - {max_num - 1} devices',
+             s=f'{min_num + 1} - {max_num - 1} partitions',
              horizontalalignment='center')
 
     # Set colors for y-axis tags
@@ -87,12 +112,13 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # Set legends
-    plt.legend(handles=[line1], bbox_to_anchor=(0.5, 1.25), loc='upper center')
+    # plt.legend(handles=[line1], bbox_to_anchor=(0.5, 1.25), loc='upper center')
     plt.grid()
     ax1.get_xaxis().set_visible(False)
 
 
     plt.savefig(f"plots/{config}-performance.pdf", bbox_inches='tight', dpi=100)
+    plt.savefig(f"plots/{config}-performance.png", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":

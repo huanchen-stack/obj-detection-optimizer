@@ -30,10 +30,6 @@ def draw(config):
 
     device_nums = df_file['device']
 
-    # line1, = ax1.plot(x1_list, plot_data,
-    #                  color=sns.xkcd_rgb["pale red"],
-    #                  linestyle='-',
-    #                  label='optimization result')
     p1 = ax1.bar(x1_list, plot_data,
                      color=sns.xkcd_rgb["pale red"], width=0.5,
                      # marker='o',
@@ -42,19 +38,7 @@ def draw(config):
     ax1.set_ylabel("End-to-end speed", fontsize=12)
     ax1.set_xlabel("Scenarios", fontsize=12)
     ax1.set_ylim(ymax=(max(plot_data + 4)))
-    # method 1: plot every #devices
-    # loc = [0]
-    # for d in range(1, len(device_nums)-1):
-    #     if device_nums[d] != device_nums[d-1]:
-    #         plt.axvline(x=d-0.5, linestyle='--')
-    #         plt.text(x=(d + loc[-1]) * 0.5, y=2,
-    #                  s=f'{device_nums[d-1]} devices' if device_nums[d-1] > 1 else 'local',
-    #                  horizontalalignment='center')
-    #         loc.append(d)
-    # plt.text(x=(len(device_nums)-1 + loc[-1]) * 0.5, y=2,
-    #          s=f'{device_nums[len(device_nums)-1]} devices' if device_nums[len(device_nums)-1] > 1 else 'local',
-    #          horizontalalignment='center')
-    # method 2: plot the max #devices
+
     loc_max = []
     loc_min_1 = []
     loc_min_2 = []

@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 
 import pandas as pd
@@ -77,10 +78,14 @@ class Optimizer(object):
             self.priorities.write(f"layername,priority\n")
             self.backtrace(write_csv=True)
             self.priorities.close()
+            shutil.copyfile(os.path.join(self.dir, "priority.csv"), os.path.join(self.dir, "1/priority.csv"))
             self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
             self.partitions.write(f"layername,device\n")
+            self.partitions_out = open(os.path.join(self.dir, "1/part.csv"), "w")
+            self.partitions_out.write(f"layername,device\n")
             success = self.optimize(write_csv=True)
             if success:
+                self.partitions_out.close()
                 self.partitions.close()
                 best = min(self.results)
                 best_iter = self.results.index(best)
@@ -100,9 +105,13 @@ class Optimizer(object):
                 self.priorities.write(f"layername,priority\n")
                 self.backtrace(write_csv=True)
                 self.priorities.close()
+                shutil.copyfile(os.path.join(self.dir, "priority.csv"), os.path.join(self.dir, "1/priority.csv"))
                 self.partitions = open(os.path.join(self.dir, "part.csv"), "w")
                 self.partitions.write(f"layername,device\n")
+                self.partitions_out = open(os.path.join(self.dir, "1/part.csv"), "w")
+                self.partitions_out.write(f"layername,device\n")
                 success = self.optimize(write_csv=True)
+                self.partitions_out.close()
                 self.partitions.close()
                 if not success:
                     self.success = False
@@ -265,22 +274,22 @@ class Optimizer(object):
 
             smart_divide = False
             ########## SMART DIVIDE
-            # for potential_next in self.layers[cur_layer_name].next:
-            #     mem_requirement = self.devices[decision].cuda_mem[cur_layer_name]\
-            #                       + self.devices[decision].cuda_mem[potential_next]
-            #     if self.devices[decision].current_cuda_mem() + mem_requirement > self.memory_constrain:
-            #         # divide this layer by the less output size edge
-            #         sum = 0
-            #         for dep_name in self.layers[cur_layer_name].dependencies:
-            #             sum += self.layers[dep_name].size
-            #         if self.layers[potential_next].size > sum:
-            #             filtered_list = \
-            #                 [x for x in sorted_device_names
-            #                  if self.devices[x].current_cuda_mem() + mem_requirement < self.memory_constrain]
-            #             if filtered_list:
-            #                 device_results = []
-            #                 smart_divide = True
-            #                 break
+            for potential_next in self.layers[cur_layer_name].next:
+                mem_requirement = self.devices[decision].cuda_mem[cur_layer_name]\
+                                  + self.devices[decision].cuda_mem[potential_next]
+                if self.devices[decision].current_cuda_mem() + mem_requirement > self.memory_constrain:
+                    # divide this layer by the less output size edge
+                    sum = 0
+                    for dep_name in self.layers[cur_layer_name].dependencies:
+                        sum += self.layers[dep_name].size
+                    if self.layers[potential_next].size > sum:
+                        filtered_list = \
+                            [x for x in sorted_device_names
+                             if self.devices[x].current_cuda_mem() + mem_requirement < self.memory_constrain]
+                        if filtered_list:
+                            device_results = []
+                            smart_divide = True
+                            break
             ########## END SMART DIVIDE
 
         # if min_value > first_run_result['min_value']:
@@ -363,6 +372,7 @@ class Optimizer(object):
         for layer_name, layer in self.layers.items():
             if write_csv:
                 self.partitions.write(f"{layer_name},{layer.device_id}\n")
+                self.partitions_out.write(f"{layer_name},{layer.device_id}\n")
         return success
 
     def find_num_device(self):
@@ -439,7 +449,7 @@ class Optimizer(object):
             if write_csv:
                 self.priorities.write(f"{name},{layer.pr_max}\n")
 
-    def report(self):
+    def  report(self):
         if len(self.results) == 0:
             return None
         best = min(self.results)
