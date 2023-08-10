@@ -7,15 +7,15 @@ import matplotlib.ticker as mticker
 import seaborn as sns
 from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
-from PLT_energy.PYPLT_energy import baseE
+from PLT_energy.PYPLT_energy_2G import baseE
 
 COMPARE_NS_Original = True
 
 def draw(config):
 
     fig, ax1 = plt.subplots()
-    fig.set_size_inches(4, 3)
-    df_file = pd.read_csv(f"../data/{config}.csv")
+    fig.set_size_inches(4, 2.2)
+    df_file = pd.read_csv(f"../data/final_data/sufficient_memory/{config}.csv")
     x1_list = []
     for i in df_file['bandwidth']:
         x1_list.append(i)
@@ -25,15 +25,15 @@ def draw(config):
     line1 = ax1.plot(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      linestyle='-',
-                     label='Optimization speed up' if not COMPARE_NS_Original else 'Swarm Optimization speed up')
+                     label='Optimization speed up' if not COMPARE_NS_Original else 'SN (this work)')
     p1 = ax1.scatter(df_file['bandwidth'], plot_data,
                      color=sns.xkcd_rgb["pale red"],
                      marker='o',
                      s=30,
-                     label='Optimization speed up' if not COMPARE_NS_Original else 'Swarm Optimization speed up')
+                     label='Optimization speed up' if not COMPARE_NS_Original else 'SN (this work)')
 
     if COMPARE_NS_Original:
-        df_file_origin = pd.read_csv(f"../OriginalNS/data/{config}.csv")
+        df_file_origin = pd.read_csv(f"../data/final_data/original_NS_sufficient_memory/{config}.csv")
         x2_list = []
         for i in df_file_origin['bandwidth']:
             x2_list.append(i)
@@ -43,29 +43,30 @@ def draw(config):
         line2 = ax1.plot(df_file_origin['bandwidth'], plot_data_origin,
                          color=sns.xkcd_rgb["denim blue"],
                          linestyle='-',
-                         label='Original NS speed up (%)')
+                         label='Neurosurgoen (%)')
         p2 = ax1.scatter(df_file_origin['bandwidth'], plot_data_origin,
                          color=sns.xkcd_rgb["denim blue"],
-                         marker='o',
+                         marker='s',
                          s=30,
-                         label='Original NS speed up')
-        for i, j, d in zip(df_file['bandwidth'], plot_data_origin, df_file_origin["device"]):
-            ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
-        note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
+                         label='Neurosurgoen')
+        # for i, j, d in zip(df_file['bandwidth'], plot_data_origin, df_file_origin["device"]):
+        #     ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
+        # note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#partitions")
 
 
-    for i, j, d in zip(df_file['bandwidth'], plot_data, df_file["device"]):
-        ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
+    # for i, j, d in zip(df_file['bandwidth'], plot_data, df_file["device"]):
+    #     ax1.annotate('%s' % d, xy=(i, j), xytext=(-7, 3), textcoords='offset points', color=sns.xkcd_rgb["green"])
 
-    note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#device needed for optimization")
+    note = ax1.scatter([], [], marker='$1$', color=sns.xkcd_rgb["green"], label="#partitions")
     # baseline = ax1.hlines(y=baseBattery[config]/baseE[config], color=sns.xkcd_rgb["denim blue"], linestyle='-', xmin=x1_list[0], xmax=x1_list[-1], label="base battery life")
 
     # ax1.set_ylim(ymin=0)
     ax1.set_xlabel("Bandwidth (Mbps)", fontsize=12)
-    ax1.set_ylabel("Optimization speed up (%)", fontsize=12)
+    ax1.set_ylabel("Perf. Improv. (%)", fontsize=12)
     # ax1.set_title(f"{config}", fontsize=14)
     if min(plot_data) > 0:
-        ax1.set_ylim(ymin=0, ymax=(max(plot_data + 2)))
+        # ax1.set_ylim(ymin=0, ymax=(max(plot_data + 2)))
+        pass
 
     # Set colors for y-axis tags
     ax1.yaxis.label.set_color('black')
@@ -75,7 +76,7 @@ def draw(config):
 
     # Set legends
     if COMPARE_NS_Original:
-        # plt.legend(handles=[p1, p2, note], loc='lower right')
+        plt.legend(handles=[p1, p2], loc='best')
         # plt.legend(handles=[p1, p2, note], bbox_to_anchor=(0.5, 1.5), loc='upper center', ncol=3)
         pass
     else:
@@ -85,8 +86,10 @@ def draw(config):
     # plt.title('4GB')
     if COMPARE_NS_Original:
         plt.savefig(f"compare/{config}.png", bbox_inches='tight', dpi=100)
+        plt.savefig(f"compare/{config}.pdf", bbox_inches='tight', dpi=100)
     else:
         plt.savefig(f"{POWER_MODE}/{config}.png", bbox_inches='tight', dpi=100)
+        plt.savefig(f"{POWER_MODE}/{config}.pdf", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":

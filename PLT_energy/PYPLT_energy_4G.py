@@ -77,6 +77,7 @@ swap_power = {
     'faster-nano': 2740,
     'yolor-nano': 2732,
     'yolov4-nano': 2566,
+    'yolos-agx': 2854
 }
 
 avg_battery = []
@@ -84,7 +85,7 @@ avg_battery = []
 def draw(config):
     power = "1"
     fig, ax1 = plt.subplots()
-    fig.set_size_inches(4, 3)
+    fig.set_size_inches(4,2)
     # df_2GB = pd.read_csv(f"../data/final_data/mem_constrained/2GB/{config}.csv")
     df_4GB = pd.read_csv(f"../data/final_data/mem_constrained/4GB/{config}.csv")
     if len(df_4GB['bandwidth']) == 0:
@@ -119,14 +120,14 @@ def draw(config):
 
     # ax2 = ax1.twinx()
     w = (df_4GB['bandwidth'][len(df_4GB['bandwidth']) - 1] - df_4GB['bandwidth'][0]) / len(df_4GB) * 0.55
-    b2 = ax1.bar(x1_list, base/1000, width=w, label='Energy: Computation',
-                 color=sns.xkcd_rgb["denim blue"])
-    b3 = ax1.bar(x1_list, df_4GB['energy']/1000, width=w, label='Energy: Communication, 4G',
+    b2 = ax1.bar(x1_list, base/1000, width=w, label='SN',
+                 color=sns.xkcd_rgb["maize"])
+    b3 = ax1.bar(x1_list, df_4GB['energy']/1000, width=w, label='NS',
                  bottom=base/1000, color=sns.xkcd_rgb["maize"])
     swap_4G_USB = base + swap_power[config] * swap_mem_baseline['4GB'][config] / 1280
-    l0 = ax1.axhline(y=swap_4G_USB/1000, color='b', linestyle='--', label='USB swap baseline')
+    l0 = ax1.axhline(y=swap_4G_USB/1000, color='b', linestyle='--', label='Baseline (USB)')
     swap_4G_MicroSD = base + swap_power[config] * swap_mem_baseline['4GB'][config] / 190
-    l2 = ax1.axhline(y=swap_4G_MicroSD/1000, color='b', linestyle='-', label='MicroSD swap baseline')
+    l2 = ax1.axhline(y=swap_4G_MicroSD/1000, color='b', linestyle='-', label='Baseline (MicroSD)')
 
     ######################################## Battery life
     # line1, = ax2.plot(df['bandwidth'], battery_plot_data, color=sns.xkcd_rgb["pale red"], linestyle='-',
@@ -157,9 +158,10 @@ def draw(config):
     ax1.tick_params(axis='y', colors='black')
 
     # Set legends
-    plt.legend(handles=[l0, l2, b2, b3], loc="lower right", prop={'size': 6})
+    plt.legend(handles=[l2, l0, b2], loc="best", prop={'size': 8})
     plt.grid()
     plt.savefig(f"{POWER_MODE}/{config}-4GB.png", bbox_inches='tight', dpi=100)
+    plt.savefig(f"{POWER_MODE}/pdfs/{config}-4GB.pdf", bbox_inches='tight', dpi=100)
 
 
 if __name__ == "__main__":
@@ -172,7 +174,7 @@ if __name__ == "__main__":
         'yolox-nano',
         # 'yolov4-agx',
         'yolov4-nano',
-         # 'yolos-agx'
+         'yolos-agx'
     ]
 
     for config in tqdm(configs):

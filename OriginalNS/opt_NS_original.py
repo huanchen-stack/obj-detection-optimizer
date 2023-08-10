@@ -17,13 +17,13 @@ POWER_MODE = 1
 
 configs = [
     'faster-agx',
-    # 'faster-nano',
-    # 'yolor-agx',
-    # 'yolor-nano',
-    # 'yolox-agx',
-    # 'yolox-nano',
-    # 'yolov4-agx',
-    # 'yolov4-nano',
+    'faster-nano',
+    'yolor-agx',
+    'yolor-nano',
+    'yolox-agx',
+    'yolox-nano',
+    'yolov4-agx',
+    'yolov4-nano',
     # 'yolos-agx'
 ]
 

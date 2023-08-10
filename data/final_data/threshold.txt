@@ -1,0 +1,8 @@
+mem_constrained/
+    /2GB:
+    /4GB:0.965
+dynamic_fleet
+
+original_NS_sufficient_memory
+
+sufficient_memory

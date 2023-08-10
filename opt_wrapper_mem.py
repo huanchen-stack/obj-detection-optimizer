@@ -9,15 +9,15 @@ from opt_wrapper import POWER_MODE
 
 # This is a variation of opt_wrapper that has a memory constrain for each device.
 # The memory constrain on each device. Unit: MB
-memory_constrain = 1024*2
+memory_constrain = 1024*4
 
 
 class OPT_WRAPPER(object):
     configs = [
         # 'faster-agx',
-        # 'faster-nano',
+        'faster-nano',
         # 'yolor-agx',
-        'yolor-nano',
+        # 'yolor-nano',
         # 'yolox-agx',
         # 'yolox-nano',
         # 'yolov4-agx',
@@ -60,8 +60,8 @@ class OPT_WRAPPER(object):
              # 'yolos': [250]},
         'nano':
             {'yolox': [*range(250, 2500, 250)],
-             # 'yolor': [*range(250, 2500, 250)],
-             'yolor': [750],
+             'yolor': [*range(250, 2500, 250)],
+             # 'yolor': [750],
              'yolov4': [*range(250, 2500, 250)],
              'faster': [*range(250, 2500, 250)]},
 
@@ -133,7 +133,8 @@ class OPT_WRAPPER(object):
             reverse0=reverse0,
             reverse1=reverse1,
             dir=f"testcases/{self.config}",
-            memory_constrain=memory_constrain
+            memory_constrain=memory_constrain,
+            config=config,
         )
         return opt
 
@@ -236,7 +237,7 @@ def driver(config, threshold):
 
 if __name__ == '__main__':
 
-    threshold = 0.95
+    threshold = 0.965
     print(f"Note: current threshold is {threshold}, "
           f"meaning that if increasing num_devices by one results in a change of speed up rate less than {1 - threshold},"
           f" opt_num_devices won't be updated\n")

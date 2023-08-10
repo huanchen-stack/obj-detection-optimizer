@@ -68,11 +68,11 @@ class EnergyInferer(object):
             total_energy = 0
             self.latency[self.config] = 0
             for mult, size in multicaster.items():
-                bandwidth_pseudo = bandwidth * mult
-                POW_up = self.predict_POW(uplink_mbps=bandwidth_pseudo, downlink_mbps=0)
-                POW_down = self.predict_POW(uplink_mbps=0, downlink_mbps=bandwidth_pseudo)
-                size_pseudo = size * 8 / mult  # convert Byte to bits; apply multicast
-                total_energy += size_pseudo / bandwidth_pseudo * (POW_up + POW_down)
+                bandwidth_pseudo = bandwidth / mult
+                POW_up = self.predict_POW(uplink_mbps=bandwidth, downlink_mbps=0)
+                POW_down = self.predict_POW(uplink_mbps=0, downlink_mbps=bandwidth)
+                size_pseudo = size * 8  # convert Byte to bits; apply multicast
+                total_energy += size_pseudo / bandwidth * (POW_up + POW_down * mult)
                 self.latency[self.config] += mult*size/bandwidth
             # print(self.latency)
             df.at[i, 'energy'] = total_energy

@@ -8,7 +8,7 @@ import matplotlib.ticker as mticker
 import seaborn as sns
 from tqdm import tqdm
 from opt_wrapper import OPT_WRAPPER, POWER_MODE
-from PLT_energy.PYPLT_energy import baseE
+from PLT_energy.PYPLT_energy_2G import baseE
 
 COMPARE_NS_Original = True
 
